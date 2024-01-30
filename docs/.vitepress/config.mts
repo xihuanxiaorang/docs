@@ -1,9 +1,11 @@
-import { defineConfig } from "vitepress";
+import { DefaultTheme, defineConfig } from "vitepress";
 import markdownItPlantuml from "markdown-it-textual-uml";
+import { nav } from "./nav";
+import { sidebar } from "./sidebar";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  // base: '/docs/', // 由于使用自定义域名，此处需要注释掉，如果不使用自定义域名的话，可以取消注释 
+  // base: '/docs/', // 由于使用自定义域名，此处需要注释掉，如果不使用自定义域名的话，可以取消注释
   title: "小让の码场",
   description:
     "包含: Java 核心技术, Spring全家桶, 设计模式, 数据结构与算法, 源码分析，面试宝典...",
@@ -15,7 +17,7 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     logo: "/logo.svg",
-    nav: [{ text: "技术碎片", link: "/技术碎片/", activeMatch: "/技术碎片/" }],
+    nav,
     socialLinks: [
       { icon: "github", link: "https://github.com/xihuanxiaorang" },
       {
@@ -25,20 +27,7 @@ export default defineConfig({
         link: "https://space.bilibili.com/307881917",
       },
     ],
-    sidebar: {
-      "/技术碎片/": [
-        { text: "技术碎片", link: "/技术碎片/" },
-        { text: "如何选择开源协议", link: "/技术碎片/如何选择开源协议" },
-        {
-          text: "手绘风格的开源白板Excalidraw搭建教程",
-          link: "/技术碎片/手绘风格的开源白板Excalidraw搭建教程",
-        },
-        {
-          text: "手摸手教你快速搭建部署Vitepress博客",
-          link: "/技术碎片/手摸手教你快速搭建部署Vitepress博客",
-        },
-      ],
-    },
+    sidebar,
     footer: {
       message:
         'Released under the <a href="https://github.com/xihuanxiaorang/docs/blob/main/LICENSE">MIT License</a>.',
