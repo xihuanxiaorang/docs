@@ -910,7 +910,35 @@ export default defineConfig({
 
 5. 然后使用 `git remote add origin git@github.com:xihuanxiaorang/docs.git` 命令关联远程仓库，最后使用 `git branch -M main` 和 `git push -u origin main` 命令推送到远程仓库。
 
-6. 将更改推送到 `main` 分支并等待 GitHub Action 工作流完成。你应该看到站点部署到 `https://<username>.github.io/[repository]/` 或 `https://<custom-domain>/`，这取决于你的设置。你的站点将在每次推送到 `main` 分支时自动部署。
+6. 将更改推送到 `main` 分支并等待 GitHub Action 工作流完成。你应该看到站点部署到 `https://<username>.github.io/[repository]/` 或 `https://<custom-domain>/`，这取决于你的设置。你的站点将在每次推送到 `main` 分支时自动部署。<br />![image-20240130150323588](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202401301503328.png)
+
+## Q&A
+
+### 部署到 Github Pages 之后样式丢失
+
+> 本人在 Vitepress 上提的 issue：[部署到Github Pages之后，如果使用自定义域名的话样式会丢失 · Issue #3513 · vuejs/vitepress](https://github.com/vuejs/vitepress/issues/3513)，大佬已经给出具体解决方案！
+
+咱们此时去 Github 存储库设置中的“Pages”菜单项查看，访问博客站点，如下所示：<br />![image-20240130151813465](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202401301518099.png)
+
+惊讶地发现与咱们在本地时看到的完全不一样，样式居然全都丢失了！<br />![image-20240130152033715](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202401301520182.png)
+
+那么该如何解决呢？有如下几种解决方案：
+
+1. 如果小伙伴们是直接部署在 `<用户名>.github.io` 仓库的话，则一路走下来部署上去之后应该不会出现样式丢失的问题；
+
+2. 如果小伙伴们像我一样部署在 `docs` 仓库的话，则存在以下两种方案：
+
+   1. 如果在 Github Pages 上配置使用自定义域名的话，就能解决当前样式丢失的问题，即不需要设置 `config.base` 的值，让其保持默认值 `/` 即可；
+
+   2. 如果不使用自定义域名的话，则需要设置 `config.base` 的值为小伙伴们当前仓库的名称，如 `docs`；如下所示：
+
+      ```ts
+      export default defineConfig({
+        base: '/docs/',
+      })
+      ```
+
+小伙伴们可以自行尝试一下，如果觉得不对的可以到这个 [部署到Github Pages之后，如果使用自定义域名的话样式会丢失 · Issue #3513 · vuejs/vitepress](https://github.com/vuejs/vitepress/issues/3513) 上提出自己的想法。
 
 ## 参考资料🎁
 

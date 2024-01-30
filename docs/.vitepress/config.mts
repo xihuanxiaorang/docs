@@ -3,6 +3,7 @@ import markdownItPlantuml from "markdown-it-textual-uml";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  // base: '/docs/', // 由于使用自定义域名，此处需要注释掉，如果不使用自定义域名的话，可以取消注释 
   title: "小让の码场",
   description:
     "包含: Java 核心技术, Spring全家桶, 设计模式, 数据结构与算法, 源码分析，面试宝典...",
