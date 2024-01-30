@@ -46,7 +46,7 @@ export default defineConfig({
         'Copyright © 2024 <a href="https://github.com/xihuanxiaorang">小让</a>',
     },
     editLink: {
-      pattern: "https://github.com/xihuanxiaorang/docs/edit/main/docs/:path",
+      pattern: "https://github.com/xihuanxiaorang/docs/edit/main/docs/md/:path",
       text: "在 GitHub 上编辑此页面",
     },
     lastUpdated: {
