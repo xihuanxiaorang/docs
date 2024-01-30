@@ -610,7 +610,7 @@ export default {
 }
 ```
 
-需要在项目目录下新建一个 MIT `LICENSE` 协议文件，并将配置中的用户名 `xihuanxiaorang` 和仓库名称 `docs` 修改成小伙伴们自己的即可。
+后面部署到 Github 上之后，按照 [添加许可到仓库 - GitHub 文档](https://docs.github.com/zh/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository#including-an-open-source-license-in-your-repository) 流程添加开源协议即可，并将配置中的用户名 `xihuanxiaorang` 和仓库名称 `docs` 修改成小伙伴们自己的即可。
 
 ### 编辑链接
 
