@@ -6,15 +6,13 @@
 
 VitePress 是一个[静态站点生成器](https://en.wikipedia.org/wiki/Static_site_generator) (SSG)，专为构建快速、以内容为中心的站点而设计。简而言之，VitePress 获取用 Markdown 编写的内容，对其应用主题，并生成可以轻松部署到任何地方的静态 HTML 页面。
 
-::: details 由 Vuepress 转到 Vitepress 的原因
-
-VitePress 灵感来源于 VuePress。最初的 VuePress 基于 Vue 2 和 webpack。借助 Vue 3 和 Vite，VitePress 提供了更好的开发体验、更好的生产性能、更精美的默认主题和更灵活的自定义 API。
-
-VitePress 和 VuePress 之间的 API 区别主要在于主题和自定义。如果使用的是带有默认主题的 VuePress 1，迁移到 VitePress 应该相对简单。
-
-VuePress 2 我们也投入了精力，它也支持 Vue 3 和 Vite，与 VuePress 1 的兼容性更好。但是，并行维护两个 SSG 是难以持续的，因此 **Vue 团队决定将重点放在 VitePress，作为长期的主要 SSG 选择推荐**。
-
-:::
+> [!IMPORTANT] 
+>
+> VitePress 灵感来源于 VuePress。最初的 VuePress 基于 Vue 2 和 webpack。借助 Vue 3 和 Vite，VitePress 提供了更好的开发体验、更好的生产性能、更精美的默认主题和更灵活的自定义 API。
+>
+> VitePress 和 VuePress 之间的 API 区别主要在于主题和自定义。如果使用的是带有默认主题的 VuePress 1，迁移到 VitePress 应该相对简单。
+>
+> VuePress 2 我们也投入了精力，它也支持 Vue 3 和 Vite，与 VuePress 1 的兼容性更好。但是，并行维护两个 SSG 是难以持续的，因此 **Vue 团队决定将重点放在 VitePress，作为长期的主要 SSG 选择推荐**。
 
 ## 快速开始🚀
 
@@ -633,11 +631,9 @@ export default {
 
 最近一条内容的更新时间会显示在页面右下角。要启用它，请将 `config.lastUpdated` 选项设置为 `true`。
 
-:::tips
-
-你必须提交 markdown 文件才能看到最后更新时间。 
-
-:::
+> [!tip]
+>
+> 你必须提交 markdown 文件才能看到最后更新时间。 
 
 其中 `themeConfig.lastUpdated` 选项允许自定义上次更新的文本和日期格式。
 
@@ -897,12 +893,10 @@ export default defineConfig({
            uses: actions/deploy-pages@v2
    ```
 
-   ::: tip
-
-   1. 如果完全照搬官方文档的话，在构建时会失败，需要如 `35-38` 行处一样，在使用 `pnpm` 部署的时候需要指定 `pnpm` 的版本号，这样才能构建成功！
-   2. 在 `public` 目录下新建一个 `.nojekyll` 文件，无需填写任何内容。
-
-   :::
+   > [!TIP]
+>
+   > 1. 如果完全照搬官方文档的话，在构建时会失败，需要如 `35-38` 行处一样，在使用 `pnpm` 部署的时候需要指定 `pnpm` 的版本号，这样才能构建成功！
+   > 2. 在 `public` 目录下新建一个 `.nojekyll` 文件，无需填写任何内容。
 
 3. 现在咱们在终端中输入 `git init` 命令初始化一个本地仓库，使用 `git add .` 命令将所有文件添加到暂存区，使用 `git commit -m "feat: init blog"` 命令进行一次提交。
 
@@ -939,6 +933,55 @@ export default defineConfig({
       ```
 
 小伙伴们可以自行尝试一下，如果觉得不对的可以到这个 [部署到Github Pages之后，如果使用自定义域名的话样式会丢失 · Issue #3513 · vuejs/vitepress](https://github.com/vuejs/vitepress/issues/3513) 上提出自己的想法。
+
+### 如何使用自定义字体
+
+VitePress 使用 [Inter](https://rsms.me/inter/) 作为默认字体，并且将其包含在生成的输出中。该字体在生产环境中也会自动预加载。但是如果要使用不同的字体，这可能不是很好。
+
+具体实现步骤如下所示：
+
+1. 在 `.vitepress/theme` 目录下创建一个 `custom.css` 样式文件，文件内容如下所示：
+
+   ```css
+   @import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap");
+   
+   :root {
+     --monospace: "JetBrains Mono", "Roboto Mono", "Noto Sans SC", "Fira Code",
+       "Ubuntu Mono";
+     --vp-font-family-base: var(--monospace); /* normal text font */
+     --vp-font-family-mono: var(--monospace); /* code font */
+   }
+   ```
+
+   本人是使用的[谷歌在线字体](https://fonts.google.com/)，小伙伴若是喜欢其他的字体可以自行搜索->添加->导入，也可以通过 `@font-face` 引用本地字体文件的方式实现，具体细节请查阅 [扩展默认主题 | VitePress](https://vitepress.dev/zh/guide/extending-default-theme#using-different-fonts)。
+
+2. 在 `.vitepress/theme/index.ts` 文件中导入该 `custom.css` 文件；
+
+   > [!TIP]
+   >
+   > 为了避免在生成后的输出中包含 Inter 字体，请从 `vitepress/theme-without-fonts` 中导入主题；
+
+   ```ts{4}
+   // https://vitepress.dev/guide/custom-theme
+   import { h } from "vue";
+   import type { Theme } from "vitepress";
+   import DefaultTheme from "vitepress/theme-without-fonts";
+   import "./style.css";
+   import "./custom.css"; // [!code ++]
+   
+   export default {
+     extends: DefaultTheme,
+     Layout: () => {
+       return h(DefaultTheme.Layout, null, {
+         // https://vitepress.dev/guide/extending-default-theme#layout-slots
+       });
+     },
+     enhanceApp({ app, router, siteData }) {
+       // ...
+     },
+   } satisfies Theme;
+   
+   ```
 
 ## 参考资料🎁
 
