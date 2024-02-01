@@ -41,6 +41,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       collapsed: false,
       items: [
         { text: "视频下载工具", link: "/工具/其他工具/视频下载工具" },
+        { text: "Office部署激活工具", link: "/工具/其他工具/Office部署激活工具" },
       ],
     },
   ],
