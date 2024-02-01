@@ -33,6 +33,7 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "内网穿透工具", link: "/工具/开发者工具/内网穿透工具" },
         { text: "IDEA", link: "/工具/开发者工具/IDEA" },
         { text: "MapStruct", link: "/工具/开发者工具/MapStruct" },
+        { text: "Git", link: "/工具/开发者工具/Git" },
       ],
     },
   ],
