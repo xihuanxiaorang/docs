@@ -36,5 +36,12 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "Git", link: "/工具/开发者工具/Git" },
       ],
     },
+    {
+      text: "其他工具",
+      collapsed: false,
+      items: [
+        { text: "视频下载工具", link: "/工具/其他工具/视频下载工具" },
+      ],
+    },
   ],
 };
