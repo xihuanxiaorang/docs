@@ -20,5 +20,9 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "Windows11 中安装 Linux 教程 | WLS2 的使用",
       link: "/技术碎片/Windows11中安装Linux教程之WLS2的使用",
     },
+    {
+      text: "搞定UML类图！",
+      link: "/技术碎片/搞定UML类图！",
+    },		
   ],
 };
