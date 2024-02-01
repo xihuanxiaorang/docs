@@ -23,6 +23,16 @@ export const sidebar: DefaultTheme.Sidebar = {
     {
       text: "搞定UML类图！",
       link: "/技术碎片/搞定UML类图！",
-    },		
+    },
+  ],
+  "/工具/": [
+    {
+      text: "开发者工具",
+      collapsed: false,
+      items: [
+        { text: "内网穿透工具", link: "/工具/开发者工具/内网穿透工具" },
+        { text: "IDEA", link: "/工具/开发者工具/IDEA" },
+      ],
+    },
   ],
 };
