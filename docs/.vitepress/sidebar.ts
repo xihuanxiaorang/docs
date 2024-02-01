@@ -12,5 +12,9 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "手摸手教你快速搭建部署Vitepress博客",
       link: "/技术碎片/手摸手教你快速搭建部署Vitepress博客",
     },
+    {
+      text: "Windows-Terminal美化",
+      link: "/技术碎片/Windows-Terminal美化",
+    },
   ],
 };
