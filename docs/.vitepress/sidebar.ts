@@ -24,6 +24,10 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "搞定UML类图！",
       link: "/技术碎片/搞定UML类图！",
     },
+    {
+      text: "正则表达式",
+      link: "/技术碎片/正则表达式",
+    },
   ],
   "/工具/": [
     {

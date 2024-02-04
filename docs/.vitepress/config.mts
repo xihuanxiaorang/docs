@@ -73,4 +73,10 @@ export default defineConfig({
       md.use(markdownItPlantuml);
     },
   },
+  vite: {
+    server: {
+      open: true,
+      port: 9527,
+    },
+  },
 });
