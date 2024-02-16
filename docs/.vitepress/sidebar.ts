@@ -9,8 +9,8 @@ export const sidebar: DefaultTheme.Sidebar = {
       link: "/技术碎片/手绘风格的开源白板Excalidraw搭建教程",
     },
     {
-      text: "手摸手教你快速搭建部署Vitepress博客",
-      link: "/技术碎片/手摸手教你快速搭建部署Vitepress博客",
+      text: "手摸手教你搭建部署Vitepress博客",
+      link: "/技术碎片/手摸手教你搭建部署Vitepress博客",
     },
     {
       text: "Windows-Terminal美化",
