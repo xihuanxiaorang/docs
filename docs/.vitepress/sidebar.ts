@@ -51,4 +51,13 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
   ],
+  "/源码剖析/": [
+    {
+      text: "集合",
+      collapsed: false,
+      items: [
+        { text: "HashMap源码分析", link: "/源码剖析/集合/HashMap源码分析" },
+      ],
+    },
+  ],
 };

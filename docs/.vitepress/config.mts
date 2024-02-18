@@ -58,7 +58,7 @@ export default defineConfig({
     },
     returnToTopLabel: "回到顶部",
     sidebarMenuLabel: "目录",
-    darkModeSwitchLabel: "切换主题",
+    darkModeSwitchLabel: "外观",
   },
   markdown: {
     lineNumbers: true,
