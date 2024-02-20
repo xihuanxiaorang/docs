@@ -63,11 +63,11 @@ export default defineConfig({
   markdown: {
     lineNumbers: true,
     container: {
-      tipLabel: "提示",
-      warningLabel: "警告",
-      dangerLabel: "错误",
-      infoLabel: "信息",
-      detailsLabel: "详细信息",
+      tipLabel: "💡提示",
+      warningLabel: "❗警告",
+      noteLabel: "📢注意",
+      importantLabel: "🎯重要",
+      cautionLabel: "⚡小心",
     },
     config: (md) => {
       md.use(markdownItPlantuml);

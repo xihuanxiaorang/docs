@@ -6,49 +6,30 @@
 
 ## 基本介绍
 
-1. HashMap 是一个散列表，它存储的内容是键值对（K-V）映射。允许存储 KEY 和 VALUE 为 NULL 的元素，但是**只允许存在一个 KEY 为 NULL 的元素**，如果再次存入 KEY 为 NULL 的元素时，会用新的 VALUE 值替换旧的 VALUE 值；
+1. HashMap 是一个散列表，它存储的内容是键值对（K-V）映射。允许存储 key 和 value 为 NULL 的元素，但是**只允许存在一个 key 为 NULL 的元素**，如果再次存入 key 为 NULL 的元素时，会用新的 value 值替换旧的 value 值；
 
 2. HashMap 继承自 AbstractMap 抽象类，实现了 Map、Serializable 和 Cloneable 接口，其继承关系体系图如下所示：
 
    ```plantuml
    @startuml
    
-   class HashMap<K, V> {
+   class HashMap<K, V> extends AbstractMap implements Map,Serializable,Cloneable {}
+   class AbstractMap<K, V> implements Map {}
    
-   }
-   
-   class AbstractMap<K, V> {
-   
-   }
-   
-   interface Map<K, V> {
-   
-   }
-   
-   interface Serializable {
-   
-   }
-   
-   interface Cloneable {
-   
-   }
-   
-   Map <|.. HashMap
-   Map <|.. AbstractMap
-   Serializable <|.. HashMap
-   Cloneable <|.. HashMap
-   AbstractMap <|-- HashMap
+   interface Map<K, V> {}
+   interface Serializable {}
+   interface Cloneable {}
    
    @enduml
    ```
-
-3. HashMap 是**无序**的。因为该容器在扩容时会对元素重新放置，所以是不保证元素顺序的。
+   
+3. HashMap 存取元素是**无序**的。因为该容器在扩容时会对元素重新放置，所以是不保证元素顺序的。
 
 4. **非线程安全**的。 
 
-## 底层数据结构
+## 底层数据结构（哈希表）
 
-Java HashMap 底层采用哈希表结构（数组+链表+红黑树）实现，结合了数组和链表的优点：
+Java HashMap 底层采用 **哈希表结构（数组+链表+红黑树）** 实现，结合了数组和链表的优点：
 
 1. 数组优点：通过数组下标可以快速实现对数组元素的访问，效率极高；
 2. 链表优点：插入或删除数据不需要移动元素，只需修改节点引用，效率极高。
@@ -59,11 +40,11 @@ HashMap 内部使用数组存储数据，数组中的每个元素类型为 `Node
 
 ```java
 static class Node<K,V> implements Map.Entry<K,V> {
-    // KEY的hash值
+    // key的hash值
     final int hash;
-    // KEY值
+    // key值
     final K key;
-    // VALUE 值
+    // value 值
     V value;
     // 当前节点的下一个节点
     Node<K,V> next;
@@ -134,12 +115,11 @@ static final class TreeNode<K,V> extends LinkedHashMap.Entry<K,V> {
 
 ## 重要属性
 
+### 静态常量
+
 ```java
 // 数组默认的初始化长度16
 static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
-
-// 数组最大容量，2的30次幂，即1073741824
-static final int MAXIMUM_CAPACITY = 1 << 30;
 
 // 默认加载因子值
 static final float DEFAULT_LOAD_FACTOR = 0.75f;
@@ -147,12 +127,20 @@ static final float DEFAULT_LOAD_FACTOR = 0.75f;
 // 链表转换为红黑树的长度阈值
 static final int TREEIFY_THRESHOLD = 8;
 
-// 红黑树转换为链表的长度阈值
-static final int UNTREEIFY_THRESHOLD = 6;
-
 // 链表转换为红黑树时，数组容量必须大于等于64
 static final int MIN_TREEIFY_CAPACITY = 64;
+```
 
+1. DEFAULT_INITIAL_CAPACITY：默认初始化容量，如果使用构造器进行初始化时没有指定初始化容量参数时，则初始化容量等于该值 = 16；
+2. DEFAULT_LOAD_FACTOR：默认加载因子，如果使用构造器进行初始化时没有指定加载因子参数时，则加载因子等于该默认值 = 0.75f；
+3. TREEIFY_THRESHOLD：链表树化阈值 = 8，配合 MIN_TREEIFY_CAPACITY 一起使用；
+4. MIN_TREEIFY_CAPACITY：最小树化容量 = 64；
+
+链表树化的两个条件，<span style="background-color: rgb(251, 228, 231);">数组长度>=64（MIN_TREEIFY_CAPACITY） && 链表长度>8（TREEIFY_THRESHOLD）</span> 时，链表 => 红黑树！
+
+### 成员变量
+
+```java
 // HashMap里键值对个数
 transient int size;
 
@@ -168,17 +156,6 @@ final float loadFactor;
 // 用于快速失败，由于HashMap非线程安全，在对HashMap进行迭代时，如果期间其他线程的参与导致HashMap的结构发生变化了（比如put，remove等操作），直接抛出ConcurrentModificationException异常
 transient int modCount;
 ```
-
-### 静态常量
-
-1. DEFAULT_INITIAL_CAPACITY：默认初始化容量，如果使用构造器进行初始化时没有指定初始化容量参数时，则初始化容量等于该值 = 16；
-2. DEFAULT_LOAD_FACTOR：默认加载因子，如果使用构造器进行初始化时没有指定加载因子参数时，则加载因子等于该默认值 = 0.75f；
-3. TREEIFY_THRESHOLD：链表树化阈值 = 8，配合 MIN_TREEIFY_CAPACITY 一起使用；
-4. MIN_TREEIFY_CAPACITY：最小树化容量 = 64；
-
-链表树化的两个条件，<span style="background-color: rgb(251, 228, 231);">数组长度>=64（MIN_TREEIFY_CAPACITY） && 链表长度>8（TREEIFY_THRESHOLD）</span> 时，链表 => 红黑树！
-
-### 成员变量
 
 1. size：元素个数。注意：不止数组长度大小的数量，因为数组某一个索引位置的元素可能已经形成链表或者红黑树。
 
@@ -222,7 +199,7 @@ transient int modCount;
 
 > [!important]
 >
-> 在构造函数中并没有对 `table` 进行初始化，而是**在第一次添加元素的时候才会对 `table` 进行初始化**，这样设计主要是为了**延迟初始化，避免内存的浪费**，因为有可能初始化了之后并没有向其中添加元素，这样会造成不必要的浪费。
+> 在构造函数中并没有对 `table` 进行初始化，而是**在第一次添加元素的时候才会对 `table` 进行初始化**，这样设计的主要目的是为了**延迟初始化，避免内存的浪费**，因为有可能发生在初始化了之后用户后面并没有向其中添加任何元素的情况，这样的话就会造成不必要的浪费。
 
 ```java
 public HashMap(int initialCapacity, float loadFactor) {
@@ -281,7 +258,7 @@ static final int hash(Object key) {
 }
 ```
 
-如果 key 为 null 的话，则返回 0；如果不为 null 的话，则通过 `(h = key.hashCode()) ^ (h >>> 16)` 公式计算得到哈希值。该公式通过将 KEY 的哈希值无符号右移 16 位后（高位全部补 0）与原哈希值本身进行按位异或运算。也就是让低 16 位与高 16 位进行异或，高 16 位保持不变 (与 0 异或都是自己本身)，让高位也得以参与散列运算。说白了，使用**扰动函数就是为了增加随机性，使得散列更加均匀，减少碰撞**，不会造成因为高位没有参与下标计算从而引起的碰撞。
+如果 key 为 null 的话，则返回 0；如果不为 null 的话，则通过 `(h = key.hashCode()) ^ (h >>> 16)` 公式计算得到哈希值。该公式通过将 key 的哈希值无符号右移 16 位后（高位全部补 0）与原哈希值本身进行按位异或运算。也就是让低 16 位与高 16 位进行异或，高 16 位保持不变 (与 0 异或都是自己本身)，让高位也得以参与散列运算。说白了，使用**扰动函数就是为了增加随机性，使得散列更加均匀，减少碰撞**，不会造成因为高位没有参与下标计算从而引起的碰撞。
 
 #### 计算数组下标
 
@@ -299,7 +276,7 @@ static final int hash(Object key) {
 
       > [!note]
       >
-      > **在使用自定义对象作为 KEY 时，需要重写对象的 `hashCode` 和 `equals` 方法**。其中，`hashCode` 方法用于决定对象会被放到哪个 bucket 里，当多个对象的哈希值冲突时，此时就需要使用 `equals` 方法判断这些对象是否为同一个对象。
+      > **在使用自定义对象作为 key 时，需要重写对象的 `hashCode` 和 `equals` 方法**。其中，`hashCode` 方法用于决定对象会被放到哪个 bucket 里，当多个对象的哈希值冲突时，此时就需要使用 `equals` 方法判断这些对象是否为同一个对象。
 
    2. 经过上一步，说明当前要插入的元素否与当前数组下标位置处的元素的 hash 值和 key 值并不相等，此时会将元素添加到链表的末尾或者红黑树的叶子节点。所以此时需要判断当前位置的元素是否为红黑树节点？条件成立的话，则走红黑树添加元素的逻辑，返回与要插入元素的 hash 值和 key 值都相等的树节点，让**节点 e 指向该树节点**。
 
@@ -310,8 +287,8 @@ static final int hash(Object key) {
 
 4. 判断节点 e 是否不为 NULL？条件成立的话，会根据传入的 onlyIfAbsent 参数判断是否要覆盖原来的 VAULE 值？
 
-   1. 如果 onlyIfAbsent = fasle 的话，则使用新的 VALUE 覆盖原来的 VALUE 值并返回原来的 VALUE 值；
-   2. 如果 onlyIfAbsent = true && oldValue != null 的话，则不会覆盖原来的值，而是直接将原来的 VALUE 值返回；
+   1. 如果 onlyIfAbsent = fasle 的话，则使用新的 value 覆盖原来的 value 值并返回原来的 value 值；
+   2. 如果 onlyIfAbsent = true && oldValue != null 的话，则不会覆盖原来的值，而是直接将原来的 value 值返回；
 
 5. 经过第 2 步和第 3.3.2 步，元素个数会加一，此时会判断元素个数是否已经超过扩容阈值？如果条件成立的话，则说明需要调用 `resize` 方法对数组进行扩容。
 
@@ -440,7 +417,7 @@ final Node<K,V>[] resize() {
      // 如果原来的数组长度已经大于等于最大的数组长度(1<<30)，即超过最大值就不再扩容了
      if (oldCap >= MAXIMUM_CAPACITY) {
 	       // 直接把阈值大小设置为最大整数2^31-1
-         threshold = Integer.MAX_VALUE;
+         threshold = Integer.MAX_value;
          // 返回原来的数组
          return oldTab;
      }
@@ -465,7 +442,7 @@ final Node<K,V>[] resize() {
      // 使用阀值公式计算新的阈值 = 新的容量 * 加载因子
      float ft = (float)newCap * loadFactor;
      newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
-               (int)ft : Integer.MAX_VALUE);
+               (int)ft : Integer.MAX_value);
  }
  // 将新的阈值大小赋值给threshold
  threshold = newThr;
@@ -551,10 +528,10 @@ final Node<K,V>[] resize() {
 ### 获取元素
 
 1. 首先**判断数组是否不为空 && 数组长度是否大于0 && 当前下标位置（`(n-1) & hash`）处的元素是否不为空**，如果三个条件中有一个条件不满足的话，则直接返回 null；
-2. 走到这一步，表示上述三个条件都满足 => 数组已经初始化 && 数组中已添加过元素 && 数组在当前下标位置处存在元素。现在只需**通过比较两者的 hash 值与 KEY 值判断当前下标位置处的元素是否刚好就是要找的元素**，如果是的话，则直接返回该元素；
+2. 走到这一步，表示上述三个条件都满足 => 数组已经初始化 && 数组中已添加过元素 && 数组在当前下标位置处存在元素。现在只需**通过比较两者的 hash 值与 key 值判断当前下标位置处的元素是否刚好就是要找的元素**，如果是的话，则直接返回该元素；
 3. 走到这一步，说明当前下标位置处的元素与目标元素不相等，需要判断当前下标位置处的元素的下一个节点是否不为空，如果不为空的话，则说明当前下标位置处是一个链表或者红黑树结构；
    1. 判断当前下标位置处的元素是否是一个树节点，如果是一个树节点的话，则走红黑树获取元素的流程；
-   2. 经过上一步，说明当前下标位置处是一个链表结构，需要从头到尾**遍历链表，依次比较链表中的各个节点的 hash 值与 KEY 值是否与目标元素的 hash 值与 KEY 值相等**。如果在链表中找到满足条件的节点的话则返回该节点，如果找不到的话则返回 null。
+   2. 经过上一步，说明当前下标位置处是一个链表结构，需要从头到尾**遍历链表，依次比较链表中的各个节点的 hash 值与 key 值是否与目标元素的 hash 值与 key 值相等**。如果在链表中找到满足条件的节点的话则返回该节点，如果找不到的话则返回 null。
 
 ```java
 public V get(Object key) {
@@ -567,7 +544,7 @@ final Node<K,V> getNode(int hash, Object key) {
   // 判断数组是否不为空 && 数组长度是否大于0 && 当前下标位置处的元素是否不为空，如果三个条件中有一个条件不满足的话，则直接返回null
   if ((tab = table) != null && (n = tab.length) > 0 &&
       (first = tab[(n - 1) & hash]) != null) {
-      // 条件成立的话，判断当前下标位置处的元素的 hash 值和 KEY 值是否刚好与目标元素的 hash 值和 KEY 值刚好相等，如果是的话，则直接返回该元素
+      // 条件成立的话，判断当前下标位置处的元素的 hash 值和 key 值是否刚好与目标元素的 hash 值和 key 值刚好相等，如果是的话，则直接返回该元素
       if (first.hash == hash && // always check first node
           ((k = first.key) == key || (key != null && key.equals(k))))
           return first;
@@ -576,7 +553,7 @@ final Node<K,V> getNode(int hash, Object key) {
           // 判断当前下标位置处的元素是否是一个树节点，如果是一个树节点的话，则走红黑树获取元素的流程
           if (first instanceof TreeNode)
               return ((TreeNode<K,V>)first).getTreeNode(hash, key);
-          // 走到这一步说明当前下标位置处是一个链表结构，需要从头到尾遍历链表，依次判断链表中的各个节点的 hash 值与 KEY 值是否与目标元素的 hash 值与 KEY 值相等
+          // 走到这一步说明当前下标位置处是一个链表结构，需要从头到尾遍历链表，依次判断链表中的各个节点的 hash 值与 key 值是否与目标元素的 hash 值与 key 值相等
           do {
               if (e.hash == hash &&
                   ((k = e.key) == key || (key != null && key.equals(k))))
@@ -610,7 +587,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
   if ((tab = table) != null && (n = tab.length) > 0 &&
       (p = tab[index = (n - 1) & hash]) != null) {
       Node<K,V> node = null, e; K k; V v;
-      // 条件成立的话，判断当前下标位置处的元素的 hash 值和 KEY 值是否刚好与目标元素的 hash 值和 KEY 值刚好相等，如果是的话，说明找到目标元素赋值给节点node
+      // 条件成立的话，判断当前下标位置处的元素的 hash 值和 key 值是否刚好与目标元素的 hash 值和 key 值刚好相等，如果是的话，说明找到目标元素赋值给节点node
       if (p.hash == hash &&
           ((k = p.key) == key || (key != null && key.equals(k))))
           node = p;
@@ -620,7 +597,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
           if (p instanceof TreeNode)
               node = ((TreeNode<K,V>)p).getTreeNode(hash, key);
           else {
-              // 走到这一步说明当前下标位置处是一个链表结构，需要从头到尾遍历链表，依次判断链表中的各个节点的 hash 值与 KEY 值是否与目标元素的 hash 值与 KEY 值相等，如果找到与目标元素相等的节点则赋值给节点node
+              // 走到这一步说明当前下标位置处是一个链表结构，需要从头到尾遍历链表，依次判断链表中的各个节点的 hash 值与 key 值是否与目标元素的 hash 值与 key 值相等，如果找到与目标元素相等的节点则赋值给节点node
               do {
                   if (e.hash == hash &&
                       ((k = e.key) == key ||
@@ -633,7 +610,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
           }
       }
       // 如果节点node不为空的话，则说明已经找到目标元素
-      // 至于判断是否需要 VALUE 值相等才删除的逻辑无关紧要，不做重点分析
+      // 至于判断是否需要 value 值相等才删除的逻辑无关紧要，不做重点分析
       if (node != null && (!matchValue || (v = node.value) == value ||
                            (value != null && value.equals(v)))) {
           // 判断节点node是否是一个树节点，如果是的话，则走红黑树删除元素的流程
@@ -654,8 +631,4 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
   return null;
 }
 ```
-
-## 参考资料🎁
-
-[Java HashMap底层实现原理 | MrBird](https://mrbird.cc/Java-HashMap底层实现原理.html)
 

@@ -57,6 +57,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       collapsed: false,
       items: [
         { text: "HashMap源码分析", link: "/源码剖析/集合/HashMap源码分析" },
+        { text: "ArrayList源码分析", link: "/源码剖析/集合/ArrayList源码分析" },
       ],
     },
   ],

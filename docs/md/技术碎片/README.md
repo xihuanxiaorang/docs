@@ -440,21 +440,17 @@ spring:
 
    运行测试方法时，发现报如下错误：
 
-   ::: danger 
-   
-   java.lang.IllegalStateException: Unable to find a **@SpringBootConfiguration**, you need to use **@ContextConfiguration** or **@SpringBootTest(classes=...)** with your test
-   
-   :::
+   > [!warning]
+   >
+   > java.lang.IllegalStateException: Unable to find a **@SpringBootConfiguration**, you need to use **@ContextConfiguration** or **@SpringBootTest(classes=...)** with your test
    
    说没有找到 `@SpringBootConfiguration` 注解，需要使用 `@ContextConfiguration` 注解或 `@SpringBootTest` 注解来解决该错误！因此咱们需要在 `@SpringBootTest` 注解中指定这两个组件 ➡️ `@SpringBootTest(classes = {RedisConfig.class, RedisService.class})`。
    
    再次进行测试，测试结果依旧报错！错误信息如下所示：
    
-   ::: danger 
-   
-   Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.data.redis.connection.lettuce.**LettuceConnectionFactory**' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
-   
-   :::
+   > [!caution]
+   >
+   > Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'org.springframework.data.redis.connection.lettuce.**LettuceConnectionFactory**' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
    
    说找不到 `LettuceConnectionFactory` 组件！不对呀！咱们不是引入了 `spring-boot-starter-data-redis` 依赖吗？根据自动配置原理，在 `RedisAutoConfiguration` 自动配置类中导入了 `LettuceConnectionConfiguration` 配置类，
    
@@ -552,14 +548,10 @@ public @interface SpringBootApplication {
 
 可以使用 `mvn versions:set -DnewVersion=0.0.1-SNAPSHOT -DgenerateBackupPoms=false` 命令直接修改版本号无需确认。如果你设置 ` generateBackupPoms=false `，则直接修改 ` pom.xml ` 文件，不会生成备份文件，也就无法回退版本号，也就不需要使用 ` commit ` 命令再次确认。
 
-::: danger
+> [!warning]
+>
+> **在修改版本号之前，必须保证父子模块的版本号一致**，如果之前手动修改过父模块的版本号导致父子模块的版本号不一致，此时使用插件统一修改项目的版本号是不成功的！会抛出如下错误：子模块中 `parent` 的版本号与父模块中的 `version` 版本号不一致！ ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202312011335841.png)
 
-**在修改版本号之前，必须保证父子模块的版本号一致**，如果之前手动修改过父模块的版本号导致父子模块的版本号不一致，此时使用插件统一修改项目的版本号是不成功的！会抛出如下错误：子模块中 `parent` 的版本号与父模块中的 `version` 版本号不一致！ ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202312011335841.png)            
-
-:::
-
-::: tip
-
-此时需要先将父模块的 `version` 版本号改回来，变成和子模块中 ` parent ` 的版本号一致，才能使用插件统一修改，否则的话修改不成功！
-
-:::                                                    
+> [!tip]                                                  
+>
+> 此时需要先将父模块的 `version` 版本号改回来，变成和子模块中 ` parent ` 的版本号一致，才能使用插件统一修改，否则的话修改不成功！
