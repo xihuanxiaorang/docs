@@ -28,6 +28,10 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "正则表达式",
       link: "/技术碎片/正则表达式",
     },
+    {
+      text: "搭建Vue3企业级项目模板",
+      link: "/技术碎片/搭建Vue3企业级项目模板",
+    },
   ],
   "/工具/": [
     {
