@@ -75,7 +75,7 @@ export default defineConfig({
   },
   vite: {
     server: {
-      open: true,
+      open: false,
       port: 9527,
     },
   },

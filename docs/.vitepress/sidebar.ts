@@ -1,7 +1,6 @@
 import { DefaultTheme } from "vitepress";
 
 export const sidebar: DefaultTheme.Sidebar = {
-  "/TypeScript从入门到放弃/": [],
   "/技术碎片/": [
     { text: "如何选择开源协议", link: "/技术碎片/如何选择开源协议" },
     {
@@ -12,22 +11,13 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "手摸手教你搭建部署Vitepress博客",
       link: "/技术碎片/手摸手教你搭建部署Vitepress博客",
     },
-    {
-      text: "Windows-Terminal美化",
-      link: "/技术碎片/Windows-Terminal美化",
-    },
+    { text: "Windows-Terminal美化", link: "/技术碎片/Windows-Terminal美化" },
     {
       text: "Windows11 中安装 Linux 教程 | WLS2 的使用",
       link: "/技术碎片/Windows11中安装Linux教程之WLS2的使用",
     },
-    {
-      text: "搞定UML类图！",
-      link: "/技术碎片/搞定UML类图！",
-    },
-    {
-      text: "正则表达式",
-      link: "/技术碎片/正则表达式",
-    },
+    { text: "搞定UML类图！", link: "/技术碎片/搞定UML类图！" },
+    { text: "正则表达式", link: "/技术碎片/正则表达式" },
     {
       text: "搭建Vue3企业级项目模板",
       link: "/技术碎片/搭建Vue3企业级项目模板",
@@ -49,9 +39,18 @@ export const sidebar: DefaultTheme.Sidebar = {
       collapsed: false,
       items: [
         { text: "视频下载工具", link: "/工具/其他工具/视频下载工具" },
-        { text: "Office部署激活工具", link: "/工具/其他工具/Office部署激活工具" },
-        { text: "篡改猴(Tampermonkey)", link: "/工具/其他工具/篡改猴(Tampermonkey)" },
-        { text: "PicList+Github搭建个人云图床", link: "/工具/其他工具/PicList+Github搭建个人云图床" },
+        {
+          text: "Office部署激活工具",
+          link: "/工具/其他工具/Office部署激活工具",
+        },
+        {
+          text: "篡改猴(Tampermonkey)",
+          link: "/工具/其他工具/篡改猴(Tampermonkey)",
+        },
+        {
+          text: "PicList+Github搭建个人云图床",
+          link: "/工具/其他工具/PicList+Github搭建个人云图床",
+        },
       ],
     },
   ],
@@ -63,6 +62,22 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "HashMap源码分析", link: "/源码剖析/集合/HashMap源码分析" },
         { text: "ArrayList源码分析", link: "/源码剖析/集合/ArrayList源码分析" },
       ],
+    },
+  ],
+  "/前端开发/": [
+    {
+      base: "/前端开发/Vue全家桶",
+      text: "Vue全家桶",
+      collapsed: false,
+      items: [
+        { text: "搭建Vue3企业级项目模板", link: "/搭建Vue3企业级项目模板" },
+      ],
+    },
+    {
+      base: "/前端开发/TypeScript从入门到放弃",
+      text: "TypeScript从入门到放弃",
+      collapsed: false,
+      items: [{ text: "学习环境搭建", link: "/TypeScript学习环境搭建" }],
     },
   ],
 };

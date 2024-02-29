@@ -1,6 +1,4 @@
-# TypeScript 从入门到放弃
-
-## 学习环境搭建
+# TypeScript 学习环境搭建
 
 为了方便学习 TypeScript，咱们以最简单的方式来搭建一个 TypeScript 的学习环境。具体步骤如下所示：
 

@@ -10,9 +10,14 @@ export const nav: DefaultTheme.NavItem[] = [
     text: "💯前端开发",
     items: [
       {
+        text: "Vue全家桶",
+        link: "/前端开发/Vue全家桶/搭建Vue3企业级项目模板",
+        activeMatch: "/前端开发/Vue全家桶/",
+      },
+      {
         text: "TypeScript从入门到放弃",
-        link: "/TypeScript从入门到放弃/README",
-        activeMatch: "/TypeScript从入门到放弃/",
+        link: "/前端开发/TypeScript从入门到放弃/TypeScript学习环境搭建",
+        activeMatch: "/前端开发/TypeScript从入门到放弃/",
       },
     ],
   },
