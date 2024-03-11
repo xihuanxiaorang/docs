@@ -11,7 +11,7 @@ export const nav: DefaultTheme.NavItem[] = [
     items: [
       {
         text: "Vue全家桶",
-        link: "/前端开发/Vue全家桶/搭建Vue3企业级项目模板",
+        link: "/前端开发/Vue全家桶/Vue3学习之旅/README",
         activeMatch: "/前端开发/Vue全家桶/",
       },
       {

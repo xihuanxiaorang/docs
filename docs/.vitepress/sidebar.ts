@@ -18,38 +18,30 @@ export const sidebar: DefaultTheme.Sidebar = {
     },
     { text: "搞定UML类图！", link: "/技术碎片/搞定UML类图！" },
     { text: "正则表达式", link: "/技术碎片/正则表达式" },
-    {
-      text: "搭建Vue3企业级项目模板",
-      link: "/技术碎片/搭建Vue3企业级项目模板",
-    },
   ],
   "/工具/": [
     {
       text: "开发者工具",
+      base: "/工具/开发者工具",
       collapsed: false,
       items: [
-        { text: "内网穿透工具", link: "/工具/开发者工具/内网穿透工具" },
-        { text: "IDEA", link: "/工具/开发者工具/IDEA" },
-        { text: "MapStruct", link: "/工具/开发者工具/MapStruct" },
-        { text: "Git", link: "/工具/开发者工具/Git" },
+        { text: "内网穿透工具", link: "/内网穿透工具" },
+        { text: "IDEA", link: "/IDEA" },
+        { text: "MapStruct", link: "/MapStruct" },
+        { text: "Git", link: "/Git" },
       ],
     },
     {
       text: "其他工具",
+      base: "/工具/其他工具",
       collapsed: false,
       items: [
-        { text: "视频下载工具", link: "/工具/其他工具/视频下载工具" },
-        {
-          text: "Office部署激活工具",
-          link: "/工具/其他工具/Office部署激活工具",
-        },
-        {
-          text: "篡改猴(Tampermonkey)",
-          link: "/工具/其他工具/篡改猴(Tampermonkey)",
-        },
+        { text: "视频下载工具", link: "/视频下载工具" },
+        { text: "Office部署激活工具", link: "/Office部署激活工具" },
+        { text: "篡改猴(Tampermonkey)", link: "/篡改猴(Tampermonkey)" },
         {
           text: "PicList+Github搭建个人云图床",
-          link: "/工具/其他工具/PicList+Github搭建个人云图床",
+          link: "/PicList+Github搭建个人云图床",
         },
       ],
     },
@@ -57,25 +49,35 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/源码剖析/": [
     {
       text: "集合",
+      base: "/源码剖析/集合",
       collapsed: false,
       items: [
-        { text: "HashMap源码分析", link: "/源码剖析/集合/HashMap源码分析" },
-        { text: "ArrayList源码分析", link: "/源码剖析/集合/ArrayList源码分析" },
+        { text: "HashMap源码分析", link: "/HashMap源码分析" },
+        { text: "ArrayList源码分析", link: "/ArrayList源码分析" },
       ],
     },
   ],
   "/前端开发/": [
     {
-      base: "/前端开发/Vue全家桶",
       text: "Vue全家桶",
+      base: "/前端开发/Vue全家桶",
       collapsed: false,
       items: [
+        {
+          text: "Vue3学习之旅",
+          base: "/前端开发/Vue全家桶/Vue3学习之旅",
+          collapsed: false,
+          items: [
+            { text: "导读", link: "/README" },
+            { text: "类与样式绑定", link: "/类与样式绑定" },
+          ],
+        },
         { text: "搭建Vue3企业级项目模板", link: "/搭建Vue3企业级项目模板" },
       ],
     },
     {
-      base: "/前端开发/TypeScript从入门到放弃",
       text: "TypeScript从入门到放弃",
+      base: "/前端开发/TypeScript从入门到放弃",
       collapsed: false,
       items: [{ text: "学习环境搭建", link: "/TypeScript学习环境搭建" }],
     },
