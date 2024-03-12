@@ -71,6 +71,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "导读", link: "/README" },
             { text: "类与样式绑定", link: "/类与样式绑定" },
             { text: "条件渲染", link: "/条件渲染" },
+            { text: "列表渲染", link: "/列表渲染" },
           ],
         },
         { text: "搭建Vue3企业级项目模板", link: "/搭建Vue3企业级项目模板" },
