@@ -78,7 +78,6 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "侦听器", link: "/侦听器" },
           ],
         },
-        { text: "搭建Vue3企业级项目模板", link: "/搭建Vue3企业级项目模板" },
       ],
     },
     {
@@ -87,5 +86,8 @@ export const sidebar: DefaultTheme.Sidebar = {
       collapsed: false,
       items: [{ text: "学习环境搭建", link: "/TypeScript学习环境搭建" }],
     },
+  ],
+  "/项目/": [
+    { text: "搭建Vue3企业级项目模板", link: "/项目/搭建Vue3企业级项目模板" },
   ],
 };
