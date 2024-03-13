@@ -649,6 +649,8 @@ export default {
 
 ### 搜索
 
+#### 本地搜索
+
 得益于 [minisearch](https://github.com/lucaong/minisearch/)，VitePress 支持使用浏览器内索引进行模糊全文搜索。要启用此功能，只需在 `.vitepress/config.ts` 文件中将 `themeConfig.search.provider` 选项设置为 `'local'` 即可：
 
 ```ts
@@ -667,7 +669,22 @@ export default defineConfig({
 
 ![搜索弹窗截图](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202401292203794.png)
 
-本人目前只使用了本地搜索，对 Algolia Search 有兴趣的小伙伴可以自己尝试捣鼓一下。
+#### Algolia Search
+
+VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/what-is-docsearch) 搜索文档站点。
+
+申请使用 [Algolia DocSearch](https://docsearch.algolia.com/apply/)，如下所示：<br />![image-20240314003539289](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202403140035441.png)
+
+申请时需要注意以下几点要求：
+
+- 您的网站必须是技术文档或技术博客
+- 您必须是该网站的所有者，或者至少拥有更新其内容的权限
+- 您的网站必须对公众开放
+- 您的网站必须位于生产环境
+
+填写完后，等待一段时间（我等了 x 天），如果申请通过，我们就会收到邮件：<br />
+
+<span style="background-color: rgb(251, 228, 231);">TODO</span>
 
 ### outline
 
@@ -982,4 +999,5 @@ VitePress 使用 [Inter](https://rsms.me/inter/) 作为默认字体，并且将�
 
 - 官方文档：[VitePress | 由 Vite 和 Vue 驱动的静态站点生成器](https://vitepress.dev/zh/) 👍
 - [vitepress搭建并部署网站 | AlbertZhang的文档网站 (bugdesigner.cn)](https://docs.bugdesigner.cn/README.html)
+- [VuePress 博客优化之开启 Algolia 全文搜索 · Issue #267 · mqyqingfeng/Blog (github.com)](https://github.com/mqyqingfeng/Blog/issues/267)
 
