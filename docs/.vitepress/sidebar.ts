@@ -75,6 +75,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "事件处理", link: "/事件处理" },
             { text: "表单输入绑定", link: "/表单输入绑定" },
             { text: "生命周期", link: "/生命周期" },
+            { text: "侦听器", link: "/侦听器" },
           ],
         },
         { text: "搭建Vue3企业级项目模板", link: "/搭建Vue3企业级项目模板" },

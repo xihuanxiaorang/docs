@@ -4,4 +4,8 @@
     "Ubuntu Mono";
   --vp-font-family-base: var(--monospace); /* normal text font */
   --vp-font-family-mono: var(--monospace); /* code font */
+
+  a {
+    text-decoration: none;
+  }
 }
