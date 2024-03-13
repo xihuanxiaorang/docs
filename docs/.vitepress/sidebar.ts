@@ -73,6 +73,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "条件渲染", link: "/条件渲染" },
             { text: "列表渲染", link: "/列表渲染" },
             { text: "事件处理", link: "/事件处理" },
+            { text: "表单输入绑定", link: "/表单输入绑定" },
           ],
         },
         { text: "搭建Vue3企业级项目模板", link: "/搭建Vue3企业级项目模板" },
