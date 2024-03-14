@@ -76,6 +76,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "表单输入绑定", link: "/表单输入绑定" },
             { text: "生命周期", link: "/生命周期" },
             { text: "侦听器", link: "/侦听器" },
+            { text: "模板引用", link: "/模板引用" },
           ],
         },
       ],
