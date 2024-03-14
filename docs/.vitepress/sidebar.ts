@@ -89,5 +89,6 @@ export const sidebar: DefaultTheme.Sidebar = {
   ],
   "/项目/": [
     { text: "搭建Vue3企业级项目模板", link: "/项目/搭建Vue3企业级项目模板" },
+    { text: "uniapp+vue3+ts项目模板搭建", link: "/项目/uniapp+vue3+ts项目模板搭建" },
   ],
 };
