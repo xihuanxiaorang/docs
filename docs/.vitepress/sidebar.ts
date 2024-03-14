@@ -59,16 +59,16 @@ export const sidebar: DefaultTheme.Sidebar = {
   ],
   "/前端开发/": [
     {
-      text: "Vue全家桶",
-      base: "/前端开发/Vue全家桶",
+      text: "Vue3学习之旅",
+      base: "/前端开发/Vue3学习之旅",
       collapsed: false,
       items: [
+        { text: "导读", link: "/README" },
         {
-          text: "Vue3学习之旅",
-          base: "/前端开发/Vue全家桶/Vue3学习之旅",
+          text: "基础",
+          base: "/前端开发/Vue3学习之旅/基础",
           collapsed: false,
           items: [
-            { text: "导读", link: "/README" },
             { text: "类与样式绑定", link: "/类与样式绑定" },
             { text: "条件渲染", link: "/条件渲染" },
             { text: "列表渲染", link: "/列表渲染" },

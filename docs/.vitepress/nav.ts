@@ -5,9 +5,9 @@ export const nav: DefaultTheme.NavItem[] = [
     text: "💯前端开发",
     items: [
       {
-        text: "Vue全家桶",
-        link: "/前端开发/Vue全家桶/Vue3学习之旅/README",
-        activeMatch: "/前端开发/Vue全家桶/",
+        text: "Vue3学习之旅",
+        link: "/前端开发/Vue3学习之旅/README",
+        activeMatch: "/前端开发/Vue3学习之旅/",
       },
       {
         text: "TypeScript从入门到放弃",
