@@ -81,6 +81,14 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "组件基础", link: "/组件基础" },
           ],
         },
+        {
+          text: "深入组件",
+          base: "/前端开发/Vue3学习之旅/深入组件",
+          collapsed: false,
+          items: [
+            { text: "注册", link: "/注册" },
+          ],
+        },
       ],
     },
     {
