@@ -78,6 +78,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "生命周期", link: "/生命周期" },
             { text: "侦听器", link: "/侦听器" },
             { text: "模板引用", link: "/模板引用" },
+            { text: "组件基础", link: "/组件基础" },
           ],
         },
       ],
