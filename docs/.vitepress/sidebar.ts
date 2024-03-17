@@ -87,6 +87,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           collapsed: false,
           items: [
             { text: "注册", link: "/注册" },
+            { text: "Props", link: "/Props" },
           ],
         },
       ],
