@@ -89,6 +89,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "注册", link: "/注册" },
             { text: "Props", link: "/Props" },
             { text: "事件", link: "/事件" },
+            { text: "组件 v-model", link: "/组件v-model" },
           ],
         },
       ],
