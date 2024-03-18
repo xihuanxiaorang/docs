@@ -2,7 +2,7 @@
 
 ## Props 声明
 
-**一个组件需要<u>显式声明</u>它所接受的 props，这样 Vue 才能知道外部传入的哪些是 props，哪些是透传 attribute** (关于透传 attribute，我们会在[专门的章节](https://cn.vuejs.org/guide/components/attrs.html)中讨论)。
+**一个组件需要<u>显式声明</u>它所接受的 props，这样 Vue 才能知道外部传入的哪些是 props，哪些是透传 attribute** (关于透传 attribute，我们会在[专门的章节](./透传Attributes.md)中讨论)。
 
 **在使用 `<script setup>` 的单文件组件中，props 可以使用 `defineProps()` 宏来声明**：
 
