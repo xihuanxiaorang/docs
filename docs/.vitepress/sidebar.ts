@@ -92,6 +92,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "组件 v-model", link: "/组件v-model" },
             { text: "透传 Attributes", link: "/透传Attributes" },
             { text: "插槽", link: "/插槽" },
+            { text: "依赖注入", link: "/依赖注入" },
           ],
         },
       ],
