@@ -93,6 +93,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "透传 Attributes", link: "/透传Attributes" },
             { text: "插槽", link: "/插槽" },
             { text: "依赖注入", link: "/依赖注入" },
+            { text: "异步组件", link: "/异步组件" },
           ],
         },
       ],
