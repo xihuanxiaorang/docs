@@ -126,7 +126,8 @@ export const sidebar: DefaultTheme.Sidebar = {
       base: "/项目/vue3",
       collapsed: false,
       items: [
-        { text: "待办清单 TodoMVC", link: "/待办清单" },
+        { text: "待办清单", link: "/待办清单" },
+        { text: "待办清单 v2.0", link: "/待办清单v2" },
       ],
     },
   ],
