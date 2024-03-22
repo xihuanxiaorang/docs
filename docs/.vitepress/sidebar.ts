@@ -96,6 +96,14 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "异步组件", link: "/异步组件" },
           ],
         },
+        {
+          text: "逻辑复用",
+          base: "/前端开发/Vue3学习之旅/逻辑复用",
+          collapsed: false,
+          items: [
+            { text: "组合式函数", link: "/组合式函数" },
+          ],
+        },
       ],
     },
     {
