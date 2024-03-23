@@ -102,6 +102,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           collapsed: false,
           items: [
             { text: "组合式函数", link: "/组合式函数" },
+            { text: "自定义指令", link: "/自定义指令" },
           ],
         },
       ],
