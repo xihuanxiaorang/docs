@@ -64,6 +64,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       base: "/前端开发/Vue3学习之旅/基础",
       collapsed: false,
       items: [
+        { text: "创建一个应用", link: "/创建一个应用" },
         { text: "计算属性", link: "/计算属性" },
         { text: "类与样式绑定", link: "/类与样式绑定" },
         { text: "条件渲染", link: "/条件渲染" },
