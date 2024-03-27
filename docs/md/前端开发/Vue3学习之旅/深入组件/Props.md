@@ -163,7 +163,7 @@ defineProps({
 
 ### 使用一个对象绑定多个 prop
 
-如果你**想要将一个对象的所有属性都当作 props 传入，你可以使用[没有参数的 `v-bind`](https://cn.vuejs.org/guide/essentials/template-syntax.html#dynamically-binding-multiple-attributes)，即只使用 `v-bind` 而非 `:prop-name`**。例如，这里有一个 `post` 对象：
+如果你**想要将一个对象的所有属性都当作 props 传入，你可以使用[没有参数的 `v-bind`](../基础/模板语法.md#dynamically-binding-multiple-attributes)，即只使用 `v-bind` 而非 `:prop-name`**。例如，这里有一个 `post` 对象：
 
 ```js
 const post = {

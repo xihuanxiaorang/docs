@@ -112,7 +112,7 @@ defineOptions({
 </div>
 ```
 
-小提示：**[没有参数的 `v-bind`](https://cn.vuejs.org/guide/essentials/template-syntax.html#dynamically-binding-multiple-attributes) 会将一个对象的所有属性都作为 attribute 应用到目标元素上**。
+小提示：**[没有参数的 `v-bind`](../基础/模板语法.md#dynamically-binding-multiple-attributes) 会将一个对象的所有属性都作为 attribute 应用到目标元素上**。
 
 ## 多根节点的 Attributes 继承
 
