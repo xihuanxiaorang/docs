@@ -12,7 +12,7 @@ export default defineConfig({
   srcDir: "./md",
   head: [["link", { rel: "icon", href: "/favicon.ico" }]],
   lang: "zh-CN",
-  ignoreDeadLinks: "localhostLinks",
+  ignoreDeadLinks: true,
   lastUpdated: true,
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config

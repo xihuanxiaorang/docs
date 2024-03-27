@@ -105,7 +105,10 @@ export const sidebar: DefaultTheme.Sidebar = {
     },
   ],
   "/前端开发/TypeScript从入门到放弃/": [
-    { text: "学习环境搭建", link: "/前端开发/TypeScript从入门到放弃/TypeScript学习环境搭建" },
+    {
+      text: "学习环境搭建",
+      link: "/前端开发/TypeScript从入门到放弃/TypeScript学习环境搭建",
+    },
   ],
   "/项目/": [
     {
@@ -133,4 +136,5 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
   ],
+  "/后端开发/设计模式": [{ text: "导读", link: "/后端开发/设计模式/README" }],
 };
