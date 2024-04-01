@@ -1,7 +1,8 @@
-import { DefaultTheme, defineConfig } from "vitepress";
+import { defineConfig } from "vitepress";
 import markdownItPlantuml from "markdown-it-textual-uml";
 import { nav } from "./nav";
 import { sidebar } from "./sidebar";
+import mdItCustomAttrs from "markdown-it-custom-attrs";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -10,7 +11,22 @@ export default defineConfig({
   description:
     "包含: Java 核心技术, Spring全家桶, 设计模式, 数据结构与算法, 源码分析，面试宝典...",
   srcDir: "./md",
-  head: [["link", { rel: "icon", href: "/favicon.ico" }]],
+  head: [
+    ["link", { rel: "icon", href: "/favicon.ico" }],
+    [
+      "link",
+      {
+        rel: "stylesheet",
+        href: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css",
+      },
+    ],
+    [
+      "script",
+      {
+        src: "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js",
+      },
+    ],
+  ],
   lang: "zh-CN",
   ignoreDeadLinks: true,
   lastUpdated: true,
@@ -71,6 +87,9 @@ export default defineConfig({
     },
     config: (md) => {
       md.use(markdownItPlantuml);
+      md.use(mdItCustomAttrs, "image", {
+        "data-fancybox": "gallery",
+      });
     },
   },
   vite: {

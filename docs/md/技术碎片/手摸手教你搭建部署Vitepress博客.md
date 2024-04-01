@@ -751,9 +751,11 @@ VitePress 带有内置的 Markdown 扩展。对于一些简单的扩展，如标
 
 VitePress 使用 [markdown-it](https://github.com/markdown-it/markdown-it) 作为 Markdown 渲染器。上面提到的很多扩展功能都是通过自定义插件实现的。可以使用 `.vitepress/config.js` 中的 `markdown` 选项来进一步自定义 `markdown-it` 实例。
 
+### PlantUML 支持
+
 本人查到一款插件 [markdown-it-textual-uml](https://github.com/manastalukdar/markdown-it-textual-uml)，使用 `pnpm add markdown-it-textual-uml` 命令下载该插件，然后需要按照如下所示配置`.vitepress/config.mts` 文件中的 `markdown` 选项。
 
-```ts
+```ts {15}
 import { defineConfig } from "vitepress";
 import markdownItPlantuml from "markdown-it-textual-uml";
 
@@ -761,11 +763,11 @@ export default defineConfig({
   markdown: {
     lineNumbers: true,
     container: {
-      tipLabel: "提示",
-      warningLabel: "警告",
-      dangerLabel: "错误",
-      infoLabel: "信息",
-      detailsLabel: "详细信息",
+      tipLabel: "💡提示",
+      warningLabel: "❗警告",
+      noteLabel: "📢注意",
+      importantLabel: "🎯重要",
+      cautionLabel: "⚡小心",
     },
     config: (md) => {
       md.use(markdownItPlantuml);
@@ -773,6 +775,58 @@ export default defineConfig({
   },
 }
 ```
+
+### 图片放大预览
+
+1. 安装插件：`pnpm add markdown-it-custom-attrs`；
+
+2. 配置 `.vitepress` 目录下的 `config.mts` 配置文件：
+
+   ```ts
+   import mdItCustomAttrs from "markdown-it-custom-attrs";
+   
+   export default defineConfig({
+     head: [
+       // ...
+       [
+         "link",
+         {
+           rel: "stylesheet",
+           href: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css",
+         },
+       ],
+       [
+         "script",
+         {
+           src: "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js",
+         },
+       ],
+     ],
+     // ...
+     markdown: {
+      	// ...
+       config: (md) => {
+         // use more markdown-it plugins!
+         md.use(mdItCustomAttrs, "image", {
+           "data-fancybox": "gallery",
+         });
+       },
+     },
+   })
+   ```
+
+3. 使用方式：
+
+   ```markdown
+   <!-- ![](图片地址) -->
+   <img src="图片地址" data-fancybox="gallery"/>
+   ```
+
+   或者
+
+   ```markdown
+   ![图片描述](图片地址){data-fancybox=gallery}
+   ```
 
 ## 部署
 
