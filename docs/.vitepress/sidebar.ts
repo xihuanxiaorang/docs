@@ -139,5 +139,23 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/后端开发/设计模式": [
     { text: "导读", link: "/后端开发/设计模式/README" },
     { text: "七大设计原则", link: "/后端开发/设计模式/七大设计原则" },
+    {
+      text: "创建型",
+      base: "/后端开发/设计模式/创建型",
+      collapsed: false,
+      items: [],
+    },
+    {
+      text: "结构型",
+      base: "/后端开发/设计模式/结构型",
+      collapsed: false,
+      items: [],
+    },
+    {
+      text: "行为型",
+      base: "/后端开发/设计模式/行为型",
+      collapsed: false,
+      items: [{ text: "策略模式", link: "/策略模式" }],
+    },
   ],
 };
