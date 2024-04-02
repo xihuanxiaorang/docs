@@ -3,6 +3,7 @@ import { DefaultTheme } from "vitepress";
 export const nav: DefaultTheme.NavItem[] = [
   {
     text: "🌈后端开发",
+    activeMatch: "/后端开发/",
     items: [
       {
         text: "研磨设计模式",
@@ -13,6 +14,7 @@ export const nav: DefaultTheme.NavItem[] = [
   },
   {
     text: "🚀前端开发",
+    activeMatch: "/前端开发/",
     items: [
       {
         text: "Vue3学习之旅",
