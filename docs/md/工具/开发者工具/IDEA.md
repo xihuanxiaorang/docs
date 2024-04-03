@@ -107,3 +107,10 @@ File -> settings -> Editor -> File Types -> Ignore Files and Folders，配置不
     ${question.code}
   }
   ```
+
+## Tips✨
+
+### 快速生成测试类
+
+对某个类快速生成测试类：选中需要生成测试代码的类 ->右键 -> Go To -> Test -> Create New Test。<br />![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404031625987.png)
+
