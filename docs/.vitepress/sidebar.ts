@@ -161,5 +161,6 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/后端开发/ORM框架": [
     { text: "JDBC", link: "/后端开发/ORM框架/JDBC" },
     { text: "Mybatis", link: "/后端开发/ORM框架/Mybatis" },
+    { text: "MybatisPlus", link: "/后端开发/ORM框架/MybatisPlus" },
   ],
 };

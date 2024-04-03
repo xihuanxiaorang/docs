@@ -1288,10 +1288,6 @@ public void selectUserById() {
 
 ![|800](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404031618503.jpeg)
 
-## 相关资料🎁
-
-- [mybatis中文文档手册](https://mybatis.net.cn/index.html) 
-
 ## 遇到的问题💣
 
 ### 找不到 mapper 接口
