@@ -10,6 +10,11 @@ export const nav: DefaultTheme.NavItem[] = [
         link: "/后端开发/设计模式/README",
         activeMatch: "/后端开发/设计模式/",
       },
+      {
+        text: "ORM框架",
+        link: "/后端开发/ORM框架/JDBC",
+        activeMatch: "/后端开发/ORM框架/",
+      },
     ],
   },
   {

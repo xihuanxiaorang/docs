@@ -158,4 +158,5 @@ export const sidebar: DefaultTheme.Sidebar = {
       items: [{ text: "策略模式", link: "/策略模式" }],
     },
   ],
+  "/后端开发/ORM框架": [{ text: "JDBC", link: "/后端开发/ORM框架/JDBC" }],
 };
