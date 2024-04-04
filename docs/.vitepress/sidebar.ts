@@ -135,6 +135,17 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "待办清单 v2.0", link: "/待办清单v2" },
       ],
     },
+    {
+      text: "后台管理系统",
+      base: "/项目/后台管理系统",
+      collapsed: false,
+      items: [
+        {
+          text: "simple前后端分离后台管理系统",
+          link: "/simple前后端分离后台管理系统",
+        },
+      ],
+    },
   ],
   "/后端开发/设计模式": [
     { text: "导读", link: "/后端开发/设计模式/README" },
