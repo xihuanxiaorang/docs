@@ -4,8 +4,58 @@
     "Ubuntu Mono";
   --vp-font-family-base: var(--monospace); /* normal text font */
   --vp-font-family-mono: var(--monospace); /* code font */
+  --vp-custom-block-info-border: #b1b3b8;
+  --vp-custom-block-note-border: #3367dd;
+  --vp-custom-block-warning-border: #936700;
+  --vp-custom-block-important-border: #7f4be2;
+  --vp-custom-block-tip-border: #3d8937;
+  --vp-custom-block-caution-border: #c11e30;
 
   a {
-    text-decoration: none;
+    text-decoration: none; /** no underline */
+  }
+
+  .custom-block {
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    border-left: 0.25em solid var(--vp-custom-block-info-border);
+  }
+  .custom-block.note {
+    border-color: var(--vp-custom-block-note-border);
+  }
+  .custom-block.warning {
+    border-color: var(--vp-custom-block-warning-border);
+  }
+  .custom-block.important {
+    border-color: var(--vp-custom-block-important-border);
+  }
+  .custom-block.tip {
+    border-color: var(--vp-custom-block-tip-border);
+  }
+  .custom-block.caution {
+    border-color: var(--vp-custom-block-caution-border);
+  }
+  .custom-block-title {
+    display: flex;
+    align-items: center;
+  }
+  .custom-block-title svg {
+    margin-right: 0.5rem;
+  }
+  .custom-block-title .note {
+    color: var(--vp-custom-block-note-border);
+  }
+  .custom-block-title .warning {
+    color: var(--vp-custom-block-warning-border);
+  }
+  .custom-block-title .important {
+    color: var(--vp-custom-block-important-border);
+  }
+  .custom-block-title .tip {
+    color: var(--vp-custom-block-tip-border);
+  }
+  .custom-block-title .caution {
+    color: var(--vp-custom-block-caution-border);
   }
 }
