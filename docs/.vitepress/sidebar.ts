@@ -142,7 +142,10 @@ export const sidebar: DefaultTheme.Sidebar = {
       items: [
         {
           text: "simple前后端分离后台管理系统",
-          link: "/simple前后端分离后台管理系统",
+          items: [
+            { text: "前端篇", link: "/simple后台管理系统(前端篇)" },
+            { text: "后端篇", link: "/simple后台管理系统(后端篇)" },
+          ],
         },
       ],
     },
