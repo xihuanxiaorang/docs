@@ -487,7 +487,6 @@ ElementPlus 图标库往往满足不了实际开发需要，因此需要通过�
 
    ```ts {4-16}
    /// <reference types="vite/client" />
-   /// <reference types="vite-svg-loader" />
    
    interface ImportMetaEnv {
      /** API 基础路径(代理前缀) */
@@ -1031,6 +1030,10 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
 
 ## 动态权限路由
 
+> [!important]
+>
+> 需要事先将用于显示的页面组件创建出来并放置在 `src/views` 目录下，如用户管理、角色管理、菜单管理等页面组件。
+
 全局导航守卫中的主要流程：
 
 1. 判断用户是否已经登录？
@@ -1374,6 +1377,29 @@ export * from './modules/permission'
 export { store }
 ```
 
+```ts [src/main.ts] {17-18}
+import '@/styles/index.scss'
+import 'normalize.css/normalize.css'
+
+import App from './App.vue'
+import router from '@/router'
+import { setupStore } from '@/stores'
+import { setupPermission } from '@/plugins'
+
+// 本地SVG图标
+import 'virtual:svg-icons-register'
+// 全局动画库
+import 'animate.css'
+
+const app = createApp(App)
+// 全局注册store状态管理
+setupStore(app)
+// 注册动态路由
+setupPermission()
+
+app.use(router).mount('#app')
+```
+
 ```ts [src/api/menu/index.ts]
 import { get } from '@/utils/request'
 import type { RouteRecordRaw } from 'vue-router'
@@ -1412,6 +1438,70 @@ declare module 'vue-router' {
   }
 }
 export {}
+```
+
+```vue [src/views/system/user/index.vue]
+<script lang="ts" setup>
+defineOptions({
+  name: 'User'
+})
+
+const count = ref(0)
+</script>
+
+<template>
+  <div class="text-2xl mb-4">用户管理</div>
+  <div class="flex items-center">
+    <div class="mr-4">count: {{ count }}</div>
+    <el-button-group>
+      <el-button size="small" type="primary" @click="count++">
+        <el-icon>
+          <IEpPlus />
+        </el-icon>
+      </el-button>
+      <el-button size="small" type="primary" @click="count--">
+        <el-icon>
+          <IEpMinus />
+        </el-icon>
+      </el-button>
+    </el-button-group>
+  </div>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/views/system/role/index.vue]
+<script lang="ts" setup>
+defineOptions({
+  name: 'Role'
+})
+
+const message = ref('')
+</script>
+
+<template>
+  <div class="text-2xl mb-4">角色管理</div>
+  <div class="flex items-center">
+    <span class="mr-5">message: {{ message }}</span>
+    <el-input v-model="message" class="!w-[250px]" placeholder="请输入内容" />
+  </div>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/views/system/menu/index.vue]
+<script lang="ts" setup>
+defineOptions({
+  // eslint-disable-next-line vue/no-reserved-component-names
+  name: 'Menu'
+})
+</script>
+
+<template>菜单管理</template>
+
+<style lang="scss" scoped></style>
 ```
 
 :::
@@ -1535,7 +1625,7 @@ const cachedViews = ref<string[]>([])
 
 ## 侧边栏
 
-通过当前用户所拥有的全部路由 = 静态路由 + 动态路由，数据已保存在 `permissionStore` 中 => 侧边栏中的目录和菜单项，并且对于目录而言，还需要进行递归处理。
+通过当前用户所拥有的全部路由 = 静态路由 + 动态路由（数据已经在全局导航守卫的逻辑执行过程中保存到 `permissionStore`）=> 侧边栏中的目录和菜单项，并且对于目录而言，还需要进行递归处理。
 
 ::: code-group
 
@@ -1767,6 +1857,42 @@ const hasOneShowingChild = computed(() => {
 <style lang="scss" scoped></style>
 ```
 
+```vue [src/components/AppLink/index.vue]
+<script lang="ts" setup>
+import { isExternal } from '@/utils'
+
+defineOptions({
+  name: 'AppLink',
+  inheritAttrs: false
+})
+
+const props = defineProps({
+  to: {
+    type: String,
+    required: true
+  }
+})
+
+const isExternalLink = computed(() => isExternal(props.to))
+
+const type = computed(() => {
+  return isExternalLink.value ? 'a' : 'router-link'
+})
+
+const linkProps = (to: string) => {
+  return isExternalLink.value ? { href: to, target: '_blank', rel: 'noopener noreferrer' } : { to }
+}
+</script>
+
+<template>
+  <component :is="type" v-bind="linkProps(to)">
+    <slot></slot>
+  </component>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
 ```ts [src/utils/index.ts]
 import path from 'path-browserify'
 
@@ -1839,6 +1965,23 @@ export function useAppStoreHook() {
 }
 ```
 
+```ts [src/enums/SidebarStatus.ts]
+/**
+ * 侧边栏状态枚举
+ */
+export const enum SidebarStatus {
+  /**
+   * 展开
+   */
+  OPENED = 'opened',
+
+  /**
+   * 关闭
+   */
+  CLOSED = 'closed'
+}
+```
+
 ```ts [src/stores/index.ts] {12}
 import type { App } from 'vue'
 
@@ -1853,6 +1996,43 @@ export * from './modules/user'
 export * from './modules/permission'
 export * from './modules/app'
 export { store }
+```
+
+```ts [src/plugins/modules/icons.ts]
+import type { App } from 'vue'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+
+// 注册所有图标
+export const setupElIcons = (app: App<Element>) => {
+  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  }
+}
+```
+
+```ts [src/main.ts] {17-18}
+import '@/styles/index.scss'
+import 'normalize.css/normalize.css'
+
+import App from './App.vue'
+import router from '@/router'
+import { setupStore } from '@/stores'
+import { setupElIcons, setupPermission } from '@/plugins'
+
+// 本地SVG图标
+import 'virtual:svg-icons-register'
+// 全局动画库
+import 'animate.css'
+
+const app = createApp(App)
+// 全局注册store状态管理
+setupStore(app)
+// 全局注册Element-plus图标
+setupElIcons(app)
+// 注册动态路由
+setupPermission()
+
+app.use(router).mount('#app')
 ```
 
 :::
@@ -2215,3 +2395,1092 @@ export const logoutApi = () => {
 :::
 
 呈现效果如下所示：<br />![image-20240425123146662](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404251231821.png)
+
+## 标签导航栏
+
+定义一个 `tagsViewStore` 用于维护以下两个数组：
+
+- `visitedViews`：用户访问过的页面，对应标签栏导航上显示的一个个标签数组集合；
+- `cachedViews`：用户访问过的页面 && 能被缓存的页面（实际被 `keep-alive` 作用的路由）。可以在配置路由的时候通过 `meta.keepAlive` 来配置是否需要缓存这个路由。
+
+> [!note]
+>
+> 由于目前 `keep-alive` 和 `router-view` 是强耦合的，而且查看文档不难发现 `keep-alive` 的 [include](https://cn.vuejs.org/guide/built-ins/keep-alive.html#include-exclude) 会根据组件的 [`name`](https://cn.vuejs.org/api/options-misc.html#name) 选项进行匹配，所以<strong style="color:#ae3520;font-size:19px;">在编写路由 router 和路由对应的 view component 的时候一定要确保两者的 name 是完全一致的</strong>。<strong style="color:#ae3520;font-size:19px;">切记 name 命名时候尽量保证唯一性，切记不要和某些组件的命名重复了，不然最后会因为递归引用从而导致内存溢出等问题</strong>
+
+::: code-group
+
+```vue [src/layout/components/AppMain/index.vue] {2,8}
+<script lang="ts" setup>
+import { useTagsViewStore } from '@/stores'
+
+defineOptions({
+  name: 'AppMain'
+})
+
+const { cachedViews } = storeToRefs(useTagsViewStore())
+</script>
+
+<template>
+  <section class="w-full h-full">
+    <router-view>
+      <template #default="{ Component, route }">
+        <keep-alive :include="cachedViews">
+          <component :is="Component" :key="route.path" />
+        </keep-alive>
+      </template>
+    </router-view>
+  </section>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/components/TagsView/index.vue]
+<script lang="ts" setup>
+import { usePermissionStore, useTagsViewStore } from '@/stores'
+import type { RouteRecordRaw } from 'vue-router'
+import { resolve } from 'path-browserify'
+
+const tagsViewStore = useTagsViewStore()
+const { visitedViews: tagList } = storeToRefs(tagsViewStore)
+const route = useRoute()
+const router = useRouter()
+const permissionStore = usePermissionStore()
+const affixTags = ref<TagView[]>([])
+const contentMenuVisible = ref(false)
+const left = ref(0)
+const top = ref(0)
+const selectedTag = ref<TagView>({
+  path: '',
+  fullPath: '',
+  name: '',
+  title: '',
+  affix: false,
+  keepAlive: false
+})
+const { proxy } = getCurrentInstance()!
+
+/**
+ * 初始化固定标签
+ */
+const initAffixTags = () => {
+  const tags: TagView[] = filterAffixTags(permissionStore.routes)
+  tags.filter((tag) => tag.name).forEach((tag) => tagsViewStore.addVisitedView(tag))
+  affixTags.value = tags
+}
+
+/**
+ * 过滤出要固定显示的标签
+ * @param routes 路由列表
+ * @param basePath 基础路径
+ */
+const filterAffixTags = (routes: RouteRecordRaw[], basePath = '/') => {
+  let tags: TagView[] = []
+  routes.forEach((route) => {
+    const tagPath = resolve(basePath, route.path)
+    if (route.meta?.affix) {
+      tags.push({
+        name: route.name as string,
+        title: route.meta.title || 'no-name',
+        path: tagPath,
+        fullPath: tagPath,
+        affix: true,
+        keepAlive: route.meta.keepAlive
+      })
+    }
+    if (route.children) {
+      const tempTags = filterAffixTags(route.children, tagPath)
+      if (tempTags.length > 0) {
+        tags = tags.concat(tempTags)
+      }
+    }
+  })
+  return tags
+}
+
+onMounted(() => {
+  initAffixTags()
+})
+
+/**
+ * 添加标签
+ */
+const addTag = () => {
+  if (!route.meta.title) return
+  tagsViewStore.addView({
+    name: route.name as string,
+    title: route.meta.title,
+    path: route.path,
+    fullPath: route.fullPath,
+    affix: route.meta.affix,
+    keepAlive: route.meta.keepAlive
+  })
+}
+
+/**
+ * 移动到当前标签
+ */
+const moveToCurrentTag = () => {
+  // 使用 nextTick 的目的是确保在更新 tagsView 组件之前，滚动条已经滚动到了正确的位置
+  nextTick(() => {
+    tagList.value
+      .filter((tag) => tag.path === route.path)
+      .forEach((tag) => {
+        // when query is different then update
+        // route.query = {...route.query, ...tag.query}
+        if (tag.fullPath !== route.fullPath) {
+          tagsViewStore.updateVisitedView({
+            name: route.name as string,
+            title: route.meta.title || 'no-name',
+            path: route.path,
+            fullPath: route.fullPath,
+            affix: route.meta.affix,
+            keepAlive: route.meta.keepAlive
+          })
+        }
+      })
+  })
+}
+
+watch(
+  route,
+  () => {
+    addTag()
+    moveToCurrentTag()
+  },
+  {
+    immediate: true
+  }
+)
+
+/**
+ * 判断标签是否处于激活状态
+ * @param tag 标签
+ */
+const isActive = (tag: TagView) => {
+  return tag.path === route.path
+}
+
+/**
+ * 判断标签是否固定显示
+ * @param tag 标签
+ */
+const isAffix = (tag: TagView) => {
+  return tag.affix
+}
+
+/**
+ * 跳转到最后一个标签
+ * @param visitedViews 已访问的标签列表
+ * @param view 当前标签
+ */
+const toLastView = (visitedViews: TagView[], view?: TagView) => {
+  const lastView = visitedViews.slice(-1)[0]
+  if (lastView && lastView.fullPath) {
+    router.push(lastView.fullPath)
+  } else {
+    // now the default is to redirect to the home page if there is no tags-view,
+    // you can adjust it according to your needs.
+    if (view?.name === 'Home') {
+      // to reload home page
+      router.replace({ path: '/redirect' + view.fullPath })
+    } else {
+      router.push('/')
+    }
+  }
+}
+
+/**
+ * 关闭选中标签
+ * @param tag 标签
+ */
+const closeSelectedTag = async (tag: TagView) => {
+  const { visitedViews } = await tagsViewStore.deleteView(tag)
+  if (isActive(tag)) {
+    toLastView(visitedViews, tag)
+  }
+}
+
+watch(contentMenuVisible, (value) => {
+  if (value) {
+    document.body.addEventListener('click', closeContentMenu)
+  } else {
+    document.body.removeEventListener('click', closeContentMenu)
+  }
+})
+
+/**
+ * 关闭右键菜单
+ */
+const closeContentMenu = () => {
+  contentMenuVisible.value = false
+}
+
+/**
+ * 打开右键菜单
+ * @param tag 标签
+ * @param e 鼠标事件
+ */
+const openContextMenu = (tag: TagView, e: MouseEvent) => {
+  const menuMinWidth = 150
+  const offsetLeft = proxy?.$el.getBoundingClientRect().left
+  const offsetWidth = proxy?.$el.offsetWidth
+  const maxLeft = offsetWidth - menuMinWidth
+  const l = e.clientX - offsetLeft + 15
+
+  if (l > maxLeft) {
+    left.value = maxLeft
+  } else {
+    left.value = l
+  }
+  top.value = e.clientY - 50
+  contentMenuVisible.value = true
+  selectedTag.value = tag
+}
+
+/**
+ * 刷新选中的标签
+ * @param tag 标签
+ */
+const refreshSelectedTag = (tag: TagView) => {
+  tagsViewStore.deleteCachedView(tag)
+  nextTick(() => {
+    router.replace({ path: '/redirect' + tag.fullPath })
+  })
+}
+
+/**
+ * 关闭其它标签
+ */
+const closeOtherTags = async () => {
+  await router.push(selectedTag.value)
+  await tagsViewStore.deleteOtherViews(selectedTag.value)
+  moveToCurrentTag()
+}
+
+/**
+ * 判断是否为第一个标签（首页或者第一个标签）
+ */
+const isFirstView = () => {
+  try {
+    return (
+      selectedTag.value.path === '/home' ||
+      selectedTag.value.fullPath === tagsViewStore.visitedViews[1].fullPath
+    )
+  } catch (err) {
+    return false
+  }
+}
+
+/**
+ * 关闭左侧标签
+ */
+const closeLeftTags = async () => {
+  const { visitedViews } = await tagsViewStore.deleteLeftViews(selectedTag.value)
+  if (!visitedViews.find((item) => item.path === route.path)) {
+    toLastView(visitedViews)
+  }
+}
+
+/**
+ * 判断是否为最后一个标签
+ */
+const isLastView = () => {
+  try {
+    return (
+      selectedTag.value.fullPath ===
+      tagsViewStore.visitedViews[tagsViewStore.visitedViews.length - 1].fullPath
+    )
+  } catch (err) {
+    return false
+  }
+}
+
+/**
+ * 关闭右侧标签
+ */
+const closeRightTags = async () => {
+  const { visitedViews } = await tagsViewStore.deleteRightViews(selectedTag.value)
+  if (!visitedViews.find((item) => item.path === route.path)) {
+    toLastView(visitedViews)
+  }
+}
+
+/**
+ * 关闭所有标签
+ * @param tag 标签
+ */
+const closeAllTags = async (tag: TagView) => {
+  const { visitedViews } = await tagsViewStore.deleteAllViews()
+  toLastView(visitedViews, tag)
+}
+</script>
+
+<template>
+  <div class="tags-container">
+    <el-scrollbar class="scrollbar-container">
+      <router-link
+        v-for="tag in tagList"
+        :key="tag.fullPath"
+        :class="{ active: isActive(tag) }"
+        :to="{ path: tag.path, query: tag.query }"
+        class="tag-item"
+        @click.middle="!isAffix(tag) && closeSelectedTag(tag)"
+        @contextmenu.prevent="openContextMenu(tag, $event)"
+      >
+        {{ tag.title }}
+        <el-icon
+          v-if="!isAffix(tag)"
+          class="close-icon"
+          size="12px"
+          @click.prevent.stop="closeSelectedTag(tag)"
+        >
+          <IEpClose />
+        </el-icon>
+      </router-link>
+    </el-scrollbar>
+
+    <!-- tag标签操作菜单 -->
+    <ul
+      v-show="contentMenuVisible"
+      :style="{ left: left + 'px', top: top + 'px' }"
+      class="contextmenu"
+    >
+      <li @click="refreshSelectedTag(selectedTag)">
+        <svg-icon icon-class="refresh" />
+        刷新
+      </li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">
+        <svg-icon icon-class="close" />
+        关闭
+      </li>
+      <li @click="closeOtherTags">
+        <svg-icon icon-class="close_other" />
+        关闭其它
+      </li>
+      <li v-if="!isFirstView()" @click="closeLeftTags">
+        <svg-icon icon-class="close_left" />
+        关闭左侧
+      </li>
+      <li v-if="!isLastView()" @click="closeRightTags">
+        <svg-icon icon-class="close_right" />
+        关闭右侧
+      </li>
+      <li @click="closeAllTags(selectedTag)">
+        <svg-icon icon-class="close_all" />
+        关闭所有
+      </li>
+    </ul>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.tags-container {
+  @apply w-full h-[34px] bg-[var(--el-bg-color)] border border-solid border-[var(--el-border-color-light)] shadow-[0_1px_1px_var(--el-box-shadow-light)];
+
+  .scrollbar-container {
+    @apply relative w-full overflow-hidden whitespace-nowrap;
+
+    .el-scrollbar__bar {
+      @apply bottom-0;
+    }
+
+    .el-scrollbar__wrap {
+      @apply h-[49px];
+    }
+
+    .tag-item {
+      @apply inline-block py-[3px] px-[8px] mt-[4px] mr-0 mb-0 ml-[5px] text-[12px] cursor-pointer border border-solid border-[var(--el-border-color-light)]
+      hover:text-[var(--el-color-primary)] first-of-type:ml-[15px] last-of-type:mr-[15px];
+
+      .close-icon {
+        @apply rounded-[50%] hover:text-white hover:bg-[var(--el-color-primary)];
+      }
+
+      &.active {
+        @apply text-white bg-[var(--el-color-primary)] before:inline-block before:w-[8px] before:h-[8px] before:mr-[5px] before:content-[""] before:bg-white before:rounded-[50%];
+
+        .close-icon {
+          @apply hover:text-[var(--el-color-primary)] hover:bg-[var(--el-fill-color-light)];
+        }
+      }
+    }
+  }
+
+  .contextmenu {
+    @apply absolute z-[99] text-[12px] bg-[var(--el-bg-color-overlay)] rounded shadow-[var(--el-box-shadow-light)];
+
+    li {
+      @apply py-[8px] px-[16px] cursor-pointer hover:bg-[var(--el-fill-color-light)];
+    }
+  }
+}
+</style>
+```
+
+```vue [src/layout/index.vue] {20,24-26}
+<script lang="ts" setup>
+import { useAppStore } from '@/stores'
+
+defineOptions({
+  name: 'Layout'
+})
+
+const appStore = useAppStore()
+</script>
+
+<template>
+  <el-container class="w-screen h-screen">
+    <el-aside
+      :width="appStore.sidebar.opened ? '200px' : '64px'"
+      class="bg-[#344157] transition-[width] duration-[0.3s] ease-in-out"
+    >
+      <Sidebar />
+    </el-aside>
+    <el-container>
+      <el-header class="!px-0" height="84px">
+        <el-row>
+          <NavBar />
+        </el-row>
+        <el-row>
+          <TagsView />
+        </el-row>
+      </el-header>
+      <el-main class="bg-[#eef5ff]">
+        <AppMain />
+      </el-main>
+    </el-container>
+  </el-container>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```ts [src/stores/modules/tagsView.ts]
+export const useTagsViewStore = defineStore('tagsView', () => {
+  const visitedViews = ref<TagView[]>([])
+  const cachedViews = ref<string[]>([])
+
+  /**
+   * 添加一个视图到已访问列表中
+   * @param view 待添加的视图
+   */
+  const addVisitedView = (view: TagView) => {
+    if (visitedViews.value.some((v) => v.path === view.path)) return
+    if (view.affix) {
+      visitedViews.value.unshift(view)
+    } else {
+      visitedViews.value.push(view)
+    }
+  }
+
+  /**
+   * 添加一个视图到缓存列表中
+   * @param view 待添加的视图
+   */
+  const addCachedView = (view: TagView) => {
+    if (!view.keepAlive || cachedViews.value.includes(view.name)) return
+    cachedViews.value.push(view.name)
+  }
+
+  /**
+   * 添加一个视图到已访问和缓存列表中
+   * @param view 待添加的视图
+   */
+  const addView = (view: TagView) => {
+    addVisitedView(view)
+    addCachedView(view)
+  }
+
+  /**
+   * 更新已访问列表中指定视图的信息
+   * @param view 待更新的视图
+   */
+  const updateVisitedView = (view: TagView) => {
+    visitedViews.value.filter((v) => v.path === view.path).forEach((v) => Object.assign(v, view))
+  }
+
+  /**
+   * 删除已访问列表中指定视图
+   * @param view 待删除的视图
+   */
+  const deleteVisitedView = (view: TagView): TagView[] => {
+    visitedViews.value = visitedViews.value.filter((v) => v.path !== view.path)
+    return [...visitedViews.value]
+  }
+
+  /**
+   * 删除缓存列表中指定视图
+   * @param view 待删除的视图
+   */
+  const deleteCachedView = (view: TagView): string[] => {
+    cachedViews.value = cachedViews.value.filter((v) => v !== view.name)
+    return [...cachedViews.value]
+  }
+
+  /**
+   * 删除已访问和缓存列表中指定视图
+   * @param view
+   */
+  const deleteView = (
+    view: TagView
+  ): Promise<{
+    visitedViews: TagView[]
+    cachedViews: string[]
+  }> => {
+    return new Promise((resolve) => {
+      deleteVisitedView(view)
+      deleteCachedView(view)
+      resolve({
+        visitedViews: [...visitedViews.value],
+        cachedViews: [...cachedViews.value]
+      })
+    })
+  }
+
+  /**
+   * 删除已访问列表中除指定视图和固定视图之外的其他视图
+   * @param view 待删除的视图
+   */
+  const deleteOtherVisitedViews = (view: TagView) => {
+    visitedViews.value = visitedViews.value.filter((v) => v.path === view.path || v.affix)
+    return [...visitedViews.value]
+  }
+
+  /**
+   * 删除缓存列表中除指定视图之外的其他视图
+   * @param view 待删除的视图
+   */
+  const deleteOtherCachedViews = (view: TagView) => {
+    const index = cachedViews.value.indexOf(view.name)
+    if (index > -1) {
+      cachedViews.value = cachedViews.value.slice(index, index + 1)
+    } else {
+      cachedViews.value = []
+    }
+    return [...cachedViews.value]
+  }
+
+  /**
+   * 删除已访问和缓存列表中除指定视图和固定视图之外的其他视图
+   * @param view 待删除的视图
+   */
+  const deleteOtherViews = (
+    view: TagView
+  ): Promise<{
+    visitedViews: TagView[]
+    cachedViews: string[]
+  }> => {
+    return new Promise((resolve) => {
+      deleteOtherVisitedViews(view)
+      deleteOtherCachedViews(view)
+      resolve({
+        visitedViews: [...visitedViews.value],
+        cachedViews: [...cachedViews.value]
+      })
+    })
+  }
+
+  /**
+   * 删除已访问列表和缓存列表中指定视图之前除固定视图之外的其他视图
+   * @param view
+   */
+  const deleteLeftViews = (view: TagView): Promise<{ visitedViews: TagView[] }> => {
+    return new Promise((resolve) => {
+      const currentIndex = visitedViews.value.findIndex((v) => v.path === view.path)
+      if (currentIndex === -1) return
+      visitedViews.value = visitedViews.value.filter((item, index) => {
+        if (index >= currentIndex || item.affix) return true
+        const cachedIndex = cachedViews.value.indexOf(item.name)
+        if (cachedIndex > -1) cachedViews.value.splice(cachedIndex, 1)
+        return false
+      })
+      resolve({
+        visitedViews: [...visitedViews.value]
+      })
+    })
+  }
+
+  /**
+   * 删除已访问列表和缓存列表中指定视图之后除固定视图之外的其他视图
+   * @param view 待删除的视图
+   */
+  const deleteRightViews = (view: TagView): Promise<{ visitedViews: TagView[] }> => {
+    return new Promise((resolve) => {
+      const currentIndex = visitedViews.value.findIndex((v) => v.path === view.path)
+      if (currentIndex === -1) return
+      visitedViews.value = visitedViews.value.filter((item, index) => {
+        if (index <= currentIndex || item.affix) return true
+      })
+      resolve({
+        visitedViews: [...visitedViews.value]
+      })
+    })
+  }
+
+  /**
+   * 删除已访问列表中除固定视图之外的所有视图和缓存列表中的所有视图
+   */
+  const deleteAllViews = (): Promise<{ visitedViews: TagView[]; cachedViews: string[] }> => {
+    return new Promise((resolve) => {
+      visitedViews.value = visitedViews.value.filter((v) => v.affix)
+      cachedViews.value = []
+      resolve({
+        visitedViews: [...visitedViews.value],
+        cachedViews: [...cachedViews.value]
+      })
+    })
+  }
+
+  return {
+    visitedViews,
+    cachedViews,
+    addVisitedView,
+    addView,
+    updateVisitedView,
+    deleteCachedView,
+    deleteView,
+    deleteOtherViews,
+    deleteLeftViews,
+    deleteRightViews,
+    deleteAllViews
+  }
+})
+```
+
+```ts [src/stores/index.ts] {13}
+import type { App } from 'vue'
+
+const store = createPinia()
+
+// 全局注册 store
+export function setupStore(app: App<Element>) {
+  app.use(store)
+}
+
+export * from './modules/user'
+export * from './modules/permission'
+export * from './modules/app'
+export * from './modules/tagsView'
+export { store }
+```
+
+```ts [src/typings/global.d.ts] {20-40}
+declare global {
+  /**
+   * 统一响应结构体
+   */
+  interface Result<T> {
+    /**
+     * 响应码
+     */
+    code: string
+    /**
+     * 响应消息
+     */
+    msg: string
+    /**
+     * 响应数据
+     */
+    data: T
+  }
+
+  /**
+   * 页签对象
+   */
+  interface TagView {
+    /** 页签名称 */
+    name: string
+    /** 页签标题 */
+    title: string
+    /** 页签路由路径 */
+    path: string
+    /** 页签路由完整路径 */
+    fullPath: string
+    /** 页签图标 */
+    icon?: string
+    /** 是否固定页签 */
+    affix?: boolean
+    /** 是否开启缓存 */
+    keepAlive?: boolean
+    /** 路由查询参数 */
+    query?: any
+  }
+}
+export {}
+```
+
+:::
+
+呈现效果如下所示：<br />![image-20240425163937984](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404251639461.png)
+
+## [ECharts](https://echarts.apache.org/zh/index.html) 图表集成
+
+在 echarts 官网的[扩展下载](https://echarts.apache.org/zh/download-extension.html)中，有一个 echarts 官方提供的 Vue 组件 [ecomfe/vue-echarts: Vue.js component for Apache ECharts™. (github.com)](https://github.com/ecomfe/vue-echarts)。
+
+1. 安装：`pnpm i echarts vue-echarts`
+
+2. 全局注册 ECharts 组件：
+
+   ::: code-group
+
+   ```ts [src/plugins/modules/echarts.ts]
+   import type { App } from 'vue'
+   import ECharts from 'vue-echarts'
+   import type { ComposeOption } from 'echarts/core'
+   import { use } from 'echarts/core'
+   import type { BarSeriesOption, LineSeriesOption, PieSeriesOption } from 'echarts/charts'
+   import { BarChart, LineChart, PieChart } from 'echarts/charts'
+   import type {
+     DataZoomComponentOption,
+     GridComponentOption,
+     LegendComponentOption,
+     MarkLineComponentOption,
+     MarkPointComponentOption,
+     TitleComponentOption,
+     ToolboxComponentOption,
+     TooltipComponentOption
+   } from 'echarts/components'
+   import {
+     DataZoomComponent,
+     GridComponent,
+     LegendComponent,
+     MarkLineComponent,
+     MarkPointComponent,
+     TitleComponent,
+     ToolboxComponent,
+     TooltipComponent
+   } from 'echarts/components'
+   import { CanvasRenderer } from 'echarts/renderers'
+   import { LabelLayout } from 'echarts/features'
+   
+   use([
+     TitleComponent,
+     ToolboxComponent,
+     TooltipComponent,
+     GridComponent,
+     LegendComponent,
+     MarkLineComponent,
+     MarkPointComponent,
+     DataZoomComponent,
+     BarChart,
+     LineChart,
+     PieChart,
+     CanvasRenderer,
+     LabelLayout
+   ])
+   
+   export type EChartsOption = ComposeOption<
+     | TitleComponentOption
+     | ToolboxComponentOption
+     | TooltipComponentOption
+     | GridComponentOption
+     | LegendComponentOption
+     | MarkLineComponentOption
+     | MarkPointComponentOption
+     | DataZoomComponentOption
+     | BarSeriesOption
+     | LineSeriesOption
+     | PieSeriesOption
+   >
+   
+   // 全局注册ECharts组件
+   export const setupECharts = (app: App<Element>) => {
+     app.component('v-chart', ECharts)
+   }
+   ```
+
+   ```ts [src/plugins/index.ts] {3}
+   export * from './modules/permission'
+   export * from './modules/icons'
+   export * from './modules/echarts'
+   ```
+
+   ```ts [src/main.ts] {19-20}
+   import '@/styles/index.scss'
+   import 'normalize.css/normalize.css'
+   
+   import App from './App.vue'
+   import router from '@/router'
+   import { setupStore } from '@/stores'
+   import { setupECharts, setupElIcons, setupPermission } from '@/plugins'
+   
+   // 本地SVG图标
+   import 'virtual:svg-icons-register'
+   // 全局动画库
+   import 'animate.css'
+   
+   const app = createApp(App)
+   // 全局注册store状态管理
+   setupStore(app)
+   // 全局注册Element-plus图标
+   setupElIcons(app)
+   // 注册ECharts图表
+   setupECharts(app)
+   // 注册动态路由
+   setupPermission()
+   
+   app.use(router).mount('#app')
+   ```
+
+   ```ts [src/typings/components.d.ts]
+   /* eslint-disable */
+   /* prettier-ignore */
+   // @ts-nocheck
+   // Generated by unplugin-vue-components
+   // Read more: https://github.com/vuejs/core/pull/3399
+   export {}
+   
+   declare module 'vue' {
+     export interface GlobalComponents {
+       // ...
+       VChart: (typeof import('vue-echarts'))['default']
+     }
+     // ...
+   }
+   ```
+
+   :::
+
+3. 在首页中显示图表
+
+   ::: code-group
+
+   ```vue [src/views/home/index.vue] {2-5,27-32}
+   <script lang="ts" setup>
+   const charts = ref(['BarChart', 'PieChart'])
+   const chartComponent = (chart: string) => {
+     return defineAsyncComponent(() => import(`./components/${chart}.vue`))
+   }
+   </script>
+   
+   <template>
+     <div>
+       <el-button>Default</el-button>
+       <el-button type="primary">Primary</el-button>
+       <el-button type="success">Success</el-button>
+       <el-button type="info">Info</el-button>
+       <el-button type="warning">Warning</el-button>
+       <el-button type="danger">Danger</el-button>
+     </div>
+     <div class="mt-4 flex items-center">
+       <i-ep-user />
+       <el-icon :size="50" color="#1976D2">
+         <i-ep-edit />
+       </el-icon>
+       <svg-icon icon-class="system" size="50" />
+       <svg-icon icon-class="user" size="50" />
+       <svg-icon icon-class="role" size="50" />
+       <svg-icon icon-class="menu" size="50" />
+     </div>
+     <!-- ECharts图表 -->
+     <el-row :gutter="10" class="m-4">
+       <el-col v-for="chart in charts" :key="chart" :lg="12" :xs="24" class="mb-2">
+         <component :is="chartComponent(chart)" />
+       </el-col>
+     </el-row>
+   </template>
+   
+   <style lang="scss" scoped></style>
+   ```
+
+   ```vue [src/views/home/components/BarChart.vue]
+   <script lang="ts" setup>
+   import type { EChartsOption } from '@/plugins'
+   
+   const categories = (function () {
+     let now = new Date()
+     let res = []
+     let len = 10
+     while (len--) {
+       res.unshift(now.toLocaleTimeString().replace(/^\D*/, ''))
+       now = new Date(+now - 2000)
+     }
+     return res
+   })()
+   const categories2 = (function () {
+     let res = []
+     let len = 10
+     while (len--) {
+       res.push(10 - len - 1)
+     }
+     return res
+   })()
+   const data: number[] = (function () {
+     let res = []
+     let len = 10
+     while (len--) {
+       res.push(Math.round(Math.random() * 1000))
+     }
+     return res
+   })()
+   const data2: number[] = (function () {
+     let res = []
+     let len = 0
+     while (len < 10) {
+       res.push(+(Math.random() * 10 + 5).toFixed(1))
+       len++
+     }
+     return res
+   })()
+   
+   const options = ref<EChartsOption>({
+     tooltip: {
+       trigger: 'axis',
+       axisPointer: {
+         type: 'cross',
+         label: {
+           backgroundColor: '#283b56'
+         }
+       }
+     },
+     dataZoom: {
+       show: false,
+       start: 0,
+       end: 100
+     },
+     xAxis: [
+       {
+         type: 'category',
+         boundaryGap: true,
+         data: categories
+       },
+       {
+         type: 'category',
+         boundaryGap: true,
+         data: categories2
+       }
+     ],
+     yAxis: [
+       {
+         type: 'value',
+         scale: true,
+         name: 'Price',
+         max: 30,
+         min: 0,
+         boundaryGap: [0.2, 0.2]
+       },
+       {
+         type: 'value',
+         scale: true,
+         name: 'Order',
+         max: 1200,
+         min: 0,
+         boundaryGap: [0.2, 0.2]
+       }
+     ],
+     series: [
+       {
+         name: 'Dynamic Bar',
+         type: 'bar',
+         xAxisIndex: 1,
+         yAxisIndex: 1,
+         data: data
+       },
+       {
+         name: 'Dynamic Line',
+         type: 'line',
+         data: data2
+       }
+     ]
+   })
+   
+   const app = { count: 11 }
+   setInterval(function () {
+     let axisData = new Date().toLocaleTimeString().replace(/^\D*/, '')
+   
+     data.shift()
+     data.push(Math.round(Math.random() * 1000))
+     data2.shift()
+     data2.push(+(Math.random() * 10 + 5).toFixed(1))
+   
+     categories.shift()
+     categories.push(axisData)
+     categories2.shift()
+     categories2.push(app.count++)
+   
+     Object.assign(options.value, {
+       xAxis: [
+         {
+           data: categories
+         },
+         {
+           data: categories2
+         }
+       ],
+       series: [
+         {
+           data: data
+         },
+         {
+           data: data2
+         }
+       ]
+     })
+   }, 2100)
+   </script>
+   
+   <template>
+     <el-card>
+       <template #header>官方示例（Dynamic Data）</template>
+       <v-chart
+         :option="options"
+         autoresize
+         class="h-[600px] w-full bg-[var(--el-bg-color-overlay)]"
+       />
+     </el-card>
+   </template>
+   
+   <style lang="scss" scoped></style>
+   ```
+
+   ```vue [src/views/home/components/PieChart.vue]
+   <script lang="ts" setup>
+   import type { EChartsOption } from '@/plugins'
+   
+   const options = ref<EChartsOption>({
+     legend: {
+       top: 'bottom'
+     },
+     series: [
+       {
+         name: 'Nightingale Chart',
+         type: 'pie',
+         radius: [50, 250],
+         center: ['50%', '50%'],
+         roseType: 'area',
+         itemStyle: {
+           borderRadius: 8
+         },
+         data: [
+           { value: 40, name: 'rose 1' },
+           { value: 38, name: 'rose 2' },
+           { value: 32, name: 'rose 3' },
+           { value: 30, name: 'rose 4' },
+           { value: 28, name: 'rose 5' },
+           { value: 26, name: 'rose 6' },
+           { value: 22, name: 'rose 7' },
+           { value: 18, name: 'rose 8' }
+         ]
+       }
+     ]
+   })
+   </script>
+   
+   <template>
+     <el-card>
+       <template #header>官方示例（Nightingale Chart）</template>
+       <v-chart
+         :option="options"
+         autoresize
+         class="h-[600px] w-full bg-[var(--el-bg-color-overlay)]"
+       />
+     </el-card>
+   </template>
+   
+   <style lang="scss" scoped></style>
+   ```
+
+   :::
+
+呈现效果如下所示：<br />![image-20240425171424099](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404251714552.png)
