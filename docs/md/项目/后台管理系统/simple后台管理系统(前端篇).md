@@ -452,6 +452,20 @@ ElementPlus 图标库往往满足不了实际开发需要，因此需要通过�
    export default NProgress;
    ```
 
+### [Animate.css](https://animate.style/) 动画库集成
+
+1. 安装 Animate.css 动画库：`pnpm i animate.css`
+
+2. 在 `main.ts` 文件中引入 Animate.css 动画库：`import 'animate.css'`
+
+3. 基础使用：将 `animate__animated` 类添加到元素中，同时添加任何[动画名称](https://animate.style/#attention_seekers)(不要忘记 `animate__` 前缀！)
+
+   ```html
+   <h1 class="animate__animated animate__bounce">An animated element</h1>
+   
+   <transition enter-active-class="animate__animated animate__fadeInLeft"></transition>
+   ```
+
 ### [环境变量与模式](https://vitejs.cn/vite3-cn/guide/env-and-mode.html#env-files)
 
 1. 在项目根目录下创建 `.env.development` 文件：
@@ -1402,3 +1416,802 @@ export {}
 
 :::
 
+## 整体布局
+
+借助 ElementPlus 的 [Container 布局容器](https://element-plus.org/zh-CN/component/container.html)实现布局，创建 Layout 组件作为专门的布局组件，如下所示：
+
+::: code-group
+
+```vue [src/layout/index.vue]
+<script lang="ts" setup>
+defineOptions({
+  name: 'Layout'
+})
+</script>
+
+<template>
+  <el-container class="w-screen h-screen">
+    <el-aside class="bg-[#344157]" width="200px">
+      <Sidebar />
+    </el-aside>
+    <el-container>
+      <el-header class="!px-0" height="50px">
+        <el-row>
+  				<NavBar />
+  			</el-row>
+      </el-header>
+      <el-main class="bg-[#eef5ff]">
+        <AppMain />
+      </el-main>
+    </el-container>
+  </el-container>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/Sidebar/index.vue]
+<script lang="ts" setup>
+defineOptions({
+  name: 'Sidebar'
+})
+</script>
+
+<template>Aside</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/NavBar/index.vue]
+<script lang="ts" setup>
+defineOptions({
+  name: 'NavBar'
+})
+</script>
+
+<template>
+  <!-- 顶部导航栏 -->
+  <div class="h-full w-full bg-white flex items-center justify-between">Header</div>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/AppMain/index.vue]
+<script lang="ts" setup>
+
+defineOptions({
+  name: 'AppMain'
+})
+
+const cachedViews = ref<string[]>([])
+</script>
+
+<template>
+  <section class="w-full h-full">
+    <router-view>
+      <template #default="{ Component, route }">
+        <keep-alive :include="cachedViews">
+          <component :is="Component" :key="route.path" />
+        </keep-alive>
+      </template>
+    </router-view>
+  </section>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/views/home/index.vue]
+<script lang="ts" setup></script>
+
+<template>
+  <div>
+    <el-button>Default</el-button>
+    <el-button type="primary">Primary</el-button>
+    <el-button type="success">Success</el-button>
+    <el-button type="info">Info</el-button>
+    <el-button type="warning">Warning</el-button>
+    <el-button type="danger">Danger</el-button>
+  </div>
+  <div class="mt-4 flex items-center">
+    <i-ep-user />
+    <el-icon :size="50" color="#1976D2">
+      <i-ep-edit />
+    </el-icon>
+    <svg-icon icon-class="system" size="50" />
+    <svg-icon icon-class="user" size="50" />
+    <svg-icon icon-class="role" size="50" />
+    <svg-icon icon-class="menu" size="50" />
+  </div>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+:::
+
+呈现效果如下所示：<br />![image-20240425115331542](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404251153801.png)
+
+## 侧边栏
+
+通过当前用户所拥有的全部路由 = 静态路由 + 动态路由，数据已保存在 `permissionStore` 中 => 侧边栏中的目录和菜单项，并且对于目录而言，还需要进行递归处理。
+
+::: code-group
+
+```vue [src/layout/index.vue] {2,8,14-15}
+<script lang="ts" setup>
+import { useAppStore } from '@/stores'
+
+defineOptions({
+  name: 'Layout'
+})
+
+const appStore = useAppStore()
+</script>
+
+<template>
+  <el-container class="w-screen h-screen">
+    <el-aside
+      :width="appStore.sidebar.opened ? '200px' : '64px'"
+      class="bg-[#344157] transition-[width] duration-[0.3s] ease-in-out"
+    >
+      <Sidebar />
+    </el-aside>
+    <el-container>
+      <el-header class="!px-0" height="50px">
+        <el-row>
+  				<NavBar />
+  			</el-row>
+      </el-header>
+      <el-main class="bg-[#eef5ff]">
+        <AppMain />
+      </el-main>
+    </el-container>
+  </el-container>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/Sidebar/index.vue]
+<script lang="ts" setup>
+import { usePermissionStore } from '@/stores'
+
+defineOptions({
+  name: 'Sidebar'
+})
+
+const permissionStore = usePermissionStore()
+</script>
+
+<template>
+  <SidebarLogo />
+  <SidebarMenu :menu-list="permissionStore.routes" base-path="" />
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/Sidebar/components/SidebarLogo.vue]
+<script lang="ts" setup>
+import { useAppStore } from '@/stores'
+
+const appStore = useAppStore()
+const collapsed = computed(() => !appStore.sidebar.opened)
+</script>
+
+<template>
+  <div class="w-full h-[50px] bg-[#2f3749]">
+    <transition enter-active-class="animate__animated animate__fadeInLeft">
+      <router-link v-if="collapsed" class="w-full h-full flex items-center justify-center" to="/">
+        <img alt="logo" class="w-[20px] h-[20px]" src="@/assets/logo.svg" />
+      </router-link>
+      <router-link v-else class="w-full h-full flex items-center justify-center" to="/">
+        <img alt="logo" class="w-[20px] h-[20px]" src="@/assets/logo.svg" />
+        <span class="flex-shrink-0 ml-[10px] text-[16px] font-bold text-white">simple-admin</span>
+      </router-link>
+    </transition>
+  </div>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/Sidebar/components/SidebarMenu.vue]
+<script lang="ts" setup>
+import { useAppStore } from '@/stores'
+import type { RouteRecordRaw } from 'vue-router'
+import { resolvePath } from '@/utils'
+
+const appStore = useAppStore()
+const route = useRoute()
+
+withDefaults(
+  defineProps<{
+    menuList: RouteRecordRaw[]
+    basePath: string
+  }>(),
+  {
+    menuList: () => []
+  }
+)
+</script>
+
+<template>
+  <div class="sidebar-menu">
+    <el-scrollbar height="calc(100vh - 50px)">
+      <el-menu
+        :collapse="!appStore.sidebar.opened"
+        :collapse-transition="false"
+        :default-active="route.path"
+        :unique-opened="false"
+        background-color="#304156"
+        text-color="#bfcbd9"
+      >
+        <SidebarMenuItem
+          v-for="item in menuList"
+          :key="item.path"
+          :basePath="resolvePath(item.path, basePath)"
+          :item="item"
+        />
+      </el-menu>
+    </el-scrollbar>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.el-menu {
+  border-right: none;
+}
+</style>
+```
+
+```vue [src/layout/Sidebar/components/SidebarMenuItem.vue]
+<script lang="ts" setup>
+import type { RouteRecordRaw } from 'vue-router'
+import { resolvePath } from '@/utils'
+
+const props = defineProps<{
+  /**
+   * 路由(eg:user)
+   */
+  item: RouteRecordRaw
+  /**
+   * 父层级完整路由路径(eg:/system)
+   */
+  basePath: string
+}>()
+
+const onlyOneChild = ref<RouteRecordRaw & { noShowingChildren?: boolean }>()
+/**
+ * 判断当前路由是否只具有一个显示的子路由
+ * 1. 如果当前路由下只有一个显示的子路由，则返回true
+ * 2. 如果当前路由下没有显示的子路由，则显示当前路由并返回true
+ * 3. 如果当前路由下有多个显示的子路由，则返回false
+ * @param current 当前路由
+ * @returns 是否只具有一个显示的子路由
+ */
+const hasOneShowingChild = computed(() => {
+  const children = props.item.children || []
+  // 显示的子路由集合
+  const showingChildren = children.filter((route) => {
+    if (route.meta?.hidden) {
+      // 过滤不显示的子路由
+      return false
+    } else {
+      // 用于存储当前路由的单个显示子路由，如果存在多个显示子路由，则该变量不会被用到
+      onlyOneChild.value = route
+      return true
+    }
+  })
+  // 如果当前路由下只有一个显示的子路由，则返回true
+  if (showingChildren.length == 1) {
+    return true
+  }
+  // 如果当前路由下没有显示的子路由，则显示当前路由
+  if (showingChildren.length == 0) {
+    onlyOneChild.value = { ...props.item, path: '', noShowingChildren: true }
+    return true
+  }
+  return false
+})
+</script>
+
+<template>
+  <template v-if="!item.meta || !item.meta.hidden">
+    <!-- 只有一个显示的子路由 || 没有子路由的菜单项 -->
+    <template
+      v-if="
+        hasOneShowingChild &&
+        (!onlyOneChild?.children || onlyOneChild.noShowingChildren) &&
+        !item.meta?.alwaysShow
+      "
+    >
+      <AppLink v-if="onlyOneChild?.meta" :to="resolvePath(onlyOneChild.path, basePath)">
+        <el-menu-item :index="resolvePath(onlyOneChild.path, basePath)">
+          <el-icon>
+            <template v-if="onlyOneChild.meta.icon && onlyOneChild.meta.icon.startsWith('el-icon')">
+              <component :is="onlyOneChild.meta.icon.replace('el-icon-', '')" />
+            </template>
+            <svg-icon v-else-if="onlyOneChild.meta.icon" :icon-class="onlyOneChild.meta.icon" />
+            <svg-icon v-else icon-class="menu" />
+          </el-icon>
+          <template #title>{{ onlyOneChild.meta.title }}</template>
+        </el-menu-item>
+      </AppLink>
+    </template>
+
+    <!-- 显示具有多个子路由的父菜单项 -->
+    <el-sub-menu v-else :index="resolvePath(item.path, basePath)" teleported>
+      <template #title>
+        <el-icon>
+          <template v-if="item.meta?.icon && item.meta.icon.startsWith('el-icon')">
+            <component :is="item.meta.icon.replace('el-icon-', '')" />
+          </template>
+          <svg-icon v-else-if="item.meta?.icon" :icon-class="item.meta.icon" />
+          <svg-icon v-else icon-class="menu" />
+        </el-icon>
+        <span>{{ item.meta?.title }}</span>
+      </template>
+      <SidebarMenuItem
+        v-for="child in item.children"
+        :key="child.path"
+        :base-path="resolvePath(child.path, basePath)"
+        :item="child"
+      />
+    </el-sub-menu>
+  </template>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```ts [src/utils/index.ts]
+import path from 'path-browserify'
+
+/**
+ * 检查路径是否为外部链接
+ * @param path 要检查的路径
+ * @returns 如果是外部链接，则为 true，否则为 false
+ */
+export const isExternal = (path: string) => {
+  return /^(https?:|http?:|mailto:|tel:)/.test(path)
+}
+
+/**
+ * 解析路由路径（相对路径 -> 绝对路径）
+ * @param routePath 路由路径
+ * @param basePath 父路由路径
+ * @returns 解析后的绝对路由路径
+ */
+export const resolvePath = (routePath: string, basePath: string) => {
+  if (isExternal(routePath)) {
+    return routePath
+  }
+  if (isExternal(basePath)) {
+    return basePath
+  }
+  // 完整路由路径（/system/user）= 父路由路径（/system） + 当前路由路径（user）
+  return path.resolve(basePath, routePath)
+}
+```
+
+```ts [src/stores/modules/app.ts]
+import { store } from '@/stores'
+import { SidebarStatus } from '@/enums/SidebarStatus'
+
+export const useAppStore = defineStore('app', () => {
+  const sidebarStatus = useStorage('sidebarStatus', SidebarStatus.OPENED)
+
+  const sidebar = reactive({
+    opened: sidebarStatus.value === SidebarStatus.OPENED,
+    withoutAnimation: false
+  })
+
+  const toggleSidebar = () => {
+    sidebar.opened = !sidebar.opened
+    sidebarStatus.value = sidebar.opened ? SidebarStatus.OPENED : SidebarStatus.CLOSED
+  }
+
+  const closeSidebar = () => {
+    sidebar.opened = false
+    sidebarStatus.value = SidebarStatus.CLOSED
+  }
+
+  const openSidebar = () => {
+    sidebar.opened = true
+    sidebarStatus.value = SidebarStatus.OPENED
+  }
+
+  return {
+    sidebar,
+    toggleSidebar,
+    closeSidebar,
+    openSidebar
+  }
+})
+
+// 手动提供给 useStore() 函数 pinia 实例
+// https://pinia.vuejs.org/zh/core-concepts/outside-component-usage.html#using-a-store-outside-of-a-component
+export function useAppStoreHook() {
+  return useAppStore(store)
+}
+```
+
+```ts [src/stores/index.ts] {12}
+import type { App } from 'vue'
+
+const store = createPinia()
+
+// 全局注册 store
+export function setupStore(app: App<Element>) {
+  app.use(store)
+}
+
+export * from './modules/user'
+export * from './modules/permission'
+export * from './modules/app'
+export { store }
+```
+
+:::
+
+呈现效果如下所示：<br />![image-20240425121642684](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404251216916.png)
+
+## 顶部导航栏
+
+在该区域存在用于折叠展开侧边栏的按钮，指示当前所处页面路径的面包屑，用于进入全屏模式的按钮以及展示当前登录信息的头像和名称部分（点击该部分可以实现用户注销登出操作）。
+
+::: code-group
+
+```vue [src/layout/NavBar/index.vue] {10-13}
+<script lang="ts" setup>
+defineOptions({
+  name: 'NavBar'
+})
+</script>
+
+<template>
+  <!-- 顶部导航栏 -->
+  <div class="h-full w-full bg-white flex items-center justify-between">
+    <!--  左侧导航栏  -->
+    <NavBarLeft />
+    <!--  右侧导航栏  -->
+    <NavBarRight />
+  </div>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/NavBar/components/NavBarLeft.vue]
+<script lang="ts" setup>
+import { useAppStore } from '@/stores'
+
+const appStore = useAppStore()
+</script>
+
+<template>
+  <div class="flex items-center">
+    <Hamburger :is-active="appStore.sidebar.opened" @toggle-click="appStore.toggleSidebar" />
+    <Breadcrumb />
+  </div>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/components/Hamburger/index.vue]
+<script lang="ts" setup>
+defineProps<{
+  isActive: boolean
+}>()
+
+defineEmits<{
+  (e: 'toggleClick'): void
+}>()
+</script>
+
+<template>
+  <div
+    class="px-[15px] flex items-center justify-center color-[var(--el-text-color-regular)]"
+    @click="$emit('toggleClick')"
+  >
+    <svg-icon :class="{ 'is-active': isActive }" class="hamburger" icon-class="indent-decrease" />
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.hamburger {
+  vertical-align: middle;
+  cursor: pointer;
+  transform: scaleX(-1);
+}
+
+.hamburger.is-active {
+  transform: scaleX(1);
+}
+</style>
+```
+
+```vue [src/components/Breadcrumb/index.vue]
+<script lang="ts" setup>
+import type { RouteLocationMatched } from 'vue-router'
+import { compile } from 'path-to-regexp'
+
+const breadcrumbs = ref<RouteLocationMatched[]>([])
+const route = useRoute()
+const router = useRouter()
+
+onBeforeMount(() => {
+  getBreadcrumbs()
+})
+
+watch(
+  () => route.path,
+  (path) => {
+    if (path.startsWith('/redirect')) return
+    getBreadcrumbs()
+  }
+)
+
+/**
+ * 根据当前路由信息获取面包屑数据
+ */
+const getBreadcrumbs = () => {
+  const matched = route.matched.filter((item) => item.meta && item.meta.title)
+  const first = matched[0]
+  if (first && !isHome(first)) {
+    matched.unshift({ path: '/home', meta: { title: '首页' } } as any)
+  }
+  breadcrumbs.value = matched.filter(
+    (item) => item.meta && item.meta.title && item.meta.breadcrumb !== false
+  )
+}
+
+/**
+ * 判断是否为首页
+ * @param route 路由信息
+ */
+const isHome = (route: RouteLocationMatched) => {
+  const name = route.name
+  if (!name) return false
+  return name.toString().trim().toLocaleLowerCase() === 'home'.toLocaleLowerCase()
+}
+
+const pathCompile = (path: string) => {
+  const { params } = route
+  const toPath = compile(path)
+  return toPath(params)
+}
+
+const handleClick = (item: RouteLocationMatched) => {
+  const { redirect, path } = item
+  if (redirect) {
+    router.push(redirect.toString()).catch((err) => {
+      console.warn(err)
+    })
+    return
+  }
+  router.push(pathCompile(path)).catch((err) => {
+    console.warn(err)
+  })
+}
+</script>
+
+<template>
+  <el-breadcrumb class="!inline-block !text-[14px] !leading-[50px] !ml-[8px]">
+    <transition-group enter-active-class="animate__animated animate__fadeInRight">
+      <el-breadcrumb-item v-for="(item, index) in breadcrumbs" :key="item.path">
+        <span
+          v-if="item.redirect === 'noredirect' || index === breadcrumbs.length - 1"
+          class="!font-normal !color-[#97a8be] !cursor-text"
+        >
+          {{ item.meta.title }}
+        </span>
+        <a v-else class="!font-semibold" @click.prevent="handleClick(item)">
+          {{ item.meta.title }}
+        </a>
+      </el-breadcrumb-item>
+    </transition-group>
+  </el-breadcrumb>
+</template>
+
+<style lang="scss" scoped></style>
+```
+
+```vue [src/layout/NavBar/components/NavBarRight.vue]
+<script lang="ts" setup>
+import { useUserStore } from '@/stores'
+
+const { isFullscreen, toggle } = useFullscreen()
+const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
+
+/**
+ * 注销登出
+ */
+const logout = () => {
+  ElMessageBox.confirm('确定注销并退出系统吗？', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+    lockScroll: false
+  }).then(async () => {
+    await userStore.logout()
+    await router.push(`/login?redirect=${route.fullPath}`)
+  })
+}
+</script>
+
+<template>
+  <div>
+    <!--全屏 -->
+    <div class="setting-item" @click="toggle">
+      <svg-icon :icon-class="isFullscreen ? 'fullscreen-exit' : 'fullscreen'" />
+    </div>
+
+    <!-- 用户头像 -->
+    <el-dropdown class="setting-item" trigger="click">
+      <div class="flex items-center justify-center h-full p-[10px]">
+        <el-avatar :src="userStore.userInfo.avatar" class="mr-[5px]" />
+        <span>{{ userStore.userInfo.username }}</span>
+      </div>
+      <template #dropdown>
+        <el-dropdown-menu>
+          <el-dropdown-item>
+            <el-icon>
+              <IEpInfoFilled />
+            </el-icon>
+            <span>个人信息</span>
+          </el-dropdown-item>
+          <el-dropdown-item>
+            <el-icon>
+              <IEpUnlock />
+            </el-icon>
+            <span>修改密码</span>
+          </el-dropdown-item>
+          <el-dropdown-item divided @click="logout">
+            <el-icon>
+              <IEpCircleClose />
+            </el-icon>
+            <span>注销登出</span>
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </template>
+    </el-dropdown>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.setting-item {
+  @apply inline-block min-w-[40px] h-[50px] leading-[50px] text-center cursor-pointer hover:bg-black hover:bg-opacity-10;
+}
+
+:deep(.el-dropdown-menu__item) {
+  line-height: 36px !important;
+  padding: 6px 22px;
+}
+</style>
+```
+
+```ts [src/stores/modules/user.ts] {66-81,83}
+import { getUserInfoApi } from '@/api/user'
+import type { UserInfo } from '@/api/user/types'
+import type { LoginRequest } from '@/api/auth/types'
+import { loginApi, logoutApi } from '@/api/auth'
+import { store } from '@/stores'
+
+export const useUserStore = defineStore('user', () => {
+  // 使用 VueUse 中的 useStorage 函数将 token 保存到 localStorage 中
+  const token = useStorage('token', '')
+  const userInfo = ref<UserInfo>({
+    roles: [],
+    permissions: []
+  })
+
+  /**
+   * 登录
+   * @param loginRequest 用户登录请求参数
+   */
+  const login = (loginRequest: LoginRequest) => {
+    return new Promise<void>((resolve, reject) => {
+      loginApi(loginRequest)
+        .then(({ accessToken }) => {
+          token.value = accessToken
+          resolve()
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  }
+
+  /**
+   * 清除token
+   */
+  const resetToken = () => {
+    return new Promise<void>((resolve) => {
+      token.value = ''
+      resolve()
+    })
+  }
+
+  /**
+   * 获取当前登录用户信息
+   */
+  const getUserInfo = () => {
+    return new Promise<UserInfo>((resolve, reject) => {
+      getUserInfoApi()
+        .then((res) => {
+          if (!res) {
+            reject('Verification failed, please Login again.')
+            return
+          }
+          if (!res.roles || res.roles.length <= 0) {
+            reject('getUserInfo: roles must be a non-null array!')
+            return
+          }
+          userInfo.value = res
+          resolve(res)
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  }
+
+  /**
+   * 注销登出
+   */
+  const logout = () => {
+    return new Promise<void>((resolve, reject) => {
+      logoutApi()
+        .then(() => {
+          token.value = ''
+          location.reload()
+          resolve()
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
+  }
+
+  return { token, userInfo, login, resetToken, getUserInfo, logout }
+})
+
+// 非setup
+export const useUserStoreHook = () => {
+  return useUserStore(store)
+}
+```
+
+```ts [src/api/auth/index.ts] {12-20}
+import { post, request } from '@/utils/request'
+import type { LoginRequest, LoginResult } from '@/api/auth/types'
+
+/**
+ * 用户登录
+ * @param loginRequest 用户登录请求参数
+ */
+export const loginApi = (loginRequest: LoginRequest) => {
+  return post<LoginResult>('/auth/login', loginRequest)
+}
+
+/**
+ * 用户登出
+ */
+export const logoutApi = () => {
+  return request<void>({
+    url: '/auth/logout',
+    method: 'DELETE'
+  })
+}
+```
+
+:::
+
+呈现效果如下所示：<br />![image-20240425123146662](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404251231821.png)
