@@ -16,6 +16,26 @@
 
 插件下载地址：[Greasy Fork - 安全、实用的用户脚本大全](https://greasyfork.org/zh-CN)
 
+### [沉浸式翻译 - 双语对照网页翻译插件 | PDF翻译 | 视频字幕翻译 (immersivetranslate.com)](https://immersivetranslate.com/?force=1)🎉🎉🎉
+
+沉浸式网页双语翻译扩展，免费使用，支持 Deepl/Google/有道/腾讯翻译等多个翻译服务，支持 Firefox/Chrome/油猴脚本，亦可在 iOS Safari 上使用。
+
+主要特性：
+
+- 网页双语对照翻译 <br />![img](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404261422473.png)
+- 视频双语字幕 <br />![img](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404261422256.png)
+- …
+
+### [iTranslator](https://greasyfork.org/zh-CN/scripts/453186-itranslator)
+
+多功能网页翻译工具，支持所有网站划词翻译，支持快捷键翻译和独立面板翻译，选择单词或段落后，按快捷键即可快速翻译（快捷键可自定义更换），可设置翻译字体颜色、翻译结果显示位置，独立翻译 面板支持显示多个翻译结果，方便对比翻译结果，支持 8 种语言互相翻译（中、英、法、日、德、俄、韩、西班牙），全面支持 Google 谷歌翻译、百度翻译、彩云小译、有道翻译、阿里翻译、必应翻译、搜狗翻译、爱词霸翻译。<br />![image-20230815232007364](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308152320406.png)
+
+### [B站哔哩哔哩使用增强，全网VIP视频免费破解去广告，知乎使用增强，短视频无水印下载，油管、Facebook等国外视频解析下载等😈](https://greasyfork.org/zh-CN/scripts/469407-b站哔哩哔哩使用增强-全网vip视频免费破解去广告-知乎使用增强-短视频无水印下载-油管-facebook等国外视频解析下载等)
+
+功能可选择性打开：1、B站使用增强：支持视频下载(👉支持多P批量快速下载👈)、浏览记录提示、一键三连、自动签到、描述文本网址转链接等；2、全网VIP视频解析：爱奇艺、腾讯、优酷、bilibili等视频免费解析(支持自定义解析接口)；3、知乎使用助手：内容种类标识、问答显示优化、视频下载等；4、短视频去水印下载：支持知乎、抖音、快手等；5、油管、Facebook等国外视频解析下载；🔥6、搜索引擎功能增强,百度添加网址显示，google结果新标签页打开灯,导航可自定义网址【脚本长期维护更新，完全免费，无广告，仅限学习交流！！】
+
+![img](https://pic.rmb.bdstatic.com/bjh/d09f94e70e90eb839e9d915aed40006e.png)
+
 ### [字体渲染](https://greasyfork.org/zh-CN/scripts/416688-字体渲染-自用脚本)
 
 无需安装 MacType，**优化浏览器字体渲染效果，让每个页面的字体变得更有质感**。默认使用“<u>微软雅黑字体</u>”，也可根据喜好自定义其他字体使用。脚本针对浏览器字体渲染提供了**字体重写**、字体平滑、字体缩放、字体描边、字体阴影、对特殊样式元素的过滤和许可、**自定义等宽字体**等高级功能。脚本支持全局渲染与个性化渲染功能，可通过“单击脚本管理器图标”或“使用快捷键”呼出配置界面进行参数配置。脚本已兼容绝大部分主流浏览器及主流脚本管理器，且兼容常用的 Greasemonkey 脚本和浏览器扩展
@@ -33,17 +53,7 @@
 
 <img src="https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308111606225.png" alt="image-20230811160628137" />
 
-### [iTranslator](https://greasyfork.org/zh-CN/scripts/453186-itranslator)
-
-多功能网页翻译工具，支持所有网站划词翻译，支持快捷键翻译和独立面板翻译，选择单词或段落后，按快捷键即可快速翻译（快捷键可自定义更换），可设置翻译字体颜色、翻译结果显示位置，独立翻译 面板支持显示多个翻译结果，方便对比翻译结果，支持 8 种语言互相翻译（中、英、法、日、德、俄、韩、西班牙），全面支持 Google 谷歌翻译、百度翻译、彩云小译、有道翻译、阿里翻译、必应翻译、搜狗翻译、爱词霸翻译。<br />![image-20230815232007364](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308152320406.png)
-
 ### [Github 增强 - 高速下载](https://greasyfork.org/zh-CN/scripts/412245-github-增强-高速下载)
 
 高速下载 Git Clone/SSH、Release、Raw、Code(ZIP) 等文件、项目列表单文件快捷下载 (☁)、添加 git clone 命令 <br /> ![img](https://greasyfork.s3.us-east-2.amazonaws.com/r8prrctxxlsdsvdjwx6pb49vlrf3)
-
-### [B站哔哩哔哩使用增强，全网VIP视频免费破解去广告，知乎使用增强，短视频无水印下载，油管、Facebook等国外视频解析下载等😈](https://greasyfork.org/zh-CN/scripts/469407-b站哔哩哔哩使用增强-全网vip视频免费破解去广告-知乎使用增强-短视频无水印下载-油管-facebook等国外视频解析下载等)
-
-功能可选择性打开：1、B站使用增强：支持视频下载(👉支持多P批量快速下载👈)、浏览记录提示、一键三连、自动签到、描述文本网址转链接等；2、全网VIP视频解析：爱奇艺、腾讯、优酷、bilibili等视频免费解析(支持自定义解析接口)；3、知乎使用助手：内容种类标识、问答显示优化、视频下载等；4、短视频去水印下载：支持知乎、抖音、快手等；5、油管、Facebook等国外视频解析下载；🔥6、搜索引擎功能增强,百度添加网址显示，google结果新标签页打开灯,导航可自定义网址【脚本长期维护更新，完全免费，无广告，仅限学习交流！！】
-
-![img](https://pic.rmb.bdstatic.com/bjh/d09f94e70e90eb839e9d915aed40006e.png)
 
