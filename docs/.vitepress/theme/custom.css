@@ -15,11 +15,17 @@
     text-decoration: none; /** no underline */
   }
 
+  h1 {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
   .custom-block {
     background-color: transparent;
     border: none;
     border-radius: 0;
     border-left: 0.25em solid var(--vp-custom-block-info-border);
+    font-size: 15px;
   }
   .custom-block.note {
     border-color: var(--vp-custom-block-note-border);

@@ -8,7 +8,7 @@ Logback 是 Java 社区中使用最广泛的日志记录框架之一。它是其
 
 ## 准备工作
 
-Logback 使用 Simple Logging Facade for Java （SLF4J） 作为其接口。在开始记录消息之前，只需要引入 `logback-classic` 这个单一的依赖即可，因为它会传递地引入 `logback-core` 和 `slf4j-api` 依赖。
+Logback 使用 Simple Logging Facade for Java （SLF4J） 作为其接口。在开始记录消息之前，只需要引入 `logback-classic` 这个单一的依赖即可，因为它会传递 `logback-core` 和 `slf4j-api` 依赖。
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -33,12 +33,17 @@ Logback 使用 Simple Logging Facade for Java （SLF4J） 作为其接口。在�
             <artifactId>logback-classic</artifactId>
             <version>1.5.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+        </dependency>
     </dependencies>
 
 </project>
 ```
 
-## 基本示例与配置
+## 基础示例与配置
 
 首先，我们需要一个配置文件。我们将创建一个名为 `logback.xml` 的配置文件，并将其放在<strong style="color:#ae3520;">类路径</strong>中的某个位置：
 
@@ -57,49 +62,48 @@ Logback 使用 Simple Logging Facade for Java （SLF4J） 作为其接口。在�
 </configuration>
 ```
 
-接下来，我们需要一个带有 `main` 方法的简单类：
+接下来，我们需要创建一个 `BasicExampleTest` 测试类：
 
 ```java
-public class Example {
-  private static final ch.qos.logback.classic.Logger LOGGER = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Example.class);
+public class BasicExampleTest {
+  private static final ch.qos.logback.classic.Logger LOGGER = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(BasicExampleTest.class);
 
-  public static void main(String[] args) {
-    LOGGER.info("Example log from {}", Example.class.getSimpleName());
+  @Test
+  public void test() {
+    LOGGER.info("Example log from {}", BasicExampleTest.class.getSimpleName());
   }
 }
 ```
 
-此类创建一个 `Logger` 并调用 `info()` 方法来生成日志消息。
+此类创建了一个 `Logger` 并调用其 `info()` 方法来生成日志消息。当我们运行测试方法时，我们会看到我们的消息记录到控制台：
 
-当我们运行 `Example` 时，我们会看到我们的消息记录到控制台：
-
-> 14:41:08.957 [main] INFO  fun.xiaorang.study.logback.Example - Example log from Example
+> 01:35:33.143 [main] INFO  f.x.study.logback.BasicExampleTest - Example log from BasicExampleTest
 
 很容易看出为什么 Logback 如此受欢迎；我们在几分钟内即可启动并运行。
 
-通过如下的三个步骤可以启用 Logback 来记录日志：
+启用 Logback 来记录日志需要通过如下的三个步骤：
 
 1. 配置 Logback 环境。
-2. 在每个要执行日志记录的类中，通过调用 `org.slf4j.LoggerFactory` 类的 `getLogger()` 方法检索 `Logger` 实例，将当前类名或类本身作为参数传递。
+2. 在每个要执行日志记录的类中，通过调用 `org.slf4j.LoggerFactory` 类的 `getLogger()` 方法获取 `Logger` 实例，将当前类名或类本身作为参数传递。
 3. 通过调用 `Logger` 实例的不同方法来打印日志。例：`debug()`，`info()`，`warn()`，`error()`。通过这些方法将会在配置好的 Appender 中输出日志。
 
 ## 架构
 
 ### Logback 的架构
 
-Logback 的基本架构足够通用，可以适用于不同的情况。目前，Logback 分为如下三个模块：
+Logback 的基础架构足够通用，可以适用于不同的情况。目前，Logback 分为如下三个模块：
 
-- logback-core – 包含基本的日志记录功能
+- logback-core – 包含基础的日志记录功能
 - logback-classic – 包含其他日志记录改进，例如 SLF4j 支持
 - logback-access – 提供与 servlet 容器（如 Tomcat 和 Jetty）的集成
 
-### 记录器、附加器和布局（Logger, Appender and Layouts）
+### 记录器、追加器和布局
 
-Logback 基于三个主要类：记录器（`Logger`）、附加器（`Appender`） 和布局（`Layout`）。这三个不同类型的组件协同工作，使开发人员能够根据消息类型和级别记录消息，并在运行时控制这些消息的格式和输出位置。
+Logback 主要基于三个类：记录器（`Logger`）、追加器（`Appender`） 和布局（`Layout`）。这三个不同类型的组件协同工作，使开发人员能够根据消息类型和级别记录消息，并在运行时控制这些消息的格式和输出位置。
 
 `Logger` 类作为 `logback-classic` 模块的一部分。`Appender` 与 `Layouts` 接口作为 `logback-core` 的一部分。作为一个通用的模块，`logback-core` 没有 logger 的概念。
 
-#### 记录器上下文（Logger context）
+#### 记录器上下文
 
 与普通 `System.out.println` 相比，任何日志记录 API 的首要优势在于它能够禁用某些日志语句，同时允许其他日志语句不受阻碍地打印。此功能假设日志记录空间（即所有可能的日志记录语句的空间）根据开发人员选择的某些标准进行分类。在 `logback-classic` 中，这种分类是记录器固有的一部分。每个记录器都连接到 `LoggerContext`，该上下文主要负责制造记录器 & 将制造出来的记录器排列到树状层次结构中。
 
@@ -117,85 +121,341 @@ Logback 基于三个主要类：记录器（`Logger`）、附加器（`Appender`
 >
 > <strong style="color:#ae3520;">根记录器（root logger）位于记录器层次结构的顶部，它的特殊之处在于它是每一个层次结构的一部分</strong> ➡️ <strong style="color:#ae3520;font-size:19px;">所有记录器都是预定义的根记录器的后代</strong>
 
-与每个记录器一样，可以通过名称检索它，如下所示：
+与每个记录器一样，可以通过名称获取它，如下所示：
 
 > Logger rootLogger = LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
 
-`Logger` 类中有一个 `level` 字段，可以通过配置文件或使用 `setLevel()` 方法进行设置。
+所有其他的记录器可以通过 `org.slf4j.LoggerFactory` 类中的静态方法 `getLogger` 进行获取，该方法需要传入一个记录器的名字作为参数。下面列出了 `Logger` 接口中的一些基础方法。
 
-<strong style="color:#ae3520;">日志级别按优先级排序：TRACE < DEBUG < INFO < WARN < ERROR。</strong>每个级别都有一个相应的方法，我们可以用对应的方法来记录对应级别的日志。
+```java
+package org.slf4j; 
+public interface Logger {
+
+  // Printing methods: 
+  public void trace(String message);
+  public void debug(String message);
+  public void info(String message); 
+  public void warn(String message); 
+  public void error(String message); 
+}
+```
+
+#### 有效级别又名级别继承
+
+记录器可以被分配日志级别。可能的日志级别集（TRACE、DEBUG、INFO、WARN 和 ERROR）在 `ch.qos.logback.classic.Level` 类中定义。请注意，在 Logback 中，类 `Level` 使用 final 修饰，因此它无法被继承。一种更灵活的方式是使用 `Marker` 对象。
 
 > [!important]
 >
-> <strong style="color:#ae3520;font-size:19px;">如果未显式分配记录器的日志级别，则它将继承其最接近的祖先的级别。</strong>
->
-> <strong style="color:#ae3520;">根记录器的日志级别默认为 DEBUG。</strong>我们将在下面看到如何覆盖它。
+> <strong style="color:#ae3520;font-size:19px;">如果一个给定的日志记录器没有被分配级别，那么它会从它最近的祖先那里继承一个级别。</strong>
 
-让我们创建一个示例程序，演示如何在日志记录层次结构中使用记录器上下文：
+更正式的说法是：
+
+> 对于一个给定的名为 *L* 的记录器，它的有效层级为从自身一直回溯到根记录器，直到找到第一个不为空的层级作为自己的层级。
+
+为了确保所有的记录器都有一个层级，<strong style="color:#ae3520;">根记录器会有一个默认层级 --- DEBUG</strong>
+
+以下四个例子指定不同的层级，以及根据继承规则得到的最终有效层级
+
+*Example 1*
+
+
+
+| 记录器的名字 | 指定的层级 | 有效层级 |
+| ------------ | ---------- | -------- |
+| root         | DEBUG      | DEBUG    |
+| X            | none       | DEBUG    |
+| X.Y          | none       | DEBUG    |
+| X.Y.Z        | none       | DEBUG    |
+
+在这个例子中，只有根记录器被指定了层级，所以记录器 **X**，**X.Y**，**X.Y.Z** 的有效层级都是 DEBUG。
+
+*Example 2*
+
+
+
+| 记录器的名字 | 指定的层级 | 有效层级 |
+| ------------ | ---------- | -------- |
+| root         | ERROR      | ERROR    |
+| X            | INFO       | INFO     |
+| X.Y          | DEBUG      | DEBUG    |
+| X.Y.Z        | WARN       | WARN     |
+
+在这个例子中，每个记录器都分配了层级，所以有效层级就是指定的层级。
+
+*Example 3*
+
+
+
+| 记录器的名字 | 指定的层级 | 有效层级 |
+| ------------ | ---------- | -------- |
+| root         | DEBUG      | DEBUG    |
+| X            | INFO       | INFO     |
+| X.Y          | none       | INFO     |
+| X.Y.Z        | ERROR      | ERROR    |
+
+在这个例子中，记录器 **root**，**X**，**X.Y.Z** 都分别分配了层级。记录器 **X.Y** 继承它的父级 **X**。
+
+*Example 4*
+
+
+
+| 记录器的名字 | 指定的层级 | 有效层级 |
+| ------------ | ---------- | -------- |
+| root         | DEBUG      | DEBUG    |
+| X            | INFO       | INFO     |
+| X.Y          | none       | INFO     |
+| X.Y.Z        | none       | INFO     |
+
+在这个例子中，记录器 **root**，**X** 都分配了层级。记录器 **X.Y**，**X.Y.Z** 的层级继承它们最近的父级 **X**。
+
+#### 打印方法和基础选择规则 {Printing methods and the basic selection rule}
+
+根据定义，打印方法决定日志记录请求的级别。例如：**L** 是一个记录器实例，那么语句 `L.info("...")` 的日志级别就是 INFO。
+
+<strong style="color:#ae3520;">如果一条日志的打印级别大于等于其日志记录器的有效级别的话，这条日志才会被打印出来。</strong>这条规则总结如下：
+
+> 日志的打印级别为 *p*，记录器实例的级别为 *q*，如果 *p* >= *q*，则该条日志才会被打印出来。
+
+这条规则是 Logback 的核心。<strong style="color:#ae3520;">日志级别按优先级排序：TRACE < DEBUG < INFO < WARN < ERROR。</strong>
+
+在下面的表格中，第一列表示的是日志的打印级别，用 *p* 表示。第一行表示的是记录器的有效级别，用 *q* 表示。行列交叉处的结果表示由**基础选择规则**得出的结果。
+
+<table>
+	<tr>
+		<td rowspan="2">level of request p</td>
+		<td colspan="6">effective level q</td>
+	</tr>
+	<tr>
+		<td style="font-weight:700;">TRACE</td>
+		<td style="font-weight:700;">DEBUG</td>
+    <td style="font-weight:700;">INFO</td>
+    <td style="font-weight:700;">WARN</td>
+    <td style="font-weight:700;">ERROR</td>
+    <td style="font-weight:700;">OFF</td>
+	</tr>
+  <tr>
+		<td style="font-weight:700;">TRACE</td>
+		<td style="color:green;font-weight:700;">YES</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+	</tr>
+  <tr>
+		<td style="font-weight:700;">DEBUG</td>
+		<td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+	</tr>
+  <tr>
+		<td style="font-weight:700;">INFO</td>
+		<td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+	</tr>
+  <tr>
+		<td style="font-weight:700;">WARN</td>
+		<td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:red;font-weight:700;">NO</td>
+    <td style="color:red;font-weight:700;">NO</td>
+	</tr>
+  <tr>
+		<td style="font-weight:700;">ERROR</td>
+		<td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:green;font-weight:700;">YES</td>
+    <td style="color:red;font-weight:700;">NO</td>
+	</tr>
+</table>
+
+下面是一个基础选择规则的例子：
 
 ```java
-@Test
-public void test() {
-  ch.qos.logback.classic.Logger parentLogger =
-    (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("fun.xiaorang.study.logback");
-  parentLogger.setLevel(ch.qos.logback.classic.Level.INFO);
-  ch.qos.logback.classic.Logger childlogger =
-    (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("fun.xiaorang.study.logback.tests");
-  parentLogger.warn("This message is logged because WARN > INFO.");
-  parentLogger.debug("This message is not logged because DEBUG < INFO.");
-  childlogger.info("INFO == INFO");
-  childlogger.debug("DEBUG < INFO");
+import ch.qos.logback.classic.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class BasicSelectionRuleTest {
+  @Test
+  public void test() {
+    // 创建一个名为 "com.foo" 的记录器（logger），进一步强转记录器的类型为 ch.qos.logback.classic.Logger，以便我们可以设置其有效级别
+    final ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("com.foo");
+    // 设置 logger 的有效级别为 INFO。
+    logger.setLevel(Level.INFO);
+    // 这条日志会打印，因为 logger 的有效级别（INFO）>= 日志的打印级别（INFO）。
+    logger.warn("Low fuel level.");
+    // 这条日志不会打印，因为日志的打印级别（DEBUG）低于 logger 的有效级别（INFO）。
+    logger.debug("Starting search for nearest gas station.");
+
+    // barLogger（"com.foo.bar"） 会继承 logger（"com.foo"） 的有效级别（INFO）。
+    final Logger barLogger = LoggerFactory.getLogger("com.foo.bar");
+    // 这条日志会打印，因为 barLogger 的有效级别（INFO）>= 日志的打印级别（INFO）。
+    barLogger.info("Located nearest gas station.");
+    // 这条日志不会打印，因为日志的打印级别（DEBUG）低于 barLogger 的有效级别（INFO）。
+    barLogger.debug("Exiting gas station search.");
+  }
 }
 ```
 
-当我们运行它时，我们会看到以下消息：
+测试结果如下所示：
 
-> 16:54:59.812 [main] WARN  fun.xiaorang.study.logback - This message is logged because WARN > INFO.
+> 15:59:03.545 [main] WARN  com.foo - Low fuel level.
 >
-> 16:54:59.814 [main] INFO  fun.xiaorang.study.logback.tests - INFO == INFO
+> 15:59:03.548 [main] INFO  com.foo.bar - Located nearest gas station.
 
-在上面这个示例中：
+#### 获取记录器
 
-1. 我们首先检索一个名为 fun.xiaorang.study.logback 的记录器，并将其转换为 `ch.qos.logback.classic.Logger`。
-2. 我们将记录器的日志级别设置为 INFO。
-3. 然后，我们创建另一个名为 fun.xiaorang.study.logback.tests 的记录器。
-4. 然后，我们通过这两个记录器分别记录两条消息，以演示层次结构。
-5. 最后发现会记录 WARN 和 INFO 级别的日志，并且过滤掉 DEBUG 级别的日志。
+<strong style="color:#ae3520;">使用相同名称调用 `LoggerFactory.getLogger` 方法将始终返回完全相同的记录器对象的引用。</strong>
 
-现在让我们使用根记录器：
+例如，
 
 ```java
-@Test
-public void test1() {
-  ch.qos.logback.classic.Logger logger =
-    (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("fun.xiaorang.study.logback");
-  logger.debug("Hi there!");
-  logger.debug("This message is logged because DEBUG == DEBUG.");
-  ch.qos.logback.classic.Logger rootLogger =
-    (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
-  rootLogger.setLevel(ch.qos.logback.classic.Level.ERROR);
-  logger.warn("This message is not logged because WARN < ERROR.");
-  logger.error("This is logged.");
+Logger x = LoggerFactory.getLogger("wombat"); 
+Logger y = LoggerFactory.getLogger("wombat");
+```
+
+`x` 和 `y` 引用完全相同的记录器对象。
+
+因此，可以通过配置一个记录器，然后在代码中的其他位置获取到相同的实例，而无需传递引用。<strong style="color:#ae3520;">父级记录器总是在子级记录器前面，并且父级记录器会自动寻找并关联子级记录器，即使父级记录器在子级记录器之后实例化的。</strong>
+
+Logback 环境的配置会在应用初始化的时候完成。<strong style="color:#ae3520;font-size:19px;">最优的方式是通过读取配置文件。</strong>
+
+Logback 可以很轻松地通过软件组件命名记录器。这可以通过在每个类中实例化一个记录器来完成，记录器的名称就等于类的完全限定名。这是一种定义记录器最好也是最简单的方式。由于日志输出时带有这个记录器的名称，因此这种命名策略可以轻松识别日志消息的来源。虽然这是一种很常见的命名记录器的策略，但是 Logback 不会严格限制记录器的命名，作为开发人员，你可以随意命名记录器。
+
+尽管如此，<strong style="color:#ae3520;font-size:19px;">根据类的全限定名来命名记录器是目前最好的方式，没有之一。</strong>
+
+#### 追加器与布局 {Appenders and Layouts}
+
+有选择性地启用或禁用日志的输出只是记录器中的一部分功能。Logback 允许将日志输出到多个地方。在 Logback 中，输出目标称为追加器（Appender），常见的 Appender 包括控制台（console）, 文件（files）, remote socket servers, MySQL, PostgreSQL, Oracle 和其他地数据库, JMS, and remote UNIX Syslog daemons。
+
+<strong style="color:#ae3520;">一个记录器（Logger）可以有多个追加器（Appender）。</strong>
+
+记录器通过 `addAppender` 方法来新增一个 Appender 。对于给定的记录器，每一个允许输出的日志都会被转发到该记录器的所拥有的 Appender 中去。换句话说，<strong style="color:#ae3520;">Appender 会从记录器的层级结构中继承，具备叠加性。</strong>例如：如果根记录器添加了一个 console Appender，那么所有允许输出的日志至少会在控制台打印出来。如果再给一个叫做 ***L*** 的记录器添加了一个 file appender，那么 ***L*** 以及 ***L*** 的子级记录器都可以在文件和控制台打印日志。可以通过设置 additivity = false 来改写默认的设置，这样的话，Appender 将不再具有叠加性。
+
+Appender 的叠加性规则如下：
+
+> 记录器 *L* 的日志输出语句会遍历 *L* 和它的父级中所有的 Appender 。这就是所谓的追加器叠加性（Appender Additivity）。
+>
+> 如果 *L* 的某个上级记录器为 *P*，且 *P* 设置了 additivity = false，那么 *L* 的日志会在层级在 *L* 到 *P* 之间的所有记录器的 Appender ，包括 *P* 本身的 Appender 中输出，但是不会在 *P* 的上级 Appender 中输出。
+>
+>  Appender 默认设置 additivity = true。
+
+| Logger          | Appender   | Additivity 标识 | 输出目的地             | 说明                                                         |
+| --------------- | ---------- | --------------- | ---------------------- | ------------------------------------------------------------ |
+| root            | A1         | 不适用          | A1                     | <strong style="color:#ae3520;">根记录器为记录器层级中的最高层，additivity 对它不适用</strong> |
+| x               | A-x1, A-x2 | True            | A1, A-x1, A-x2         | x 与 root 的 appender                                        |
+| x.y             | 无         | true            | A1, A-x1, A-x2         | x 与 root 的 appender                                        |
+| x.y.z           | A-xyz1     | true            | A1, A-x1, A-x2, A-xyz1 | x 与 x.y 与 root 的 appender                                 |
+| security        | A-sec      | **false**       | A-sec                  | 因为 additivity = false，所以只有 A-sec 这个 appender        |
+| security.access | 无         | true            | A-sec                  | 因为它的父级记录器 security 设置了 additivity = false，所以只有 A-sec 这一个 appender |
+
+通常，用户既想自定义日志的输出地，也想自定义日志的输出格式。通过给 Appender 添加一个 *Layout* 就可以做到。<strong style="color:#ae3520;">Layout 的作用是将日志格式化，而 Appender 的作用是将格式化后的日志输出到指定的目的地。</strong>**PatternLayout** 能够根据用户指定的格式来格式化日志，类似于 C 语言的 printf 函数。
+
+例：PatternLayout 通过格式化串 "%-4relative [%thread] %-5level %logger{32} - %msg%n" 会将日志格式化成如下结果：
+
+```
+176  [main] DEBUG manual.architecture.HelloWorld2 - Hello world.
+```
+
+第一个参数表示程序启动以来的耗时，单位为毫秒。第二个参数表示当前的线程号。第三个参数表示当前日志的级别。第四个参数是记录器的名称。“-” 之后是具体的日志信息。
+
+#### 参数化日志
+
+鉴于 `logback-classic` 中的记录器实现了 SLF4J 的 `Logger` 接口，某些打印方法允许多个参数。这些打印方法变体主要是为了提高性能，同时最大限度地减少对代码可读性的影响。
+
+对于一些 Logger 输出如下日志：
+
+```java
+logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i]));
+```
+
+这样会产生构建消息参数的成本，因为需要将整数 i 和 entry[i] 转换为字符串，然后再将字符串拼接起来。
+
+为了避免构建参数带来的损耗，可以在日志记录之前做一个判断，如下：
+
+```java
+if(logger.isDebugEnabled()) { 
+  logger.debug("Entry number: " + i + " is " + String.valueOf(entry[i]));
 }
 ```
 
-当我们执行此代码片段时，我们会看到以下消息：
+在这种情况下，如果 **Logger** 没有开启 debug 模式，则不会有构建参数带来的性能损耗。换句话说，如果 Logger 在 debug 级别，将会有两次性能的损耗，一次是判断是否启用了 debug 模式，一次是打印 debug 日志。在实际应用当中，这种性能上的损耗是可以忽略不计的，因为它所花费的时间小于打印一条日志的时间的 1%。
 
-> 17:24:21.221 [main] DEBUG fun.xiaorang.study.logback - Hi there!
+##### 更好的选择
+
+有一种更好的方式去格式化日志信息。假设 **entry** 是一个 Object 对象：
+
+```java
+Object entry = new SomeObject(); 
+logger.debug("The entry is {}.", entry);
+```
+
+只有在需要打印 debug 信息的时候，才会去格式化日志信息，将 <strong style="color:#ae3520;">占位符 {}</strong> 替换成 entry 的字符串形式。也就是说在这种情况下，如果禁止了日志的打印，也就不会有构建参数上的性能消耗。
+
+> [!tip]
 >
-> 17:24:21.224 [main] DEBUG fun.xiaorang.study.logback - This message is logged because DEBUG == DEBUG.
->
-> 17:24:21.224 [main] ERROR fun.xiaorang.study.logback - This is logged.
+> **占位符 {} 将接受任何对象，并仅在验证需要日志消息后才使用其 toString() 方法构建消息。**
 
-在上面这个示例中：
+以下两行输出的结果是一样的，但是一旦禁止日志打印，第二种的性能至少比第一种好上 30 倍。
 
-1. 在没有改变根记录器的日志级别时打印了 DEBUG 日志。
-2. 然后，我们使用其静态定义的名称检索根记录器，并将其级别设置为 ERROR。
-3. 最后，任何小于错误级别的日志都会被过滤掉。
+```java
+logger.debug("The new entry is " + entry + ".");
+logger.debug("The new entry is {}", entry);
+```
 
-#### 有效级别又名级别继承（Effective Level aka Level Inheritance）
+使用两个参数的例子如下：
 
-<span style="background-color: rgb(251, 228, 231);">TODO</span>
+```java
+logger.debug("The new entry is {}, It replaces {}.", entry, oldEntry);
+```
+
+如果需要使用三个或三个以上的参数，可以采用可变参数或者数组的形式：
+
+```java
+logger.debug("Value {} was inserted between {} and {}.", newVal, below, above);
+```
+
+#### 底层实现初探
+
+在介绍了基本的 Logback 组件之后，我们准备介绍一下，当用户调用日志的打印方法时，Logback 所执行的步骤。现在我们来分析一下当用户通过一个名为 *com.wombat* 的 Logger 调用了 **info()** 方法时，Logback 具体执行了哪些步骤。
+
+**第一步：获取过滤器链**
+
+如果存在，则 **TurboFilter** 过滤器会被调用，Turbo 过滤器会设置一个上下文的阀值，或者根据每一条相关的日志请求信息，例如：**Marker**, **Level**， **Logger**， 消息，**Throwable**  来过滤某些事件。如果过滤器链的响应是 *FilterReply.DENY*，那么这条日志请求将会被丢弃。如果是 *FilterReply.NEUTRAL*，则会继续执行下一步，例如：第二步。如果响应是 *FilterRerply.ACCEPT*，则会直接跳到第三步。
+
+**第二步：应用[基础选择规则](#打印方法和基础选择规则)**
+
+在这步，Logback 会比较记录器的有效级别与日志请求的级别，如果日志请求被禁止，那么 Logback 将会丢弃调这条日志请求，并不会再做进一步的处理，否则的话，则进行下一步的处理。
+
+**第三步：创建一个 LoggingEvent 对象** 
+
+如果日志请求通过了之前的过滤器，Logback 将会创建一个 `ch.qos.logback.classic.LoggingEvent` 对象，这个对象包含了日志请求的所有相关参数，如：请求的 Logger，日志请求的级别，日志信息，与日志一同传递的异常信息，当前时间，当前线程，以及发出日志记录请求的类的各种数据和 MDC。MDC 将会在后续章节进行讨论。
+
+**第四步：调用 Appender**
+
+在创建了 `LoggingEvent` 对象之后，Logback 将调用所有可用的 Appender（即从 Logger 上下文继承的 Appender） 中的 `doAppend()` 方法。
+
+所有的 Appender 都继承自 `AppenderBase` 这个抽象类，并实现了 `doAppend()` 这个方法，该方法是<strong style="color:#ae3520;">线程安全</strong>的。`AppenderBase` 的 `doAppend()` 也会调用附加到 Appender 上的自定义过滤器。自定义过滤器能动态的添加到 Appender 上，在过滤器章节会详细讨论。
+
+**第五步：格式化输出**
+
+被调用的 Appender 负责格式化 Logging Event。但是，一些（但不是全部）Appender 将格式化 Logging Event 的任务委托给一个 Layout。Layout 将 LoggingEvent 实例格式化为一个字符串并返回。但需要注意的是，某些 Appender（例如 SocketAppender）并不会把 Logging Event 转化为一个字符串，而是进行序列化。因此，它们没有并且也不需要 Layout。
+
+**第六步：发送 LoggingEvent**
+
+当日志事件被完全格式化之后将会通过每个 Appender 发送到具体的目的地。
 
 ## 参考资料🎁
 
@@ -205,3 +465,4 @@ public void test1() {
   - [Solving Your Logging Problems with Logback](https://stackify.com/logging-logback/) by Eugen Paraschiv
 - 📺视频
   - [logback学习 | 配置文件实用功能](https://www.bilibili.com/video/BV17m4y197o9/?spm_id_from=333.880.my_history.page.click)
+
