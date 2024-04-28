@@ -6,10 +6,6 @@ export const sidebar: DefaultTheme.Sidebar = {
     { text: "搞定UML类图！", link: "/技术碎片/搞定UML类图！" },
     { text: "正则表达式", link: "/技术碎片/正则表达式" },
     {
-      text: "日志框架",
-      items: [{ text: "Logback", link: "/技术碎片/Logback" }],
-    },
-    {
       text: "其他",
       items: [
         { text: "如何选择开源协议", link: "/技术碎片/如何选择开源协议" },
@@ -185,9 +181,23 @@ export const sidebar: DefaultTheme.Sidebar = {
       items: [{ text: "策略模式", link: "/策略模式" }],
     },
   ],
-  "/后端开发/ORM框架": [
-    { text: "JDBC", link: "/后端开发/ORM框架/JDBC" },
-    { text: "Mybatis", link: "/后端开发/ORM框架/Mybatis" },
-    { text: "MybatisPlus", link: "/后端开发/ORM框架/MybatisPlus" },
+  "/后端开发/other": [
+    {
+      text: "ORM框架",
+      base: "/后端开发/other/ORM框架",
+      items: [
+        { text: "JDBC", link: "/JDBC" },
+        { text: "Mybatis", link: "/Mybatis" },
+        { text: "MybatisPlus", link: "/MybatisPlus" },
+      ],
+    },
+    {
+      text: "Logback",
+      base: "/后端开发/other/Logback",
+      items: [
+        { text: "介绍", link: "/README" },
+        { text: "架构", link: "/架构" },
+      ],
+    },
   ],
 };
