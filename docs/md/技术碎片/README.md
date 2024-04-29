@@ -555,3 +555,81 @@ public @interface SpringBootApplication {
 > [!tip]                                                  
 >
 > 此时需要先将父模块的 `version` 版本号改回来，变成和子模块中 ` parent ` 的版本号一致，才能使用插件统一修改，否则的话修改不成功！
+
+## Logback 配置文件
+
+对于日志功能的要求：
+
+1. 要能够展示加载配置时的调试信息，当发生解析配置文件出错时，可以快速定位问题
+2. 要能够自动定时检测配置文件的变化，并重新应用
+3. 日志要能够按天滚动，每天生成日志
+4. 单个日志文件不超过 512MB，超过的生成新文件
+5. 设置存储时间（90天）、空间上限（10GB），不能无限制存储日志文件
+6. 将 INFO 级别的日志与 ERROR 级别的日志分开，可以快速看到每一天是否产生了错误，并且 INFO 级别的日志文件中要包含 ERROR 级别的日志，这样在排查问题时可以看到完整的异常发生链路
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true" scan="true" scanPeriod="60 seconds">
+    <!-- 自定义日志输出格式 -->
+    <property name="LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n"/>
+    <!-- 自定义日志输出路径 -->
+    <property name="LOG_NAME" value="logs"/>
+    <!-- 自定义单个日志文件大小，超过将生成新的日志文件 -->
+    <property name="LOG_MAX_FILE_SIZE" value="512MB"/>
+    <!-- 自定义日志最大存留天数 -->
+    <property name="LOG_MAX_HISTORY" value="90"/>
+    <!-- 自定义日志总大小，超过将删除最旧存档 -->
+    <property name="LOG_TOTAL_SIZE_CAP" value="10GB"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- INFO 级别的文件日志, 按大小和时间滚动，保留 90 天，单个日志文件最大 512MB，总日志大小 10GB，输出的文件中会包含 INFO 级别以及以上（WARN 和 ERROR）的日志   -->
+    <appender name="FILE_INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_NAME}/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ERROR 级别的日志，按大小和时间滚动，保留 90 天，单个日志文件最大 512MB，总日志大小 10GB，输出的文件中只包含 ERROR 级别的日志 -->
+    <appender name="FILE_ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--自定义输出时的级别过滤器 对于低于 ERROR 级别的日志 全部拒绝-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_NAME}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>${LOG_MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${LOG_MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${LOG_TOTAL_SIZE_CAP}</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- 根记录器，有效级别为 INFO，所有的日志都会输出到 STDOUT 和 FILE_INFO_LOG 和 FILE_ERROR_LOG 三个地方 -->
+    <root level="info">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE_INFO_LOG"/>
+        <appender-ref ref="FILE_ERROR_LOG"/>
+    </root>
+</configuration>
+```
+

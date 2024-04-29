@@ -20,6 +20,10 @@
     margin-bottom: 30px;
   }
 
+  .VPBadge {
+    font-size: 17px;
+  }
+
   .custom-block {
     background-color: transparent;
     border: none;
