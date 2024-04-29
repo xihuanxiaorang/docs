@@ -11,6 +11,11 @@ export const nav: DefaultTheme.NavItem[] = [
         activeMatch: "/后端开发/设计模式/",
       },
       {
+        text: "JUC并发编程",
+        link: "/后端开发/juc/README",
+        activeMatch: "/后端开发/juc/",
+      },
+      {
         text: "其他",
         link: "/后端开发/other/ORM框架/JDBC",
         activeMatch: "/后端开发/other/",
@@ -38,7 +43,11 @@ export const nav: DefaultTheme.NavItem[] = [
     link: "/源码剖析/集合/HashMap源码分析",
     activeMatch: "/源码剖析/",
   },
-  { text: "💯项目实战", link: "/项目/项目模板/搭建Vue3企业级项目模板", activeMatch: "/项目/" },
+  {
+    text: "💯项目实战",
+    link: "/项目/项目模板/搭建Vue3企业级项目模板",
+    activeMatch: "/项目/",
+  },
   { text: "🏷️技术碎片", link: "/技术碎片/README", activeMatch: "/技术碎片/" },
   {
     text: "🧰实用工具",

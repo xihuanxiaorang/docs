@@ -181,6 +181,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       items: [{ text: "策略模式", link: "/策略模式" }],
     },
   ],
+  "/后端开发/juc": [{ text: "导读", link: "/后端开发/juc/README" }],
   "/后端开发/other": [
     {
       text: "ORM框架",
