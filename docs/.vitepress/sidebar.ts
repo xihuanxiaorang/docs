@@ -27,8 +27,8 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: "/Windows11中安装Linux教程之WLS2的使用",
         },
         {
-          text: "Github 个人主页",
-          link: "/Github个人主页",
+          text: "美化 Github 个人主页",
+          link: "/美化Github个人主页",
         },
       ],
     },

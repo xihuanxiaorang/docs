@@ -1,4 +1,4 @@
-# Github 个人主页
+# 美化 Github 个人主页
 
 ## 创建同名仓库
 
@@ -95,7 +95,7 @@
 
 2. 为当前仓库创建一个名为 `GH_TOKEN` 的密钥，值为上一步创建的 Github Access Token：前往当前仓库 Settings ➡️ Secrets and variables ➡️ Actions secrets and variables ➡️ New Repository secret。<br />![image-20240516182613827](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202405161826917.png)
 
-3. 修改工作流权限：回到当前仓库 ➡️ Settings ➡️ Actions ➡️ General ➡️ Workflow permissions ➡️ 设置为读写权限。<br />![new_secrets_actions](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202405170038996)
+3. 修改工作流权限：前往当前仓库 Settings ➡️ Actions ➡️ General ➡️ Workflow permissions ➡️ 设置为读写权限。<br />![new_secrets_actions](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202405170038996)
 
 4. 在当前仓库的 `.github/workflows` 目录下创建一个名为 `snake.yml` 的新工作流文件，内容如下所示：
 
