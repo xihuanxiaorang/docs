@@ -195,9 +195,11 @@
            with:
              WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
              GH_TOKEN: ${{ secrets.GH_TOKEN }}
-             BLOCKS: "⬜🟨🟩"
+             BLOCKS: ⣀⣄⣤⣦⣶⣷⣿
              TIME_RANGE: last_30_days
              SHOW_TIME: true
+             LANG_COUNT: 10
+             SHOW_TOTAL: true
    ```
 
 7. 使用方式：复制粘贴以下特殊注释后保存 README.md 文件，统计效果将出现在两者之间。
@@ -331,9 +333,11 @@ jobs:
         with:
           WAKATIME_API_KEY: ${{ secrets.WAKATIME_API_KEY }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          BLOCKS: "⬜🟨🟩"
+          BLOCKS: ⣀⣄⣤⣦⣶⣷⣿
           TIME_RANGE: last_30_days
           SHOW_TIME: true
+          LANG_COUNT: 10
+          SHOW_TOTAL: true
 ```
 
 :::
