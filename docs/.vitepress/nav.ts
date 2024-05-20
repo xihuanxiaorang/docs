@@ -16,6 +16,11 @@ export const nav: DefaultTheme.NavItem[] = [
         activeMatch: "/后端开发/juc/",
       },
       {
+        text: "MySQL",
+        link: "/后端开发/MySQL/通用表表达式",
+        activeMatch: "/后端开发/MySQL/",
+      },
+      {
         text: "其他",
         link: "/后端开发/other/ORM框架/JDBC",
         activeMatch: "/后端开发/other/",
