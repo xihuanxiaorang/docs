@@ -29,23 +29,27 @@
 
 ### 如何隐藏不想看到的文件夹或者文件？
 
-File -> settings -> Editor -> File Types -> Ignore Files and Folders，配置不想看到的文件夹或者文件。<br />![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041718338.png)
+File ➡ settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配置不想看到的文件夹或者文件。<br />![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041718338.png)
 
 如果配置无误还能看到文件夹或者文件的话，请确保没有勾选显示排除的文件选项，如果勾选了的话取消勾选即可！<br />![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041723979.png)
 
 ### 以 TODO 为例添加自定义的实时模板
 
-设置 -> 编辑器 -> 实时模板，先创建一个属于自己的分组，组名可以根据自己的喜欢取；<br />![img](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041706690.png)在创建的分组下新建一个模板，以 <span style="background-color: rgb(251, 228, 231);">TODO</span> 为例，步骤如下所示：
+设置 ➡ 编辑器 ➡ 实时模板，先创建一个属于自己的分组，组名可以根据自己的喜欢取；<br />![img](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041706690.png)在创建的分组下新建一个模板，以 <span style="background-color: rgb(251, 228, 231);">TODO</span> 为例，步骤如下所示：
 
 1. 先右键选中新创建的分组，然后点击 + 号选择实时模板；<br />![img](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041707518.png)
 
 2. 填写模板信息，缩写，描述信息，模板文本，以及编辑模板文本中涉及到的变量，最后选择该模板应用于 Java 环境；<br />![img](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041707094.png)
 
-3. 设置 -> 编辑器 -> TODO，先创建一个模式，按照如下方式进行填写；<br />![img](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041707324.png)
+3. 设置 ➡ 编辑器 ➡ TODO，先创建一个模式，按照如下方式进行填写；<br />![img](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041707324.png)
 
 4. 添加一个筛选器，名称任意，模式选择上面新建的，最后点击确定退出设置；<br />![img](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041708909.png)
 
 5. 打开 TODO 窗口，选中咱们新建的筛选器，这样就只会显示出咱们添加的 TODO，把其他人或其他引入的第三方项目中的 TODO 给过滤掉！<br />![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308041708006.png)
+
+### 设置文件的行分隔符为 LF
+
+文件 ➡ 设置 ➡ 编辑器 ➡ 代码样式 ➡ 行分隔符。<br />![image-20240522203342601](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202405222033731.png)
 
 ## 插件
 
@@ -112,5 +116,5 @@ File -> settings -> Editor -> File Types -> Ignore Files and Folders，配置不
 
 ### 快速生成测试类
 
-对某个类快速生成测试类：选中需要生成测试代码的类 ->右键 -> Go To -> Test -> Create New Test。<br />![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404031625987.png)
+对某个类快速生成测试类：选中需要生成测试代码的类 ➡ 右键 ➡ Go To ➡ Test ➡ Create New Test。<br />![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404031625987.png)
 
