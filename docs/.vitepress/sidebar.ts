@@ -187,6 +187,10 @@ export const sidebar: DefaultTheme.Sidebar = {
     },
   ],
   "/后端开发/juc": [{ text: "导读", link: "/后端开发/juc/README" }],
+  "/后端开发/MySQL": [
+    { text: "通用表表达式", link: "/后端开发/MySQL/通用表表达式" },
+    { text: "窗口函数", link: "/后端开发/MySQL/窗口函数" },
+  ],
   "/后端开发/other": [
     {
       text: "ORM框架",
