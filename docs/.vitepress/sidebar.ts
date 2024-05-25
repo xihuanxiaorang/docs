@@ -190,6 +190,11 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/后端开发/MySQL": [
     { text: "通用表表达式", link: "/后端开发/MySQL/通用表表达式" },
     { text: "窗口函数", link: "/后端开发/MySQL/窗口函数" },
+    {
+      text: "刷题集",
+      base: "/后端开发/MySQL/刷题集",
+      items: [{ text: "LeetCode", link: "/LeetCode" }],
+    },
   ],
   "/后端开发/other": [
     {
