@@ -25,6 +25,20 @@
 | [595. 大的国家](#big-countries)                              | <strong style="color:#51b8b8;">简单</strong> |                                                              |
 | [596. 超过5名学生的课](#classes-more-than-5-students)        | <strong style="color:#51b8b8;">简单</strong> |                                                              |
 | [601. 体育馆的人流量](#human-traffic-of-stadium)             | <strong style="color:#e63338;">困难</strong> | <Badge type="tip" text="窗口函数" /> <Badge type="warning" text="连续问题" /> |
+| [602. 好友申请 II ：谁有最多的好友](#friend-requests-ii-who-has-the-most-friends) | <strong style="color:#f5b900;">中等</strong> |                                                              |
+| [607. 销售员](#sales-person)                                 | <strong style="color:#51b8b8;">简单</strong> |                                                              |
+| [608. 树节点](#tree-node)                                    | <strong style="color:#f5b900;">中等</strong> |                                                              |
+| [610. 判断三角形](#triangle-judgement)                       | <strong style="color:#51b8b8;">简单</strong> |                                                              |
+| [619. 只出现一次的最大数字](#biggest-single-number)          | <strong style="color:#51b8b8;">简单</strong> |                                                              |
+| [620. 有趣的电影](#not-boring-movies)                        | <strong style="color:#51b8b8;">简单</strong> |                                                              |
+| [626. 换座位](#exchange-seats)                               | <strong style="color:#f5b900;">中等</strong> |                                                              |
+| [627. 变更性别](#swap-sex)                                   | <strong style="color:#51b8b8;">简单</strong> |                                                              |
+| [1045. 买下所有产品的客户](#customers-who-bought-all-products) | <strong style="color:#f5b900;">中等</strong> |                                                              |
+| [1050. 合作过至少三次的演员和导演](#actors-and-directors-who-cooperated-at-least-three-times) | <strong style="color:#51b8b8;">简单</strong> |                                                              |
+| [1068. 产品销售分析 I](#product-sales-analysis-i)            | <strong style="color:#51b8b8;">简单</strong> |                                                              |
+| [1070. 产品销售分析 III](#product-sales-analysis-iii)        | <strong style="color:#f5b900;">中等</strong> |                                                              |
+| [1075. 项目员工 I](#project-employees-i)                     | <strong style="color:#51b8b8;">简单</strong> |                                                              |
+| [1084. 销售分析III](#sales-analysis-iii)                     | <strong style="color:#51b8b8;">简单</strong> |                                                              |
 
 ## [175. 组合两个表](https://leetcode.cn/problems/combine-two-tables/) {#combine-two-tables}
 
@@ -1909,6 +1923,1163 @@ WHERE (pre2 = id - 2 AND pre1 = id - 1)
    OR (pre1 = id - 1 AND next1 = id + 1)
    OR (next1 = id + 1 AND next2 = id + 2)
 ORDER BY visit_date;
+```
+
+:::
+
+## [602. 好友申请 II ：谁有最多的好友](https://leetcode.cn/problems/friend-requests-ii-who-has-the-most-friends/) {#friend-requests-ii-who-has-the-most-friends}
+
+::: code-group
+
+```markdown [题目]
+RequestAccepted 表：
+
++----------------+---------+
+| Column Name    | Type    |
++----------------+---------+
+| requester_id   | int     |
+| accepter_id    | int     |
+| accept_date    | date    |
++----------------+---------+
+(requester_id, accepter_id) 是这张表的主键(具有唯一值的列的组合)。
+这张表包含发送好友请求的人的 ID ，接收好友请求的人的 ID ，以及好友请求通过的日期。
+
+编写解决方案，找出拥有最多的好友的人和他拥有的好友数目。
+生成的测试用例保证拥有最多好友数目的只有 1 个人。
+查询结果格式如下例所示。
+
+示例 1：
+
+输入：
+RequestAccepted 表：
++--------------+-------------+-------------+
+| requester_id | accepter_id | accept_date |
++--------------+-------------+-------------+
+| 1            | 2           | 2016/06/03  |
+| 1            | 3           | 2016/06/08  |
+| 2            | 3           | 2016/06/08  |
+| 3            | 4           | 2016/06/09  |
++--------------+-------------+-------------+
+输出：
++----+-----+
+| id | num |
++----+-----+
+| 3  | 3   |
++----+-----+
+解释：
+编号为 3 的人是编号为 1 ，2 和 4 的人的好友，所以他总共有 3 个好友，比其他人都多。
+ 
+进阶：在真实世界里，可能会有多个人拥有好友数相同且最多，你能找到所有这些人吗？
+```
+
+```sql [SQL Schema]
+Create table If Not Exists RequestAccepted (requester_id int not null, accepter_id int null, accept_date date null);
+Truncate table RequestAccepted;
+insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('1', '2', '2016/06/03');
+insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('1', '3', '2016/06/08');
+insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('2', '3', '2016/06/08');
+insert into RequestAccepted (requester_id, accepter_id, accept_date) values ('3', '4', '2016/06/09');
+```
+
+```sql [答案]
+SELECT id, COUNT(*) AS `num`
+FROM (SELECT requester_id AS `id`
+      FROM requestaccepted
+      UNION ALL
+      SELECT accepter_id AS `id`
+      FROM requestaccepted) t
+GROUP BY id
+ORDER BY COUNT(*) DESC
+LIMIT 1;
+```
+
+:::
+
+## [607. 销售员](https://leetcode.cn/problems/sales-person/) {#sales-person}
+
+::: code-group
+
+```markdown [题目]
+表: SalesPerson
+
++-----------------+---------+
+| Column Name     | Type    |
++-----------------+---------+
+| sales_id        | int     |
+| name            | varchar |
+| salary          | int     |
+| commission_rate | int     |
+| hire_date       | date    |
++-----------------+---------+
+sales_id 是该表的主键列(具有唯一值的列)。
+该表的每一行都显示了销售人员的姓名和 ID ，以及他们的工资、佣金率和雇佣日期。
+ 
+表: Company
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| com_id      | int     |
+| name        | varchar |
+| city        | varchar |
++-------------+---------+
+com_id 是该表的主键列(具有唯一值的列)。
+该表的每一行都表示公司的名称和 ID ，以及公司所在的城市。
+
+表: Orders
+
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| order_id    | int  |
+| order_date  | date |
+| com_id      | int  |
+| sales_id    | int  |
+| amount      | int  |
++-------------+------+
+order_id 是该表的主键列(具有唯一值的列)。
+com_id 是 Company 表中 com_id 的外键（reference 列）。
+sales_id 是来自销售员表 sales_id 的外键（reference 列）。
+该表的每一行包含一个订单的信息。这包括公司的 ID 、销售人员的 ID 、订单日期和支付的金额。
+
+编写解决方案，找出没有任何与名为 “RED” 的公司相关的订单的所有销售人员的姓名。
+以 任意顺序 返回结果表。
+返回结果格式如下所示。
+
+示例 1：
+
+输入：
+SalesPerson 表:
++----------+------+--------+-----------------+------------+
+| sales_id | name | salary | commission_rate | hire_date  |
++----------+------+--------+-----------------+------------+
+| 1        | John | 100000 | 6               | 4/1/2006   |
+| 2        | Amy  | 12000  | 5               | 5/1/2010   |
+| 3        | Mark | 65000  | 12              | 12/25/2008 |
+| 4        | Pam  | 25000  | 25              | 1/1/2005   |
+| 5        | Alex | 5000   | 10              | 2/3/2007   |
++----------+------+--------+-----------------+------------+
+Company 表:
++--------+--------+----------+
+| com_id | name   | city     |
++--------+--------+----------+
+| 1      | RED    | Boston   |
+| 2      | ORANGE | New York |
+| 3      | YELLOW | Boston   |
+| 4      | GREEN  | Austin   |
++--------+--------+----------+
+Orders 表:
++----------+------------+--------+----------+--------+
+| order_id | order_date | com_id | sales_id | amount |
++----------+------------+--------+----------+--------+
+| 1        | 1/1/2014   | 3      | 4        | 10000  |
+| 2        | 2/1/2014   | 4      | 5        | 5000   |
+| 3        | 3/1/2014   | 1      | 1        | 50000  |
+| 4        | 4/1/2014   | 1      | 4        | 25000  |
++----------+------------+--------+----------+--------+
+输出：
++------+
+| name |
++------+
+| Amy  |
+| Mark |
+| Alex |
++------+
+解释：
+根据表 orders 中的订单 '3' 和 '4' ，容易看出只有 'John' 和 'Pam' 两个销售员曾经向公司 'RED' 销售过。
+所以我们需要输出表 salesperson 中所有其他人的名字。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists SalesPerson (sales_id int, name varchar(255), salary int, commission_rate int, hire_date date);
+Create table If Not Exists Company (com_id int, name varchar(255), city varchar(255));
+Create table If Not Exists Orders (order_id int, order_date date, com_id int, sales_id int, amount int);
+Truncate table SalesPerson;
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('1', 'John', '100000', '6', '2006-4-1');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('2', 'Amy', '12000', '5', '2010-5-1');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('3', 'Mark', '65000', '12', '2008-12-25');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('4', 'Pam', '25000', '25', '2005-1-1');
+insert into SalesPerson (sales_id, name, salary, commission_rate, hire_date) values ('5', 'Alex', '5000', '10', '2007-2-3');
+Truncate table Company;
+insert into Company (com_id, name, city) values ('1', 'RED', 'Boston');
+insert into Company (com_id, name, city) values ('2', 'ORANGE', 'New York');
+insert into Company (com_id, name, city) values ('3', 'YELLOW', 'Boston');
+insert into Company (com_id, name, city) values ('4', 'GREEN', 'Austin');
+Truncate table Orders;
+insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('1', '2024-1-1', '3', '4', '10000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('2', '2024-2-1', '4', '5', '5000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('3', '2024-3-1', '1', '1', '50000');
+insert into Orders (order_id, order_date, com_id, sales_id, amount) values ('4', '2024-4-1', '1', '4', '25000');
+```
+
+```sql [答案]
+SELECT name
+FROM salesperson
+WHERE sales_id NOT IN (SELECT o.sales_id
+                       FROM orders o
+                                INNER JOIN company c ON o.com_id = c.com_id
+                       WHERE c.name = 'RED');
+```
+
+:::
+
+## [608. 树节点](https://leetcode.cn/problems/tree-node/) {#tree-node}
+
+::: code-group
+
+```markdown [题目]
+表：Tree
+
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| id          | int  |
+| p_id        | int  |
++-------------+------+
+id 是该表中具有唯一值的列。
+该表的每行包含树中节点的 id 及其父节点的 id 信息。
+给定的结构总是一个有效的树。
+
+树中的每个节点可以是以下三种类型之一：
+"Leaf"：节点是叶子节点。
+"Root"：节点是树的根节点。
+"lnner"：节点既不是叶子节点也不是根节点。
+
+编写一个解决方案来报告树中每个节点的类型。
+以 任意顺序 返回结果表。
+结果格式如下所示。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Tree (id int, p_id int);
+Truncate table Tree;
+insert into Tree (id, p_id) values ('1', NULL);
+insert into Tree (id, p_id) values ('2', '1');
+insert into Tree (id, p_id) values ('3', '1');
+insert into Tree (id, p_id) values ('4', '2');
+insert into Tree (id, p_id) values ('5', '2');
+```
+
+```sql [解法一]
+SELECT t1.id, IF(COUNT(t1.p_id) = 0, 'Root', IF(COUNT(t2.id) = 0, 'Leaf', 'Inner')) AS `type`
+FROM tree t1
+         LEFT JOIN tree t2 ON t1.id = t2.p_id
+GROUP BY t1.id;
+```
+
+```sql [解法二]
+SELECT id, IF(p_id IS NULL, 'Root', IF(id IN (SELECT p_id FROM tree), 'Inner', 'Leaf')) AS `type`
+FROM tree;
+```
+
+:::
+
+示例 1：
+
+![img](https://assets.leetcode.com/uploads/2021/10/22/tree1.jpg)
+
+```markdown
+输入：
+Tree table:
++----+------+
+| id | p_id |
++----+------+
+| 1  | null |
+| 2  | 1    |
+| 3  | 1    |
+| 4  | 2    |
+| 5  | 2    |
++----+------+
+输出：
++----+-------+
+| id | type  |
++----+-------+
+| 1  | Root  |
+| 2  | Inner |
+| 3  | Leaf  |
+| 4  | Leaf  |
+| 5  | Leaf  |
++----+-------+
+解释：
+节点 1 是根节点，因为它的父节点为空，并且它有子节点 2 和 3。
+节点 2 是一个内部节点，因为它有父节点 1 和子节点 4 和 5。
+节点 3、4 和 5 是叶子节点，因为它们有父节点而没有子节点。
+```
+
+示例 2：
+
+![img](https://assets.leetcode.com/uploads/2021/10/22/tree2.jpg)
+
+```markdown
+输入：
+Tree table:
++----+------+
+| id | p_id |
++----+------+
+| 1  | null |
++----+------+
+输出：
++----+-------+
+| id | type  |
++----+-------+
+| 1  | Root  |
++----+-------+
+解释：如果树中只有一个节点，则只需要输出其根属性。
+```
+
+## [610. 判断三角形](https://leetcode.cn/problems/triangle-judgement/) {#triangle-judgement}
+
+::: code-group
+
+```markdown [题目]
+表: Triangle
+
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| x           | int  |
+| y           | int  |
+| z           | int  |
++-------------+------+
+在 SQL 中，(x, y, z)是该表的主键列。
+该表的每一行包含三个线段的长度。
+
+对每三个线段报告它们是否可以形成一个三角形。
+以 任意顺序 返回结果表。
+查询结果格式如下所示。
+
+示例 1:
+
+输入: 
+Triangle 表:
++----+----+----+
+| x  | y  | z  |
++----+----+----+
+| 13 | 15 | 30 |
+| 10 | 20 | 15 |
++----+----+----+
+输出: 
++----+----+----+----------+
+| x  | y  | z  | triangle |
++----+----+----+----------+
+| 13 | 15 | 30 | No       |
+| 10 | 20 | 15 | Yes      |
++----+----+----+----------+
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Triangle (x int, y int, z int);
+Truncate table Triangle;
+insert into Triangle (x, y, z) values ('13', '15', '30');
+insert into Triangle (x, y, z) values ('10', '20', '15');
+```
+
+```sql [答案]
+SELECT x, y, z, IF(x + y > z && x + z > y && y + z > x, 'Yes', 'No') AS `triangle`
+FROM triangle;
+```
+
+:::
+
+## [619. 只出现一次的最大数字](https://leetcode.cn/problems/biggest-single-number/) {#biggest-single-number}
+
+::: code-group
+
+```markdown [题目]
+MyNumbers 表：
+
++-------------+------+
+| Column Name | Type |
++-------------+------+
+| num         | int  |
++-------------+------+
+该表可能包含重复项（换句话说，在SQL中，该表没有主键）。
+这张表的每一行都含有一个整数。
+
+单一数字 是在 MyNumbers 表中只出现一次的数字。
+找出最大的 单一数字 。如果不存在 单一数字 ，则返回 null 。
+查询结果如下例所示。
+
+示例 1：
+
+输入：
+MyNumbers 表：
++-----+
+| num |
++-----+
+| 8   |
+| 8   |
+| 3   |
+| 3   |
+| 1   |
+| 4   |
+| 5   |
+| 6   |
++-----+
+输出：
++-----+
+| num |
++-----+
+| 6   |
++-----+
+解释：单一数字有 1、4、5 和 6 。
+6 是最大的单一数字，返回 6 。
+示例 2：
+
+输入：
+MyNumbers table:
++-----+
+| num |
++-----+
+| 8   |
+| 8   |
+| 7   |
+| 7   |
+| 3   |
+| 3   |
+| 3   |
++-----+
+输出：
++------+
+| num  |
++------+
+| null |
++------+
+解释：输入的表中不存在单一数字，所以返回 null 。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists MyNumbers (num int);
+Truncate table MyNumbers;
+insert into MyNumbers (num) values ('8');
+insert into MyNumbers (num) values ('8');
+insert into MyNumbers (num) values ('3');
+insert into MyNumbers (num) values ('3');
+insert into MyNumbers (num) values ('1');
+insert into MyNumbers (num) values ('4');
+insert into MyNumbers (num) values ('5');
+insert into MyNumbers (num) values ('6');
+```
+
+```sql [答案]
+SELECT MAX(num) AS `num`
+FROM (SELECT num FROM mynumbers GROUP BY num HAVING COUNT(*) = 1) t;
+```
+
+:::
+
+## [620. 有趣的电影](https://leetcode.cn/problems/not-boring-movies/) {#not-boring-movies}
+
+::: code-group
+
+```markdown [题目]
+表：cinema
+
++----------------+----------+
+| Column Name    | Type     |
++----------------+----------+
+| id             | int      |
+| movie          | varchar  |
+| description    | varchar  |
+| rating         | float    |
++----------------+----------+
+id 是该表的主键(具有唯一值的列)。
+每行包含有关电影名称、类型和评级的信息。
+评级为 [0,10] 范围内的小数点后 2 位浮点数。
+
+编写解决方案，找出所有影片描述为 非 boring (不无聊) 的并且 id 为奇数 的影片。
+返回结果按 rating 降序排列。
+结果格式如下示例。
+
+示例 1：
+
+输入：
++---------+-----------+--------------+-----------+
+|   id    | movie     |  description |  rating   |
++---------+-----------+--------------+-----------+
+|   1     | War       |   great 3D   |   8.9     |
+|   2     | Science   |   fiction    |   8.5     |
+|   3     | irish     |   boring     |   6.2     |
+|   4     | Ice song  |   Fantacy    |   8.6     |
+|   5     | House card|   Interesting|   9.1     |
++---------+-----------+--------------+-----------+
+输出：
++---------+-----------+--------------+-----------+
+|   id    | movie     |  description |  rating   |
++---------+-----------+--------------+-----------+
+|   5     | House card|   Interesting|   9.1     |
+|   1     | War       |   great 3D   |   8.9     |
++---------+-----------+--------------+-----------+
+解释：
+我们有三部电影，它们的 id 是奇数:1、3 和 5。id = 3 的电影是 boring 的，所以我们不把它包括在答案中。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists cinema (id int, movie varchar(255), description varchar(255), rating float(2, 1));
+Truncate table cinema;
+insert into cinema (id, movie, description, rating) values ('1', 'War', 'great 3D', '8.9');
+insert into cinema (id, movie, description, rating) values ('2', 'Science', 'fiction', '8.5');
+insert into cinema (id, movie, description, rating) values ('3', 'irish', 'boring', '6.2');
+insert into cinema (id, movie, description, rating) values ('4', 'Ice song', 'Fantacy', '8.6');
+insert into cinema (id, movie, description, rating) values ('5', 'House card', 'Interesting', '9.1');
+```
+
+```sql [答案]
+SELECT *
+FROM cinema
+WHERE description <> 'boring'
+  AND id % 2 = 1
+ORDER BY rating DESC;
+```
+
+:::
+
+## [626. 换座位](https://leetcode.cn/problems/exchange-seats/) {#exchange-seats}
+
+::: code-group
+
+```markdown [题目]
+表: Seat
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| student     | varchar |
++-------------+---------+
+id 是该表的主键（唯一值）列。
+该表的每一行都表示学生的姓名和 ID。
+id 是一个连续的增量。
+
+编写解决方案来交换每两个连续的学生的座位号。如果学生的数量是奇数，则最后一个学生的id不交换。
+按 id 升序 返回结果表。
+查询结果格式如下所示。
+
+示例 1:
+
+输入: 
+Seat 表:
++----+---------+
+| id | student |
++----+---------+
+| 1  | Abbot   |
+| 2  | Doris   |
+| 3  | Emerson |
+| 4  | Green   |
+| 5  | Jeames  |
++----+---------+
+输出: 
++----+---------+
+| id | student |
++----+---------+
+| 1  | Doris   |
+| 2  | Abbot   |
+| 3  | Green   |
+| 4  | Emerson |
+| 5  | Jeames  |
++----+---------+
+解释:
+请注意，如果学生人数为奇数，则不需要更换最后一名学生的座位。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Seat (id int, student varchar(255));
+Truncate table Seat;
+insert into Seat (id, student) values ('1', 'Abbot');
+insert into Seat (id, student) values ('2', 'Doris');
+insert into Seat (id, student) values ('3', 'Emerson');
+insert into Seat (id, student) values ('4', 'Green');
+insert into Seat (id, student) values ('5', 'Jeames');
+```
+
+```sql [解法一]
+SELECT s1.id, IFNULL(s2.student, s1.student) AS `student`
+FROM seat s1
+         LEFT JOIN seat s2 ON IF(s1.id % 2 = 1, s2.id = s1.id + 1, s2.id = s1.id - 1);
+```
+
+```sql [解法二]
+SELECT (CASE WHEN id % 2 = 0 THEN id - 1 WHEN id = (SELECT COUNT(*) FROM seat) THEN id ELSE id + 1 END) AS `id`, student
+FROM seat
+ORDER BY id;
+```
+
+:::
+
+## [627. 变更性别](https://leetcode.cn/problems/swap-salary/) {#swap-sex}
+
+::: code-group
+
+```markdown [题目]
+Salary 表：
+
++-------------+----------+
+| Column Name | Type     |
++-------------+----------+
+| id          | int      |
+| name        | varchar  |
+| sex         | ENUM     |
+| salary      | int      |
++-------------+----------+
+id 是这个表的主键（具有唯一值的列）。
+sex 这一列的值是 ENUM 类型，只能从 ('m', 'f') 中取。
+本表包含公司雇员的信息。
+ 
+请你编写一个解决方案来交换所有的 'f' 和 'm' （即，将所有 'f' 变为 'm' ，反之亦然），仅使用 单个 update 语句 ，且不产生中间临时表。
+注意，你必须仅使用一条 update 语句，且 不能 使用 select 语句。
+结果如下例所示。
+
+示例 1:
+
+输入：
+Salary 表：
++----+------+-----+--------+
+| id | name | sex | salary |
++----+------+-----+--------+
+| 1  | A    | m   | 2500   |
+| 2  | B    | f   | 1500   |
+| 3  | C    | m   | 5500   |
+| 4  | D    | f   | 500    |
++----+------+-----+--------+
+输出：
++----+------+-----+--------+
+| id | name | sex | salary |
++----+------+-----+--------+
+| 1  | A    | f   | 2500   |
+| 2  | B    | m   | 1500   |
+| 3  | C    | f   | 5500   |
+| 4  | D    | m   | 500    |
++----+------+-----+--------+
+解释：
+(1, A) 和 (3, C) 从 'm' 变为 'f' 。
+(2, B) 和 (4, D) 从 'f' 变为 'm' 。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Salary (id int, name varchar(100), sex char(1), salary int);
+Truncate table Salary;
+insert into Salary (id, name, sex, salary) values ('1', 'A', 'm', '2500');
+insert into Salary (id, name, sex, salary) values ('2', 'B', 'f', '1500');
+insert into Salary (id, name, sex, salary) values ('3', 'C', 'm', '5500');
+insert into Salary (id, name, sex, salary) values ('4', 'D', 'f', '500');
+```
+
+```sql [答案]
+UPDATE salary SET sex = IF(sex = 'm', 'f', 'm');
+```
+
+:::
+
+## [1045. 买下所有产品的客户](https://leetcode.cn/problems/customers-who-bought-all-products/) {#customers-who-bought-all-products}
+
+::: code-group
+
+```markdown [题目]
+Customer 表：
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| customer_id | int     |
+| product_key | int     |
++-------------+---------+
+该表可能包含重复的行。
+customer_id 不为 NULL。
+product_key 是 Product 表的外键(reference 列)。
+Product 表：
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| product_key | int     |
++-------------+---------+
+product_key 是这张表的主键（具有唯一值的列）。
+
+编写解决方案，报告 Customer 表中购买了 Product 表中所有产品的客户的 id。
+返回结果表 无顺序要求 。
+返回结果格式如下所示。
+
+示例 1：
+
+输入：
+Customer 表：
++-------------+-------------+
+| customer_id | product_key |
++-------------+-------------+
+| 1           | 5           |
+| 2           | 6           |
+| 3           | 5           |
+| 3           | 6           |
+| 1           | 6           |
++-------------+-------------+
+Product 表：
++-------------+
+| product_key |
++-------------+
+| 5           |
+| 6           |
++-------------+
+输出：
++-------------+
+| customer_id |
++-------------+
+| 1           |
+| 3           |
++-------------+
+解释：
+购买了所有产品（5 和 6）的客户的 id 是 1 和 3 。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Customer (customer_id int, product_key int);
+Create table Product (product_key int);
+Truncate table Customer;
+insert into Customer (customer_id, product_key) values ('1', '5');
+insert into Customer (customer_id, product_key) values ('2', '6');
+insert into Customer (customer_id, product_key) values ('3', '5');
+insert into Customer (customer_id, product_key) values ('3', '6');
+insert into Customer (customer_id, product_key) values ('1', '6');
+Truncate table Product;
+insert into Product (product_key) values ('5');
+insert into Product (product_key) values ('6');
+```
+
+```sql [答案]
+SELECT customer_id
+FROM customer c
+GROUP BY customer_id
+HAVING COUNT(DISTINCT product_key) = (SELECT COUNT(*) FROM product);
+```
+
+:::
+
+## [1050. 合作过至少三次的演员和导演](https://leetcode.cn/problems/actors-and-directors-who-cooperated-at-least-three-times/) {#actors-and-directors-who-cooperated-at-least-three-times}
+
+::: code-group
+
+```markdown [题目]
+ActorDirector 表：
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| actor_id    | int     |
+| director_id | int     |
+| timestamp   | int     |
++-------------+---------+
+timestamp 是这张表的主键(具有唯一值的列).
+
+编写解决方案找出合作过至少三次的演员和导演的 id 对 (actor_id, director_id)
+示例 1：
+
+输入：
+ActorDirector 表：
++-------------+-------------+-------------+
+| actor_id    | director_id | timestamp   |
++-------------+-------------+-------------+
+| 1           | 1           | 0           |
+| 1           | 1           | 1           |
+| 1           | 1           | 2           |
+| 1           | 2           | 3           |
+| 1           | 2           | 4           |
+| 2           | 1           | 5           |
+| 2           | 1           | 6           |
++-------------+-------------+-------------+
+输出：
++-------------+-------------+
+| actor_id    | director_id |
++-------------+-------------+
+| 1           | 1           |
++-------------+-------------+
+解释：
+唯一的 id 对是 (1, 1)，他们恰好合作了 3 次。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists ActorDirector (actor_id int, director_id int, timestamp int)
+Truncate table ActorDirector
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '1', '0')
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '1', '1')
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '1', '2')
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '2', '3')
+insert into ActorDirector (actor_id, director_id, timestamp) values ('1', '2', '4')
+insert into ActorDirector (actor_id, director_id, timestamp) values ('2', '1', '5')
+insert into ActorDirector (actor_id, director_id, timestamp) values ('2', '1', '6')
+```
+
+```sql [答案]
+SELECT actor_id, director_id
+FROM actordirector
+GROUP BY actor_id, director_id
+HAVING COUNT(*) >= 3;
+```
+
+:::
+
+## [1068. 产品销售分析 I](https://leetcode.cn/problems/product-sales-analysis-i/) {#product-sales-analysis-i}
+
+::: code-group
+
+```markdown [题目]
+销售表 Sales：
+
++-------------+-------+
+| Column Name | Type  |
++-------------+-------+
+| sale_id     | int   |
+| product_id  | int   |
+| year        | int   |
+| quantity    | int   |
+| price       | int   |
++-------------+-------+
+(sale_id, year) 是销售表 Sales 的主键（具有唯一值的列的组合）。
+product_id 是关联到产品表 Product 的外键（reference 列）。
+该表的每一行显示 product_id 在某一年的销售情况。
+注意: price 表示每单位价格。
+产品表 Product：
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| product_id   | int     |
+| product_name | varchar |
++--------------+---------+
+product_id 是表的主键（具有唯一值的列）。
+该表的每一行表示每种产品的产品名称。
+ 
+编写解决方案，以获取 Sales 表中所有 sale_id 对应的 product_name 以及该产品的所有 year 和 price 。
+返回结果表 无顺序要求 。
+结果格式示例如下。
+
+示例 1：
+
+输入：
+Sales 表：
++---------+------------+------+----------+-------+
+| sale_id | product_id | year | quantity | price |
++---------+------------+------+----------+-------+ 
+| 1       | 100        | 2008 | 10       | 5000  |
+| 2       | 100        | 2009 | 12       | 5000  |
+| 7       | 200        | 2011 | 15       | 9000  |
++---------+------------+------+----------+-------+
+Product 表：
++------------+--------------+
+| product_id | product_name |
++------------+--------------+
+| 100        | Nokia        |
+| 200        | Apple        |
+| 300        | Samsung      |
++------------+--------------+
+输出：
++--------------+-------+-------+
+| product_name | year  | price |
++--------------+-------+-------+
+| Nokia        | 2008  | 5000  |
+| Nokia        | 2009  | 5000  |
+| Apple        | 2011  | 9000  |
++--------------+-------+-------+
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Sales (sale_id int, product_id int, year int, quantity int, price int);
+Create table If Not Exists Product (product_id int, product_name varchar(10));
+Truncate table Sales;
+insert into Sales (sale_id, product_id, year, quantity, price) values ('1', '100', '2008', '10', '5000');
+insert into Sales (sale_id, product_id, year, quantity, price) values ('2', '100', '2009', '12', '5000');
+insert into Sales (sale_id, product_id, year, quantity, price) values ('7', '200', '2011', '15', '9000');
+Truncate table Product;
+insert into Product (product_id, product_name) values ('100', 'Nokia');
+insert into Product (product_id, product_name) values ('200', 'Apple');
+insert into Product (product_id, product_name) values ('300', 'Samsung');
+```
+
+```sql [答案]
+SELECT p.product_name, s.year, s.price
+FROM sales s
+         INNER JOIN product p ON s.product_id = p.product_id;
+```
+
+:::
+
+## [1070. 产品销售分析 III](https://leetcode.cn/problems/product-sales-analysis-iii/) {#product-sales-analysis-iii}
+
+::: code-group
+
+```markdown [题目]
+销售表 Sales：
+
++-------------+-------+
+| Column Name | Type  |
++-------------+-------+
+| sale_id     | int   |
+| product_id  | int   |
+| year        | int   |
+| quantity    | int   |
+| price       | int   |
++-------------+-------+
+(sale_id, year) 是这张表的主键（具有唯一值的列的组合）。
+product_id 是产品表的外键（reference 列）。
+这张表的每一行都表示：编号 product_id 的产品在某一年的销售额。
+请注意，价格是按每单位计的。
+ 
+
+产品表 Product：
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| product_id   | int     |
+| product_name | varchar |
++--------------+---------+
+product_id 是这张表的主键（具有唯一值的列）。
+这张表的每一行都标识：每个产品的 id 和 产品名称。
+ 
+编写解决方案，选出每个售出过的产品 第一年 销售的 产品 id、年份、数量 和 价格。
+结果表中的条目可以按 任意顺序 排列。
+结果格式如下例所示：
+
+示例 1：
+
+输入：
+Sales 表：
++---------+------------+------+----------+-------+
+| sale_id | product_id | year | quantity | price |
++---------+------------+------+----------+-------+ 
+| 1       | 100        | 2008 | 10       | 5000  |
+| 2       | 100        | 2009 | 12       | 5000  |
+| 7       | 200        | 2011 | 15       | 9000  |
++---------+------------+------+----------+-------+
+Product 表：
++------------+--------------+
+| product_id | product_name |
++------------+--------------+
+| 100        | Nokia        |
+| 200        | Apple        |
+| 300        | Samsung      |
++------------+--------------+
+输出：
++------------+------------+----------+-------+
+| product_id | first_year | quantity | price |
++------------+------------+----------+-------+ 
+| 100        | 2008       | 10       | 5000  |
+| 200        | 2011       | 15       | 9000  |
++------------+------------+----------+-------+
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Sales (sale_id int, product_id int, year int, quantity int, price int);
+Create table If Not Exists Product (product_id int, product_name varchar(10));
+Truncate table Sales;
+insert into Sales (sale_id, product_id, year, quantity, price) values ('1', '100', '2008', '10', '5000');
+insert into Sales (sale_id, product_id, year, quantity, price) values ('2', '100', '2009', '12', '5000');
+insert into Sales (sale_id, product_id, year, quantity, price) values ('7', '200', '2011', '15', '9000');
+Truncate table Product;
+insert into Product (product_id, product_name) values ('100', 'Nokia');
+insert into Product (product_id, product_name) values ('200', 'Apple');
+insert into Product (product_id, product_name) values ('300', 'Samsung');
+```
+
+```sql [解法一]
+SELECT product_id, year AS `first_year`, quantity, price
+FROM sales
+WHERE (product_id, year) IN (SELECT product_id, MIN(year)
+                             FROM sales
+                             GROUP BY product_id);
+```
+
+```sql [解法二]
+SELECT product_id, year AS `first_year`, quantity, price
+FROM (SELECT product_id, RANK() OVER (PARTITION BY product_id ORDER BY year) AS `rn`, year, quantity, price
+      FROM sales) t
+WHERE rn = 1;
+```
+
+:::
+
+## [1075. 项目员工 I](https://leetcode.cn/problems/project-employees-i/) {#project-employees-i}
+
+::: code-group
+
+```markdown [题目]
+项目表 Project： 
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| project_id  | int     |
+| employee_id | int     |
++-------------+---------+
+主键为 (project_id, employee_id)。
+employee_id 是员工表 Employee 表的外键。
+这张表的每一行表示 employee_id 的员工正在 project_id 的项目上工作。
+
+员工表 Employee：
+
++------------------+---------+
+| Column Name      | Type    |
++------------------+---------+
+| employee_id      | int     |
+| name             | varchar |
+| experience_years | int     |
++------------------+---------+
+主键是 employee_id。数据保证 experience_years 非空。
+这张表的每一行包含一个员工的信息。
+ 
+请写一个 SQL 语句，查询每一个项目中员工的 平均 工作年限，精确到小数点后两位。
+以 任意 顺序返回结果表。
+查询结果的格式如下。
+
+示例 1:
+
+输入：
+Project 表：
++-------------+-------------+
+| project_id  | employee_id |
++-------------+-------------+
+| 1           | 1           |
+| 1           | 2           |
+| 1           | 3           |
+| 2           | 1           |
+| 2           | 4           |
++-------------+-------------+
+
+Employee 表：
++-------------+--------+------------------+
+| employee_id | name   | experience_years |
++-------------+--------+------------------+
+| 1           | Khaled | 3                |
+| 2           | Ali    | 2                |
+| 3           | John   | 1                |
+| 4           | Doe    | 2                |
++-------------+--------+------------------+
+
+输出：
++-------------+---------------+
+| project_id  | average_years |
++-------------+---------------+
+| 1           | 2.00          |
+| 2           | 2.50          |
++-------------+---------------+
+解释：第一个项目中，员工的平均工作年限是 (3 + 2 + 1) / 3 = 2.00；第二个项目中，员工的平均工作年限是 (3 + 2) / 2 = 2.50
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Project (project_id int, employee_id int);
+Create table If Not Exists Employee (employee_id int, name varchar(10), experience_years int);
+Truncate table Project;
+insert into Project (project_id, employee_id) values ('1', '1');
+insert into Project (project_id, employee_id) values ('1', '2');
+insert into Project (project_id, employee_id) values ('1', '3');
+insert into Project (project_id, employee_id) values ('2', '1');
+insert into Project (project_id, employee_id) values ('2', '4');
+Truncate table Employee;
+insert into Employee (employee_id, name, experience_years) values ('1', 'Khaled', '3');
+insert into Employee (employee_id, name, experience_years) values ('2', 'Ali', '2');
+insert into Employee (employee_id, name, experience_years) values ('3', 'John', '1');
+insert into Employee (employee_id, name, experience_years) values ('4', 'Doe', '2');
+```
+
+```sql [答案]
+SELECT p.project_id, ROUND(AVG(experience_years), 2) AS `average_years`
+FROM project p
+         JOIN employee e ON p.employee_id = e.employee_id
+GROUP BY p.project_id;
+```
+
+:::
+
+## [1084. 销售分析III](https://leetcode.cn/problems/sales-analysis-iii/) {#sales-analysis-iii}
+
+::: code-group
+
+```markdown [题目]
+表： Product
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| product_id   | int     |
+| product_name | varchar |
+| unit_price   | int     |
++--------------+---------+
+product_id 是该表的主键（具有唯一值的列）。
+该表的每一行显示每个产品的名称和价格。
+
+表：Sales
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| seller_id   | int     |
+| product_id  | int     |
+| buyer_id    | int     |
+| sale_date   | date    |
+| quantity    | int     |
+| price       | int     |
++------ ------+---------+
+这个表可能有重复的行。
+product_id 是 Product 表的外键（reference 列）。
+该表的每一行包含关于一个销售的一些信息。
+
+编写解决方案，报告2019年春季才售出的产品。即仅在2019-01-01至2019-03-31（含）之间出售的商品。
+以 任意顺序 返回结果表。
+结果格式如下所示。
+
+示例 1:
+
+输入：
+Product table:
++------------+--------------+------------+
+| product_id | product_name | unit_price |
++------------+--------------+------------+
+| 1          | S8           | 1000       |
+| 2          | G4           | 800        |
+| 3          | iPhone       | 1400       |
++------------+--------------+------------+
+Sales table:
++-----------+------------+----------+------------+----------+-------+
+| seller_id | product_id | buyer_id | sale_date  | quantity | price |
++-----------+------------+----------+------------+----------+-------+
+| 1         | 1          | 1        | 2019-01-21 | 2        | 2000  |
+| 1         | 2          | 2        | 2019-02-17 | 1        | 800   |
+| 2         | 2          | 3        | 2019-06-02 | 1        | 800   |
+| 3         | 3          | 4        | 2019-05-13 | 2        | 2800  |
++-----------+------------+----------+------------+----------+-------+
+输出：
++-------------+--------------+
+| product_id  | product_name |
++-------------+--------------+
+| 1           | S8           |
++-------------+--------------+
+解释:
+id 为 1 的产品仅在 2019 年春季销售。
+id 为 2 的产品在 2019 年春季销售，但也在 2019 年春季之后销售。
+id 为 3 的产品在 2019 年春季之后销售。
+我们只返回 id 为 1 的产品，因为它是 2019 年春季才销售的产品。
+```
+
+```sql [SQL Schema]
+Create table If Not Exists Product (product_id int, product_name varchar(10), unit_price int);
+Create table If Not Exists Sales (seller_id int, product_id int, buyer_id int, sale_date date, quantity int, price int);
+Truncate table Product;
+insert into Product (product_id, product_name, unit_price) values ('1', 'S8', '1000');
+insert into Product (product_id, product_name, unit_price) values ('2', 'G4', '800');
+insert into Product (product_id, product_name, unit_price) values ('3', 'iPhone', '1400');
+Truncate table Sales;
+insert into Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) values ('1', '1', '1', '2019-01-21', '2', '2000');
+insert into Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) values ('1', '2', '2', '2019-02-17', '1', '800');
+insert into Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) values ('2', '2', '3', '2019-06-02', '1', '800');
+insert into Sales (seller_id, product_id, buyer_id, sale_date, quantity, price) values ('3', '3', '4', '2019-05-13', '2', '2800');
+```
+
+```sql [答案]
+SELECT product_id, product_name
+FROM product
+WHERE product_id IN (SELECT product_id
+                     FROM sales
+                     GROUP BY product_id
+                     HAVING MIN(sale_date) >= '2019-01-01'
+                        AND MAX(sale_date) <= '2019-03-31');
 ```
 
 :::
