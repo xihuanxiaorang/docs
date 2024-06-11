@@ -222,6 +222,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       items: [
         { text: "数组", link: "/数组" },
         { text: "链表", link: "/链表" },
+        { text: "列表", link: "/列表" },
       ],
     },
   ],
