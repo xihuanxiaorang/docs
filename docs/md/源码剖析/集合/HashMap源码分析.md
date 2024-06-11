@@ -136,7 +136,7 @@ static final int MIN_TREEIFY_CAPACITY = 64;
 3. TREEIFY_THRESHOLD：链表树化阈值 = 8，配合 MIN_TREEIFY_CAPACITY 一起使用；
 4. MIN_TREEIFY_CAPACITY：最小树化容量 = 64；
 
-链表树化的两个条件，<span style="background-color: rgb(251, 228, 231);">数组长度>=64（MIN_TREEIFY_CAPACITY） && 链表长度>8（TREEIFY_THRESHOLD）</span> 时，链表 => 红黑树！
+链表树化的两个条件，<strong style="color:#ae3520;font-size:19px;">数组长度>=64（MIN_TREEIFY_CAPACITY） && 链表长度>8（TREEIFY_THRESHOLD）</strong> 时，链表 => 红黑树！
 
 ### 成员变量
 
