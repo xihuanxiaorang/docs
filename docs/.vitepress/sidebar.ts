@@ -220,9 +220,22 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "数据结构",
       base: "/数据结构与算法/数据结构",
       items: [
-        { text: "数组", link: "/数组" },
-        { text: "链表", link: "/链表" },
-        { text: "列表", link: "/列表" },
+        {
+          text: "数组与链表",
+          collapsed : false,
+          items: [
+            { text: "数组", link: "/数组" },
+            { text: "链表", link: "/链表" },
+            { text: "列表", link: "/列表" },
+          ],
+        },
+        {
+          text: "栈与队列",
+          collapsed : false,
+          items: [
+            { text: "栈", link: "/栈" },
+          ],
+        },
       ],
     },
   ],
