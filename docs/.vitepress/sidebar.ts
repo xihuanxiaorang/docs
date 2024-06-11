@@ -215,4 +215,14 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
   ],
+  "/数据结构与算法": [
+    {
+      text: "数据结构",
+      base: "/数据结构与算法/数据结构",
+      items: [
+        { text: "数组", link: "/数组" },
+        { text: "链表", link: "/链表" },
+      ],
+    },
+  ],
 };
