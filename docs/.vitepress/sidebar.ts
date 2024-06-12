@@ -235,6 +235,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           items: [
             { text: "栈", link: "/栈" },
             { text: "队列", link: "/队列" },
+            { text: "双向队列", link: "/双向队列" },
           ],
         },
       ],
