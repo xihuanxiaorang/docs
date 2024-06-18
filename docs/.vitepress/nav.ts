@@ -60,6 +60,17 @@ export const nav: DefaultTheme.NavItem[] = [
     ],
   },
   {
+    text: "🏆刷题",
+    activeMatch: "/刷题/",
+    items: [
+      {
+        text: "LeetCode全解",
+        link: "/刷题/LeetCode全解/1.两数之和",
+        activeMatch: "/刷题/LeetCode全解/",
+      },
+    ],
+  },
+  {
     text: "💯项目实战",
     link: "/项目/项目模板/搭建Vue3企业级项目模板",
     activeMatch: "/项目/",

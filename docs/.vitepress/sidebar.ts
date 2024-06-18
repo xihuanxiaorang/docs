@@ -244,4 +244,11 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
   ],
+  "/刷题": [
+    {
+      text: "LeetCode全解",
+      base: "/刷题/LeetCode全解",
+      items: [{ text: "1.两数之和", link: "/1.两数之和" }],
+    },
+  ],
 };
