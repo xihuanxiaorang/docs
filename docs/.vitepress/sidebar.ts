@@ -193,7 +193,10 @@ export const sidebar: DefaultTheme.Sidebar = {
     {
       text: "刷题集",
       base: "/后端开发/MySQL/刷题集",
-      items: [{ text: "LeetCode", link: "/LeetCode" }],
+      items: [
+        { text: "LeetCode", link: "/LeetCode" },
+        { text: "NowCoder", link: "/NowCoder" },
+      ],
     },
   ],
   "/后端开发/other": [
@@ -222,7 +225,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       items: [
         {
           text: "数组与链表",
-          collapsed : false,
+          collapsed: false,
           items: [
             { text: "数组", link: "/数组" },
             { text: "链表", link: "/链表" },
@@ -231,7 +234,7 @@ export const sidebar: DefaultTheme.Sidebar = {
         },
         {
           text: "栈与队列",
-          collapsed : false,
+          collapsed: false,
           items: [
             { text: "栈", link: "/栈" },
             { text: "队列", link: "/队列" },
