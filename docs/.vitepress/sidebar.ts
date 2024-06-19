@@ -253,6 +253,7 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "175.组合两个表", link: "/175.组合两个表" },
         { text: "176.第二高的薪水", link: "/176.第二高的薪水" },
         { text: "177.第N高的薪水", link: "/177.第N高的薪水" },
+        { text: "178.分数排名", link: "/178.分数排名" },
       ],
     },
   ],
