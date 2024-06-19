@@ -254,6 +254,7 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "176.第二高的薪水", link: "/176.第二高的薪水" },
         { text: "177.第N高的薪水", link: "/177.第N高的薪水" },
         { text: "178.分数排名", link: "/178.分数排名" },
+        {text: "180.连续出现的数字", link: "/180.连续出现的数字"}
       ],
     },
   ],
