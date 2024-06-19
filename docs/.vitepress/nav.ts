@@ -70,7 +70,7 @@ export const nav: DefaultTheme.NavItem[] = [
       },
       {
         text: "NowCoder全解",
-        link: "/刷题/NowCoder全解/SQL167 连续签到领金币",
+        link: "/刷题/NowCoder全解/SQL156 各个视频的平均完播率",
         activeMatch: "/刷题/NowCoder全解/",
       },
     ],
