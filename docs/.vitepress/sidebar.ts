@@ -193,10 +193,7 @@ export const sidebar: DefaultTheme.Sidebar = {
     {
       text: "刷题集",
       base: "/后端开发/MySQL/刷题集",
-      items: [
-        { text: "LeetCode", link: "/LeetCode" },
-        { text: "NowCoder", link: "/NowCoder" },
-      ],
+      items: [{ text: "LeetCode", link: "/LeetCode" }],
     },
   ],
   "/后端开发/other": [
