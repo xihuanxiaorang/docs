@@ -248,7 +248,10 @@ export const sidebar: DefaultTheme.Sidebar = {
     {
       text: "LeetCode全解",
       base: "/刷题/LeetCode全解",
-      items: [{ text: "1.两数之和", link: "/1.两数之和" }],
+      items: [
+        { text: "1.两数之和", link: "/1.两数之和" },
+        { text: "175.组合两个表", link: "/175.组合两个表" },
+      ],
     },
   ],
 };
