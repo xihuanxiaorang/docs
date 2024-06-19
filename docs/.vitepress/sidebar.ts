@@ -274,6 +274,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL157 平均播放进度大于60%的视频类别",
           link: "/SQL157 平均播放进度大于百分之60的视频类别",
         },
+        {
+          text: "SQL158 每类视频近一个月的转发量&率",
+          link: "/SQL158 每类视频近一个月的转发量&率",
+        },
         { text: "SQL167 连续签到领金币", link: "/SQL167 连续签到领金币" },
         {
           text: "SQL168 计算商城中2021年每月的GMV",
