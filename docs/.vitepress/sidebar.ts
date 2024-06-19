@@ -267,6 +267,10 @@ export const sidebar: DefaultTheme.Sidebar = {
       base: "/刷题/NowCoder全解",
       items: [
         { text: "SQL167 连续签到领金币", link: "/SQL167 连续签到领金币" },
+        {
+          text: "SQL168 计算商城中2021年每月的GMV",
+          link: "/SQL168 计算商城中2021年每月的GMV",
+        },
       ],
     },
   ],
