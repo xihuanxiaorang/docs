@@ -68,6 +68,11 @@ export const nav: DefaultTheme.NavItem[] = [
         link: "/刷题/LeetCode全解/1.两数之和",
         activeMatch: "/刷题/LeetCode全解/",
       },
+      {
+        text: "NowCoder全解",
+        link: "/刷题/NowCoder全解/SQL167 连续签到领金币",
+        activeMatch: "/刷题/NowCoder全解/",
+      },
     ],
   },
   {

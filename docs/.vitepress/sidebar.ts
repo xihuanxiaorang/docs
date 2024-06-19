@@ -244,9 +244,8 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
   ],
-  "/刷题": [
+  "/刷题/LeetCode全解": [
     {
-      text: "LeetCode全解",
       base: "/刷题/LeetCode全解",
       items: [
         { text: "1.两数之和", link: "/1.两数之和" },
@@ -260,6 +259,14 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "183.从不订购的客户", link: "/183.从不订购的客户" },
         { text: "184.部门工资最高的员工", link: "/184.部门工资最高的员工" },
         { text: "196.删除重复的电子邮箱", link: "/196.删除重复的电子邮箱" },
+      ],
+    },
+  ],
+  "/刷题/NowCoder全解": [
+    {
+      base: "/刷题/NowCoder全解",
+      items: [
+        { text: "SQL167 连续签到领金币", link: "/SQL167 连续签到领金币" },
       ],
     },
   ],
