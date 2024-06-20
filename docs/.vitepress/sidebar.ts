@@ -287,6 +287,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL161 近一个月发布的视频中热度最高的top3视频",
           link: "/SQL161 近一个月发布的视频中热度最高的top3视频",
         },
+        {
+          text: "SQL162 2021年11月每天的人均浏览文章时长",
+          link: "/SQL162 2021年11月每天的人均浏览文章时长",
+        },
         { text: "SQL167 连续签到领金币", link: "/SQL167 连续签到领金币" },
         {
           text: "SQL168 计算商城中2021年每月的GMV",
