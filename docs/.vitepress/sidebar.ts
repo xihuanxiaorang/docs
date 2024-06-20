@@ -324,6 +324,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL171 零食类商品中复购率top3高的商品",
           link: "/SQL171 零食类商品中复购率top3高的商品",
         },
+        {
+          text: "SQL172 10月的新户客单价和获客成本",
+          link: "/SQL172 10月的新户客单价和获客成本",
+        },
       ],
     },
   ],
