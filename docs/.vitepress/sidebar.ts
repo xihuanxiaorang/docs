@@ -312,6 +312,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL168 计算商城中2021年每月的GMV",
           link: "/SQL168 计算商城中2021年每月的GMV",
         },
+        {
+          text: "SQL169 统计2021年10月每个退货率不大于0.5的商品各项指标",
+          link: "/SQL169 统计2021年10月每个退货率不大于0.5的商品各项指标",
+        },
       ],
     },
   ],
