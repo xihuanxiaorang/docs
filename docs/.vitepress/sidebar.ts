@@ -320,6 +320,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL170 某店铺的各商品毛利率及店铺整体毛利率",
           link: "/SQL170 某店铺的各商品毛利率及店铺整体毛利率",
         },
+        {
+          text: "SQL171 零食类商品中复购率top3高的商品",
+          link: "/SQL171 零食类商品中复购率top3高的商品",
+        },
       ],
     },
   ],
