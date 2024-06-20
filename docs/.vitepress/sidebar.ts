@@ -336,6 +336,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL174 2021年国庆在北京接单3次及以上的司机统计信息",
           link: "/SQL174 2021年国庆在北京接单3次及以上的司机统计信息",
         },
+        {
+          text: "SQL175 有取消订单记录的司机平均评分",
+          link: "/SQL175 有取消订单记录的司机平均评分",
+        },
       ],
     },
   ],
