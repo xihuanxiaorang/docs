@@ -291,6 +291,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL162 2021年11月每天的人均浏览文章时长",
           link: "/SQL162 2021年11月每天的人均浏览文章时长",
         },
+        {
+          text: "SQL163 每篇文章同一时刻最大在看人数",
+          link: "/SQL163 每篇文章同一时刻最大在看人数",
+        },
         { text: "SQL167 连续签到领金币", link: "/SQL167 连续签到领金币" },
         {
           text: "SQL168 计算商城中2021年每月的GMV",
