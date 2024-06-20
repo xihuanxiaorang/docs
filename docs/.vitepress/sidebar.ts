@@ -328,6 +328,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL172 10月的新户客单价和获客成本",
           link: "/SQL172 10月的新户客单价和获客成本",
         },
+        {
+          text: "SQL173 店铺901国庆期间的7日动销率和滞销率",
+          link: "/SQL173 店铺901国庆期间的7日动销率和滞销率",
+        },
       ],
     },
   ],
