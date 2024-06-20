@@ -303,6 +303,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL165 统计活跃间隔对用户分级结果",
           link: "/SQL165 统计活跃间隔对用户分级结果",
         },
+        {
+          text: "SQL166 每天的日活数及新用户占比",
+          link: "/SQL166 每天的日活数及新用户占比",
+        },
         { text: "SQL167 连续签到领金币", link: "/SQL167 连续签到领金币" },
         {
           text: "SQL168 计算商城中2021年每月的GMV",
