@@ -279,6 +279,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL159 每个创作者每月的涨粉率及截止当前的总粉丝量",
           link: "/SQL159 每个创作者每月的涨粉率及截止当前的总粉丝量",
         },
+        {
+          text: "SQL160 国庆期间每类视频点赞量和转发量",
+          link: "/SQL160 国庆期间每类视频点赞量和转发量",
+        },
         { text: "SQL167 连续签到领金币", link: "/SQL167 连续签到领金币" },
         {
           text: "SQL168 计算商城中2021年每月的GMV",
