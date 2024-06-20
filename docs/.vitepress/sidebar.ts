@@ -344,6 +344,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL176 每个城市中评分最高的司机信息",
           link: "/SQL176 每个城市中评分最高的司机信息",
         },
+        {
+          text: "SQL177 国庆期间近7日日均取消订单量",
+          link: "/SQL177 国庆期间近7日日均取消订单量",
+        },
       ],
     },
   ],
