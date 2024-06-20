@@ -295,6 +295,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL163 每篇文章同一时刻最大在看人数",
           link: "/SQL163 每篇文章同一时刻最大在看人数",
         },
+        {
+          text: "SQL164 2021年11月每天新用户的次日留存率",
+          link: "/SQL164 2021年11月每天新用户的次日留存率",
+        },
         { text: "SQL167 连续签到领金币", link: "/SQL167 连续签到领金币" },
         {
           text: "SQL168 计算商城中2021年每月的GMV",
