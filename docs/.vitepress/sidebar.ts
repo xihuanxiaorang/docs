@@ -375,6 +375,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL186 牛客直播开始时各直播间在线人数",
           link: "/SQL186 牛客直播开始时各直播间在线人数",
         },
+        {
+          text: "SQL187 牛客直播各科目平均观看时长",
+          link: "/SQL187 牛客直播各科目平均观看时长",
+        },
       ],
     },
   ],
