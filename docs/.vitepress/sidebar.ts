@@ -383,6 +383,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL188 牛客直播各科目出勤率",
           link: "/SQL188 牛客直播各科目出勤率",
         },
+        {
+          text: "SQL189 牛客直播各科目同时在线人数",
+          link: "/SQL189 牛客直播各科目同时在线人数",
+        },
       ],
     },
   ],
