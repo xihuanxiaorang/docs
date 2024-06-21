@@ -391,6 +391,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL190 某乎问答11月份日人均回答量",
           link: "/SQL190 某乎问答11月份日人均回答量",
         },
+        {
+          text: "SQL191 某乎问答高质量的回答中用户属于各级别的数量",
+          link: "/SQL191 某乎问答高质量的回答中用户属于各级别的数量",
+        },
       ],
     },
   ],
