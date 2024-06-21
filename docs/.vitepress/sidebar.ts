@@ -387,6 +387,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL189 牛客直播各科目同时在线人数",
           link: "/SQL189 牛客直播各科目同时在线人数",
         },
+        {
+          text: "SQL190 某乎问答11月份日人均回答量",
+          link: "/SQL190 某乎问答11月份日人均回答量",
+        },
       ],
     },
   ],
