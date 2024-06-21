@@ -352,6 +352,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL178 工作日各时段叫车量、等待接单时间和调度时间",
           link: "/SQL178 工作日各时段叫车量、等待接单时间和调度时间",
         },
+        {
+          text: "SQL179 各城市最大同时等车人数",
+          link: "/SQL179 各城市最大同时等车人数",
+        },
       ],
     },
   ],
