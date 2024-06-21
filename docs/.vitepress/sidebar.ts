@@ -370,6 +370,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL184 某宝店铺连续2天及以上购物的用户及其对应的天数",
           link: "/SQL184 某宝店铺连续2天及以上购物的用户及其对应的天数",
         },
+        { text: "SQL185 牛客直播转换率", link: "/SQL185 牛客直播转换率" },
       ],
     },
   ],
