@@ -366,6 +366,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL183 某宝店铺动销率与售罄率",
           link: "/SQL183 某宝店铺动销率与售罄率",
         },
+        {
+          text: "SQL184 某宝店铺连续2天及以上购物的用户及其对应的天数",
+          link: "/SQL184 某宝店铺连续2天及以上购物的用户及其对应的天数",
+        },
       ],
     },
   ],
