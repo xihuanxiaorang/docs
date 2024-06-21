@@ -348,6 +348,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL177 国庆期间近7日日均取消订单量",
           link: "/SQL177 国庆期间近7日日均取消订单量",
         },
+        {
+          text: "SQL178 工作日各时段叫车量、等待接单时间和调度时间",
+          link: "/SQL178 工作日各时段叫车量、等待接单时间和调度时间",
+        },
       ],
     },
   ],
