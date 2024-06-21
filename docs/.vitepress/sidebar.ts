@@ -357,6 +357,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: "/SQL179 各城市最大同时等车人数",
         },
         { text: "SQL180 某宝店铺的SPU数量", link: "/SQL180 某宝店铺的SPU数量" },
+        {
+          text: "SQL181 某宝店铺的实际销售额与客单价",
+          link: "/SQL181 某宝店铺的实际销售额与客单价",
+        },
       ],
     },
   ],
