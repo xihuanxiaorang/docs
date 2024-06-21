@@ -361,6 +361,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL181 某宝店铺的实际销售额与客单价",
           link: "/SQL181 某宝店铺的实际销售额与客单价",
         },
+        { text: "SQL182 某宝店铺折扣率", link: "/SQL182 某宝店铺折扣率" },
       ],
     },
   ],
