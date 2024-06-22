@@ -426,6 +426,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL198 查找所有已经分配部门的员工的last_name和first_name以及dept_no",
           link: "/SQL198 查找所有已经分配部门的员工的last_name和first_name以及dept_no",
         },
+        {
+          text: "SQL201 查找薪水记录超过15条的员工号emp_no以及其对应的记录次数t",
+          link: "/SQL201 查找薪水记录超过15条的员工号emp_no以及其对应的记录次数t",
+        },
       ],
     },
   ],
