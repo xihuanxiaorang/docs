@@ -467,6 +467,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL239 将titles_test表名修改为titles_2017",
           link: "/SQL239 将titles_test表名修改为titles_2017",
         },
+        {
+          text: "SQL256 出现三次以上相同积分的情况",
+          link: "/SQL256 出现三次以上相同积分的情况",
+        },
       ],
     },
   ],
