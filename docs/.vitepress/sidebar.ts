@@ -442,6 +442,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL209 查找employees表emp_no与last_name的员工信息",
           link: "/SQL209 查找employees表emp_no与last_name的员工信息",
         },
+        {
+          text: "SQL211 获取当前薪水第二多的员工的emp_no以及其对应的薪水salary",
+          link: "/SQL211 获取当前薪水第二多的员工的emp_no以及其对应的薪水salary",
+        },
       ],
     },
   ],
