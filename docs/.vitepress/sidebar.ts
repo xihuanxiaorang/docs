@@ -463,6 +463,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL238 将id=5以及emp_no=10001的行数据替换成id=5以及emp_no=10005",
           link: "/SQL238 将id=5以及emp_no=10001的行数据替换成id=5以及emp_no=10005",
         },
+        {
+          text: "SQL239 将titles_test表名修改为titles_2017",
+          link: "/SQL239 将titles_test表名修改为titles_2017",
+        },
       ],
     },
   ],
