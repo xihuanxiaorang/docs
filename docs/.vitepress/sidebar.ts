@@ -450,6 +450,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL226 将employees表的所有员工的last_name和first_name拼接起来作为Name",
           link: "/SQL226 将employees表的所有员工的last_name和first_name拼接起来作为Name",
         },
+        { text: "SQL228 批量插入数据", link: "/SQL228 批量插入数据" },
       ],
     },
   ],
