@@ -430,6 +430,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL201 查找薪水记录超过15条的员工号emp_no以及其对应的记录次数t",
           link: "/SQL201 查找薪水记录超过15条的员工号emp_no以及其对应的记录次数t",
         },
+        {
+          text: "SQL202 找出所有员工当前薪水salary情况",
+          link: "/SQL202 找出所有员工当前薪水salary情况",
+        },
       ],
     },
   ],
