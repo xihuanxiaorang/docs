@@ -481,6 +481,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL271 牛客的课程订单分析(一)",
           link: "/SQL271 牛客的课程订单分析(一)",
         },
+        {
+          text: "SQL278 实习广场投递简历分析(一)",
+          link: "/SQL278 实习广场投递简历分析(一)",
+        },
       ],
     },
   ],
