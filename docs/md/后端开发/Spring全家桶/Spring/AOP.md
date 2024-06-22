@@ -125,7 +125,7 @@ try{
 
    2. Spring 核心配置文件
 
-      ![](https://fastly.jsdelivr.net/gh/xihuanxiaorang/images/202211120123471.png)
+      ![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406221949700.png)
 
       ```xml
       <?xml version="1.0" encoding="UTF-8"?>

@@ -221,6 +221,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           items: [
             { text: "IoC", link: "/IoC" },
             { text: "AOP", link: "/AOP" },
+            { text: "事务", link: "/事务" },
             { text: "注解驱动开发", link: "/注解驱动开发" },
           ],
         },
