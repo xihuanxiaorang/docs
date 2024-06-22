@@ -434,6 +434,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL202 找出所有员工当前薪水salary情况",
           link: "/SQL202 找出所有员工当前薪水salary情况",
         },
+        {
+          text: "SQL204 获取所有非manager的员工emp_no",
+          link: "/SQL204 获取所有非manager的员工emp_no",
+        },
       ],
     },
   ],
