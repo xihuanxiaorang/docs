@@ -418,6 +418,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL195 查找最晚入职员工的所有信息",
           link: "/SQL195 查找最晚入职员工的所有信息",
         },
+        {
+          text: "SQL196 查找入职员工时间排名倒数第三的员工所有信息",
+          link: "/SQL196 查找入职员工时间排名倒数第三的员工所有信息",
+        },
       ],
     },
   ],
