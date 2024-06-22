@@ -32,22 +32,16 @@
    1. 添加依赖
 
       ```xml
-      <!-- slf4j日志门面 -->
-      <dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-          <version>2.0.3</version>
-      </dependency>
       <!-- logback日志 -->
       <dependency>
           <groupId>ch.qos.logback</groupId>
           <artifactId>logback-classic</artifactId>
-          <version>1.4.4</version>
+          <version>1.5.6</version>
       </dependency>
       ```
-
+      
    2. 添加日志配置文件
-
+   
       ```xml
       <?xml version="1.0" encoding="UTF-8"?>
       <configuration>
@@ -85,7 +79,7 @@
 > 两个重要的概念：
 >
 > 1. **控制反转**(Inversion of Control，简称 IOC)：把对象创建的控制权交给 Spring 进行管理。
-> 2. **依赖注入**(Dependcy Injection，简称 DI)：当一个类需要另一个类的时候，就意味着依赖，一旦出现依赖，就可以把另一个类作为本类的成员变量，最终通过 Spring 配置文件进行注入 (即对成员变量赋值)，这样可以做到解耦合。
+> 2. **依赖注入**(Dependcy Injection，简称 DI)：当一个类需要另一个类的时候，就意味着依赖，<strong style="color:#ae3520;">一旦出现依赖，就可以把另一个类作为本类的*成员变量*，最终通过 Spring 配置文件进行*注入* (即对成员变量赋值)</strong>，这样可以做到解耦合。
 
 1. 创建需要 Spring 进行管理的类，如 Person 类，
 
@@ -104,7 +98,7 @@
 
 2. 在 Spring 核心配置文件中添加如下配置：
 
-   ```xml
+   ```xml {5}
    <?xml version="1.0" encoding="UTF-8"?>
    <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xmlns="http://www.springframework.org/schema/beans"
@@ -136,11 +130,11 @@
 
    > [!note]
    >
-   > 当没有在 Spring 核心配置文件`applicationContext.xml` 文件中注册 `Person` 类时，如果从 `ApplicationContext`工厂中获取该类的实例对象则会报如下异常！![79a2c517-a836-4754-8228-6a0b1f8561c2](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251653252.png)
+   > 当没有在 Spring 核心配置文件`applicationContext.xml` 文件中注册 `Person` 类时，如果从 `ApplicationContext`工厂中获取该类的实例对象则会报如下异常（找不到 `Person` 类的 Bean 定义信息）！![79a2c517-a836-4754-8228-6a0b1f8561c2](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251653252.png)
 
 ### 细节分析
 
-1. `ApplicationContext`：是一个接口，主要用于对象的创建和获取。其实现类主要有 `ClassPathXmlApplicationContext` 和 `AnnotationConfigApplicationContext`。`ApplicationContext` 工厂对象会占用大量内存，所以一个应用中应该只能存在一个这样的工厂对象，即应该采用 [单例模式](../../设计模式/创建型/单例模式.md) 实现，并且保证线程安全。<br />![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251653654.png)
+1. `ApplicationContext`：是一个接口，主要用于 Bean 对象的创建和获取。其实现类主要有 `ClassPathXmlApplicationContext` 和 `AnnotationConfigApplicationContext`。`ApplicationContext` 工厂对象会占用大量内存，所以一个应用中应该只能存在一个这样的工厂对象，即应该采用 [单例模式](../../设计模式/创建型/单例模式.md) 实现，并且保证线程安全。<br />![image.png](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251653654.png)
 
 2. Spring 工厂创建出来的对象通常称之为 bean 或者 component（组件）；
 
@@ -157,34 +151,34 @@
        // 使用该方法时，在spring配置文件中只能有一个class是Person的bean，否则会报错
        Person person2 = ctx.getBean(Person.class);
        System.out.println(person2);
-       // 获取spring配置文件中所有bean表标签的id
+       // 获取spring配置文件中所有bean标签的id
        String[] beanDefinitionNames = ctx.getBeanDefinitionNames();
        for (String beanDefinitionName : beanDefinitionNames) {
            System.out.println(beanDefinitionName);
        }
        // 用于判断是否存在指定id或者name值的bean
        System.out.println(ctx.containsBean("person"));
-       // 用于判断是否存在指定id值的bean
+       // 用于判断是否存在指定id值的bean定义信息
        System.out.println(ctx.containsBeanDefinition("person"));
    }
    ```
 
-   1. 当在配置文件中不存在 id 或者 name 为 "person" 的 bean 时，那么使用 `ctx.getBean("person", ...)` 获取 Person 实例对象时，则会抛出如下异常！<br />![5df0ba5b-b324-43dd-9e12-a8a4b0456c0f](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251656754.png)
+   1. 当在配置文件中不存在 id 或者 name 为 "person" 的 bean 时，那么使用 `ctx.getBean("person", ...)` 获取 Person 实例对象时，则会抛出如下异常（找不到名称为 person 的 Bean 定义信息）！<br />![5df0ba5b-b324-43dd-9e12-a8a4b0456c0f](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251656754.png)
 
-   2. 当配置文件中存在两个相同 class = Person 的 bean 时，那么使用 `ctx.getBean(Person.class)` 获取 Person 实例对象时，则会抛出如下异常！<br />![a9aede46-d297-4819-b473-e2b4bc9a04c7](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251657268.png)
+   2. 当配置文件中存在两个相同 class = Person 的 bean 时，那么使用 `ctx.getBean(Person.class)` 获取 Person 实例对象时，则会抛出如下异常（存在两个 Class 相同的 Bean 定义信息）！<br />![a9aede46-d297-4819-b473-e2b4bc9a04c7](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251657268.png)
 
-   3. 当配置文件中存在两个 id 相同的 bean 时，在配置文件解析阶段就会抛出如下异常！<br />![421d4881-3283-42f4-9d68-817e024aca41](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251658111.png)
+   3. 当配置文件中存在两个 id 相同的 bean 时，在配置文件解析阶段就会抛出如下异常（已经存在 id 相同的 Bean 定义信息）！<br />![421d4881-3283-42f4-9d68-817e024aca41](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251658111.png)
 
-   4. 当在 spring 配置文件中注册 bean 时，bean 标签里只有 class，没有 id 值，那么它默认的 id 值是 `全限定类名#0`。如 `<bean class="fun.xiaorang.spring.pojo.Person" />`，那么 id 值为 `fun.xiaorang.spring.pojo.Person#0`。如果这个 bean 只需要使用一次，那么可以省略 id 值，如果在其他 bean 中会引用到这个 bean，这个时候就需要设置 id 值。
+   4. 当在 spring 配置文件中注册 bean 时，bean 标签里只有 class，没有 id 值，那么它默认的 id 值是 `全限定类名#0`。如 `<bean class="fun.xiaorang.spring.pojo.Person" />`，那么 id 值为 `fun.xiaorang.spring.pojo.Person#0`。如果这个 bean 只需要使用一次，那么可以省略 id 值，如果在其他 bean 中会引用（ref）到这个 bean，这个时候就需要设置 id 值。
 
-   5. bean 标签中的 name 属性，为 bean 对象定义别名，在获取对象的时候也可以通过别名来获取。与 id 属性的区别如下：
+   5. bean 标签中的 name 属性，为 bean 对象定义**别名**，在获取对象的时候也可以通过别名来获取。与 id 属性的区别如下：
 
       1. 别名可以定义多个 (用逗号分隔)，但是 id 属性只能有一个值；
       2. id 属性值，命名要求：必须以字母开头，可以使用字母，数字，下划线，连字符等符号，不可以以特殊字符开头 "/person"，虽然发展到现在 id 就像 name 一样没有了命名的限制。
 
-4. 获取出来的对象是单例的。如下图，三种获取 Person 实例对象的方式打印出来的对象引用都是一样的，说明获取到的对象都是同一个。<br />![82c757ce-d908-4653-9906-2d36ce60ebd6](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251659550.png)
+4. 获取出来的对象是单例的。如下图，三种获取 Person 实例对象的方式打印出来的对象地址都是一样的，说明获取到的对象都是同一个。<br />![82c757ce-d908-4653-9906-2d36ce60ebd6](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251659550.png)
 
-5. 在解析配置文件阶段会获取 bean 标签的相关信息，id 值为 "person"，class 值为 "fun.xiaorang.spring.pojo.Person"，会通过反射去调用 Person 类的构造方法创建对象。即使构造方法是私有的，也可以创建出实例对象保存在工厂中。
+5. 在解析配置文件阶段会获取 bean 标签的相关信息，id 值为 "person"，class 值为 "fun.xiaorang.spring.pojo.Person"，会通过**反射**去调用 Person 类的构造方法创建对象。即使构造方法是**私有的**，也可以创建出实例对象保存在工厂中。
 
 ## 依赖注入 (Dependcy Injection)
 
@@ -237,7 +231,7 @@ public class Person {
 </bean>
 ```
 
-添加测试方法，用于测试从 Spring 工厂获取出来的 Person 实例对象中的 name 、age 属性是否已经被赋值。
+增加测试方法，用于测试从 Spring 工厂获取出来的 Person 实例对象中的 name 、age 属性是否已经被赋值。
 
 ```java
 @Test
@@ -247,7 +241,7 @@ public void test_02() {
 }
 ```
 
-测试结果如下所示：发现从 Spring 工厂获取出来的 Person 实例对象中的 name、age 属性已经被赋上对应的值。<br />![9ff198a8-a195-4092-a689-1811b422f4ad](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251700232.png)<br />通过上面的代码以及输出结果，可以看出 Spring 底层通过反射调用对象的构造方法创建出实例对象，之后调用对象的 setter 方法给成员变量赋值，这种赋值方式称之为 **set 注入**。
+测试结果如下所示：发现从 Spring 工厂获取出来的 Person 实例对象中的 name、age 属性已经被赋上对应的值。<br />![9ff198a8-a195-4092-a689-1811b422f4ad](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251700232.png)<br />通过上面的代码以及输出结果，可以看出 Spring 底层通过反射调用对象的构造方法创建出实例对象，之后**调用对象的 setter 方法给成员变量赋值**，这种赋值方式称之为 **set 注入**。
 
 ### set 注入
 
@@ -348,7 +342,7 @@ public void test_02() {
      </bean>
    ```
 
-   上面这种注入方式虽然运行的结果没有问题，但实际上被注入的 UserDao 对象多次创建，造成资源的浪费。正确的做法应该是使用 bean 标签创建一个 UserDao 对象，然后在给 UserServiceImpl 实例对象中的成员变量 userDao 赋值时，直接引用已经创建好的 UserDao 实例对象即可。
+   上面这种注入方式虽然运行的结果没有问题，但实际上被注入的 UserDao 对象多次创建，造成资源的浪费。正确的做法应该是使用 bean 标签创建一个 UserDao 对象，然后在给 UserServiceImpl 实例对象中的成员变量 userDao 赋值时，直接引用（ref）已经创建好的 UserDao 实例对象即可。
 
    ```xml
    <bean id="userDao" class="fun.xiaorang.spring.dao.UserDao"/>
@@ -673,10 +667,10 @@ try (InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml
 > 代码分析：
 >
 > 1. 在使用 `getBean()` 方法获取简单对象时，获取到的都是 bean 标签中 class 属性对应的类的对象；而在使用 `getBean()` 方法获取复杂对象 (实现了 `FactoryBean` 接口) 时，获取到的是 bean 标签中 class 属性对应的类的对象中 `getObject()` 方法返回的对象。
-> 2. 其中的 `isSingleton` 方法返回 true 表示创建的是一个单例对象，只会创建一次；如果返回的是 false，则每一次都会创建一个新的对象。此处的数据库连接对象 (connection) 则返回 false，表示在使用的时候都应该每次获取一个新的对象。
+> 2. `FactoryBean` 接口中定义的 `isSingleton()` 方法返回 true 则表示创建的是一个单例对象，只会创建一次；如果返回的是 false，则每一次都会创建一个新的对象。此处的数据库连接对象 (connection) 则返回 false，表示在使用的时候都应该每次获取一个新的对象。
 > 3. 现在使用 `ctx.getBean("connection")` 获取到的是 `getObject()` 方法中返回的对象，如果就是想获取 FactoryBean 接口的实现类呢？那么需要使用 `ctx.getBean("&connection")`，获取到的就是 FactoryBean 实例对象。
 >
-> 在调用 `getBean()` 方法从 Spring 工厂获取实例对象时，会先通过 `instanceof()` 方法判断是否是 FactoryBean 接口的实现类？如果是的话，则返回 `getObject()` 方法中返回的对象。使用该方式创建复杂对象，是 Spring 原生提供的，后续在 Spring 整合其他框架时，会大量应用到 FactoryBean。
+> 在调用 `getBean()` 方法从 Spring 工厂获取实例对象时，会先通过 `instanceof()` 方法判断是否是 FactoryBean 接口的实现类？如果是的话，则返回 `getObject()` 方法中返回的对象。使用该方式创建复杂对象，是 Spring 原生提供的，**后续在 Spring 整合其他框架时，会大量应用到 FactoryBean**。
 
 #### 实例工厂的方式
 
@@ -738,7 +732,7 @@ try (InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml
 
 3. 运行测试方法 `test_04()`，注意，测试之前，先注释掉配置文件中前一种方式的 FactoryBean 所对应的标签，否则会抛出异常！
 
-   测试结果如下所示：因为指定了 bean 标签中的 scope 属性为 prototype，所以从 Spring 工厂获取出来的 Connection 实例对象并不是同一个，在打印的信息中可以发现创建了 ConnectionFactory 工厂类的单例对象，但是并没有打印出创建 Connection 实例对象的信息，这是为什么？盲猜一波是因为 Connection 是多例的，在调用 `getBean()` 方法的时候才去创建其实例对象，并不像单例对象那样，在配置文件解析阶段就已经确定，详情的话见下文 [对象的生命周期](#对象的生命周期(Bean Lifecycle))。<br />![e68ec5a0-fea6-466b-be4c-4e2154ca7554](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251712829.png)
+   测试结果如下所示：因为指定了 bean 标签中的 scope 属性为 prototype，所以从 Spring 工厂获取出来的 Connection 实例对象并不是同一个，在打印的信息中可以发现创建了 ConnectionFactory 工厂类的单例对象，但是并没有打印出创建 Connection 实例对象的信息，这是为什么？盲猜一波是因为 Connection 是多例的，在调用 `getBean()` 方法的时候才去创建其实例对象，并不像单例对象那样，在配置文件解析阶段就已经确定，详情的话见下文 [对象的生命周期](#Bean-Lifecycle)。<br />![e68ec5a0-fea6-466b-be4c-4e2154ca7554](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251712829.png)
 
 > [!TIP]
 >
@@ -777,8 +771,7 @@ try (InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml
 
 3. 运行测试方法 `test_04()`，注意，测试之前，先注释掉配置文件中前一种方式的 ConnectionFactory 所对应的标签，否则会抛出异常！测试结果如下所示：<br/>![ad342634-6bac-4825-a6d6-3d59bef61808](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202307251714994.png)
 
-
-## 对象的生命周期(Bean Lifecycle)
+## 对象的生命周期(Bean Lifecycle) {#Bean-Lifecycle}
 
 🤔 什么是对象的生命周期？<br />🤓 指的是一个对象从创建到初始化最后到销毁的一个完整过程。
 
@@ -842,7 +835,7 @@ try (InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml
 
    将两种实现方式放在一起进行演示，定义一个类既实现 InitializingBean 接口又提供一个普通的初始化方法。
 
-   ```java
+   ```java {1,17-24}
    public class Student implements InitializingBean {
        private String name;
        private String age;
@@ -939,7 +932,7 @@ try (InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml
 
    将两种实现方式放在一起进行演示，修改 Student 类，使其既实现 DisposableBean 接口又提供一个普通的销毁方法。
 
-   ```java
+   ```java {1,26-33}
    public class Student implements InitializingBean, DisposableBean {
        private String name;
        private String age;
@@ -1131,7 +1124,7 @@ try (InputStream inputStream = Resources.getResourceAsStream("mybatis-config.xml
 
 ## BeanPostProcessor
 
-🤔 BeanPostProcessor 接口干嘛用的？<br />🤓 用于对 Spring 工厂创建的对象进行再加工，算是 Spring 提供的扩展点，非常非常重要！以后在 Spring 源码分析中会着重分析该接口并看到 Spring 是如何利用该接口进行扩展的（如 Spring 中的 AOP 底层就是在该接口定义的 `postProcessAfterInitialization()` 方法中使用 JDK 动态代理对 Bean 对象进行代理增强的）。
+🤔 BeanPostProcessor 接口干嘛用的？<br />🤓 用于对 Spring 工厂创建的对象进行再加工，算是 Spring 提供的<strong style="color:#ae3520;font-size:19px;">扩展点</strong>，非常非常重要！以后在 Spring 源码分析中会着重分析该接口并看到 Spring 是如何利用该接口进行扩展的（如 Spring 中的 AOP 底层就是在该接口定义的 `postProcessAfterInitialization()` 方法中使用 JDK 动态代理对 Bean 对象进行代理增强的）。
 
 那么如何自定义一个 BeanPostProcessor？步骤如下：
 

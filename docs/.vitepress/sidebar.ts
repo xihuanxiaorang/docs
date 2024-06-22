@@ -217,7 +217,6 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: "Spring",
           base: "/后端开发/Spring全家桶/Spring",
-          collapsed: false,
           items: [
             { text: "IoC", link: "/IoC" },
             { text: "AOP", link: "/AOP" },
