@@ -438,6 +438,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL204 获取所有非manager的员工emp_no",
           link: "/SQL204 获取所有非manager的员工emp_no",
         },
+        {
+          text: "SQL209 查找employees表emp_no与last_name的员工信息",
+          link: "/SQL209 查找employees表emp_no与last_name的员工信息",
+        },
       ],
     },
   ],
