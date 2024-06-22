@@ -476,6 +476,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL260 牛客每个人最近的登录日期(一)",
           link: "/SQL260 牛客每个人最近的登录日期(一)",
         },
+        { text: "SQL266 考试分数(一)", link: "/SQL266 考试分数(一)" },
       ],
     },
   ],
