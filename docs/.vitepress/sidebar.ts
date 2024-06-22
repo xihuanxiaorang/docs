@@ -76,6 +76,12 @@ export const sidebar: DefaultTheme.Sidebar = {
       collapsed: false,
       items: [
         {
+          text: "Spring",
+          base: "/源码剖析/开源项目/Spring",
+          collapsed: false,
+          items: [{ text: "导读", link: "/README" }],
+        },
+        {
           text: "RuoYi-Vue-Plus",
           base: "/源码剖析/开源项目/RuoYi-Vue-Plus",
           collapsed: false,
