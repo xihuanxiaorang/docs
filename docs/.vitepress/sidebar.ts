@@ -262,6 +262,8 @@ export const sidebar: DefaultTheme.Sidebar = {
   "/刷题/NowCoder全解": [
     {
       base: "/刷题/NowCoder全解",
+      text: "SQL大厂面试真题",
+      collapsed: false,
       items: [
         {
           text: "SQL156 各个视频的平均完播率",
@@ -406,6 +408,15 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: "SQL194 某乎问答最大连续回答问题天数大于等于3天的用户及其对应等级",
           link: "/SQL194 某乎问答最大连续回答问题天数大于等于3天的用户及其对应等级",
+        },
+      ],
+    },
+    {
+      base: "/刷题/NowCoder全解",
+      items: [
+        {
+          text: "SQL195 查找最晚入职员工的所有信息",
+          link: "/SQL195 查找最晚入职员工的所有信息",
         },
       ],
     },
