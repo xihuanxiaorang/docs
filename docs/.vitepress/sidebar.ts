@@ -422,6 +422,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL196 查找入职员工时间排名倒数第三的员工所有信息",
           link: "/SQL196 查找入职员工时间排名倒数第三的员工所有信息",
         },
+        {
+          text: "SQL198 查找所有已经分配部门的员工的last_name和first_name以及dept_no",
+          link: "/SQL198 查找所有已经分配部门的员工的last_name和first_name以及dept_no",
+        },
       ],
     },
   ],
