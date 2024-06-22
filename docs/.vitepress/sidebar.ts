@@ -459,6 +459,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL237 将所有to_date为9999-01-01的全部更新为NULL",
           link: "/SQL237 将所有to_date为9999-01-01的全部更新为NULL",
         },
+        {
+          text: "SQL238 将id=5以及emp_no=10001的行数据替换成id=5以及emp_no=10005",
+          link: "/SQL238 将id=5以及emp_no=10001的行数据替换成id=5以及emp_no=10005",
+        },
       ],
     },
   ],
