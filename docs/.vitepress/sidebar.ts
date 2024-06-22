@@ -220,6 +220,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           collapsed: false,
           items: [
             { text: "IoC", link: "/IoC" },
+            { text: "AOP", link: "/AOP" },
             { text: "注解驱动开发", link: "/注解驱动开发" },
           ],
         },
