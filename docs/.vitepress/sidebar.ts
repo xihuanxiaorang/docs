@@ -70,6 +70,19 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "ArrayList源码分析", link: "/ArrayList源码分析" },
       ],
     },
+    {
+      text: "开源项目",
+      base: "/源码剖析/开源项目",
+      collapsed: false,
+      items: [
+        {
+          text: "RuoYi-Vue-Plus",
+          base: "/源码剖析/开源项目/RuoYi-Vue-Plus",
+          collapsed: false,
+          items: [{ text: "导读", link: "/README" }],
+        },
+      ],
+    },
   ],
   "/前端开发/Vue3学习之旅/": [
     { text: "导读", link: "/前端开发/Vue3学习之旅/README" },
