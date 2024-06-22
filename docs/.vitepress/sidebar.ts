@@ -184,28 +184,48 @@ export const sidebar: DefaultTheme.Sidebar = {
     },
   ],
   "/后端开发/设计模式": [
-    { text: "导读", link: "/后端开发/设计模式/README" },
-    { text: "七大设计原则", link: "/后端开发/设计模式/七大设计原则" },
     {
-      text: "创建型",
-      base: "/后端开发/设计模式/创建型",
-      collapsed: false,
-      items: [],
-    },
-    {
-      text: "结构型",
-      base: "/后端开发/设计模式/结构型",
-      collapsed: false,
-      items: [],
-    },
-    {
-      text: "行为型",
-      base: "/后端开发/设计模式/行为型",
-      collapsed: false,
-      items: [{ text: "策略模式", link: "/策略模式" }],
+      base: "/后端开发/设计模式",
+      items: [
+        { text: "导读", link: "/README" },
+        { text: "七大设计原则", link: "/七大设计原则" },
+        {
+          text: "创建型",
+          base: "/后端开发/设计模式/创建型",
+          collapsed: false,
+          items: [],
+        },
+        {
+          text: "结构型",
+          base: "/后端开发/设计模式/结构型",
+          collapsed: false,
+          items: [],
+        },
+        {
+          text: "行为型",
+          base: "/后端开发/设计模式/行为型",
+          collapsed: false,
+          items: [{ text: "策略模式", link: "/策略模式" }],
+        },
+      ],
     },
   ],
-  "/后端开发/juc": [{ text: "导读", link: "/后端开发/juc/README" }],
+  "/后端开发/Spring全家桶": [
+    {
+      base: "/后端开发/Spring全家桶",
+      items: [
+        {
+          text: "Spring",
+          base: "/后端开发/Spring全家桶/Spring",
+          collapsed: false,
+          items: [{ text: "IoC", link: "/IoC" }],
+        },
+      ],
+    },
+  ],
+  "/后端开发/juc": [
+    { base: "/后端开发/juc", items: [{ text: "导读", link: "/README" }] },
+  ],
   "/后端开发/MySQL": [
     { text: "通用表表达式", link: "/后端开发/MySQL/通用表表达式" },
     { text: "窗口函数", link: "/后端开发/MySQL/窗口函数" },

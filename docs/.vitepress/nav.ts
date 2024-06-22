@@ -11,6 +11,11 @@ export const nav: DefaultTheme.NavItem[] = [
         activeMatch: "/后端开发/设计模式/",
       },
       {
+        text: "Spring全家桶",
+        link: "/后端开发/Spring全家桶/Spring/IoC",
+        activeMatch: "/后端开发/Spring全家桶/",
+      },
+      {
         text: "JUC并发编程",
         link: "/后端开发/juc/README",
         activeMatch: "/后端开发/juc/",
