@@ -455,6 +455,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "SQL236 删除emp_no重复的记录，只保留最小的id对应的记录",
           link: "/SQL236 删除emp_no重复的记录，只保留最小的id对应的记录",
         },
+        {
+          text: "SQL237 将所有to_date为9999-01-01的全部更新为NULL",
+          link: "/SQL237 将所有to_date为9999-01-01的全部更新为NULL",
+        },
       ],
     },
   ],
