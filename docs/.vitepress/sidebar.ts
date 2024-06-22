@@ -472,6 +472,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: "/SQL256 出现三次以上相同积分的情况",
         },
         { text: "SQL258 找到每个人的任务", link: "/SQL258 找到每个人的任务" },
+        {
+          text: "SQL260 牛客每个人最近的登录日期(一)",
+          link: "/SQL260 牛客每个人最近的登录日期(一)",
+        },
       ],
     },
   ],
