@@ -451,6 +451,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: "/SQL226 将employees表的所有员工的last_name和first_name拼接起来作为Name",
         },
         { text: "SQL228 批量插入数据", link: "/SQL228 批量插入数据" },
+        {
+          text: "SQL236 删除emp_no重复的记录，只保留最小的id对应的记录",
+          link: "/SQL236 删除emp_no重复的记录，只保留最小的id对应的记录",
+        },
       ],
     },
   ],
