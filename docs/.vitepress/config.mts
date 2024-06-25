@@ -3,6 +3,7 @@ import markdownItPlantuml from "markdown-it-textual-uml";
 import { nav } from "./nav";
 import { sidebar } from "./sidebar";
 import mdItCustomAttrs from "markdown-it-custom-attrs";
+import markdownItTaskLists from "markdown-it-task-lists";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -90,6 +91,7 @@ export default defineConfig({
       md.use(mdItCustomAttrs, "image", {
         "data-fancybox": "gallery",
       });
+      md.use(markdownItTaskLists);
     },
   },
   vite: {

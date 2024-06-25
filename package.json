@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "markdown-it-custom-attrs": "^1.0.2",
+    "markdown-it-task-lists": "^2.1.1",
     "markdown-it-textual-uml": "^0.17.1"
   },
   "config": {
