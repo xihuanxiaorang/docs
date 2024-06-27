@@ -2,60 +2,30 @@ import { DefaultTheme } from "vitepress";
 
 export const sidebar: DefaultTheme.Sidebar = {
   "/技术碎片/": [
-    { text: "技术碎片", link: "/技术碎片/README" },
-    { text: "搞定UML类图！", link: "/技术碎片/搞定UML类图！" },
-    { text: "正则表达式", link: "/技术碎片/正则表达式" },
     {
-      text: "其他",
-      base: "/技术碎片",
+      base: "/技术碎片/",
       items: [
-        { text: "如何选择开源协议", link: "/如何选择开源协议" },
-        {
-          text: "手绘风格的开源白板Excalidraw搭建教程",
-          link: "/手绘风格的开源白板Excalidraw搭建教程",
-        },
-        {
-          text: "手摸手教你搭建部署Vitepress博客",
-          link: "/手摸手教你搭建部署Vitepress博客",
-        },
-        {
-          text: "Windows-Terminal美化",
-          link: "/Windows-Terminal美化",
-        },
-        {
-          text: "Windows11 中安装 Linux 教程 | WLS2 的使用",
-          link: "/Windows11中安装Linux教程之WLS2的使用",
-        },
-        {
-          text: "美化 Github 个人主页",
-          link: "/美化Github个人主页",
-        },
-      ],
-    },
-  ],
-  "/工具/": [
-    {
-      text: "开发者工具",
-      base: "/工具/开发者工具",
-      collapsed: false,
-      items: [
-        { text: "内网穿透工具", link: "/内网穿透工具" },
-        { text: "IDEA", link: "/IDEA" },
+        { text: "技术碎片", link: "/README" },
+        { text: "搞定UML类图！", link: "/搞定UML类图！" },
+        { text: "正则表达式", link: "/正则表达式" },
         { text: "MapStruct", link: "/MapStruct" },
         { text: "Git", link: "/Git" },
-      ],
-    },
-    {
-      text: "其他工具",
-      base: "/工具/其他工具",
-      collapsed: false,
-      items: [
-        { text: "视频下载工具", link: "/视频下载工具" },
-        { text: "Office部署激活工具", link: "/Office部署激活工具" },
-        { text: "篡改猴(Tampermonkey)", link: "/篡改猴(Tampermonkey)" },
         {
-          text: "PicList+Github搭建个人云图床",
-          link: "/PicList+Github搭建个人云图床",
+          text: "ORM框架",
+          base: "/技术碎片/ORM框架",
+          items: [
+            { text: "JDBC", link: "/JDBC" },
+            { text: "Mybatis", link: "/Mybatis" },
+            { text: "MybatisPlus", link: "/MybatisPlus" },
+          ],
+        },
+        {
+          text: "Logback",
+          base: "/技术碎片/Logback",
+          items: [
+            { text: "介绍", link: "/README" },
+            { text: "架构", link: "/架构" },
+          ],
         },
       ],
     },
@@ -237,25 +207,6 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "刷题集",
       base: "/后端开发/MySQL/刷题集",
       items: [{ text: "LeetCode", link: "/LeetCode" }],
-    },
-  ],
-  "/后端开发/other": [
-    {
-      text: "ORM框架",
-      base: "/后端开发/other/ORM框架",
-      items: [
-        { text: "JDBC", link: "/JDBC" },
-        { text: "Mybatis", link: "/Mybatis" },
-        { text: "MybatisPlus", link: "/MybatisPlus" },
-      ],
-    },
-    {
-      text: "Logback",
-      base: "/后端开发/other/Logback",
-      items: [
-        { text: "介绍", link: "/README" },
-        { text: "架构", link: "/架构" },
-      ],
     },
   ],
   "/数据结构与算法": [
@@ -527,6 +478,59 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: "SQL278 实习广场投递简历分析(一)",
           link: "/SQL278 实习广场投递简历分析(一)",
+        },
+      ],
+    },
+  ],
+  "/杂记/": [
+    {
+      text: "开发者工具",
+      base: "/杂记/工具/开发者工具",
+      collapsed: false,
+      items: [
+        { text: "IDEA", link: "/IDEA" },
+        { text: "内网穿透工具", link: "/内网穿透工具" },
+      ],
+    },
+    {
+      text: "其他工具",
+      base: "/杂记/工具/其他工具",
+      collapsed: false,
+      items: [
+        { text: "视频下载工具", link: "/视频下载工具" },
+        { text: "Office部署激活工具", link: "/Office部署激活工具" },
+        { text: "篡改猴(Tampermonkey)", link: "/篡改猴(Tampermonkey)" },
+        {
+          text: "PicList+Github搭建个人云图床",
+          link: "/PicList+Github搭建个人云图床",
+        },
+      ],
+    },
+    {
+      text: "其他",
+      base: "/杂记/其他",
+      collapsed: false,
+      items: [
+        { text: "如何选择开源协议", link: "/如何选择开源协议" },
+        {
+          text: "手绘风格的开源白板Excalidraw搭建教程",
+          link: "/手绘风格的开源白板Excalidraw搭建教程",
+        },
+        {
+          text: "手摸手教你搭建部署Vitepress博客",
+          link: "/手摸手教你搭建部署Vitepress博客",
+        },
+        {
+          text: "Windows-Terminal美化",
+          link: "/Windows-Terminal美化",
+        },
+        {
+          text: "Windows11 中安装 Linux 教程 | WLS2 的使用",
+          link: "/Windows11中安装Linux教程之WLS2的使用",
+        },
+        {
+          text: "美化 Github 个人主页",
+          link: "/美化Github个人主页",
         },
       ],
     },

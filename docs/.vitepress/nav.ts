@@ -25,11 +25,6 @@ export const nav: DefaultTheme.NavItem[] = [
         link: "/后端开发/MySQL/通用表表达式",
         activeMatch: "/后端开发/MySQL/",
       },
-      {
-        text: "其他",
-        link: "/后端开发/other/ORM框架/JDBC",
-        activeMatch: "/后端开发/other/",
-      },
     ],
   },
   {
@@ -85,10 +80,10 @@ export const nav: DefaultTheme.NavItem[] = [
     link: "/项目/项目模板/搭建Vue3企业级项目模板",
     activeMatch: "/项目/",
   },
-  { text: "🏷️技术碎片", link: "/技术碎片/README", activeMatch: "/技术碎片/" },
+  { text: "🔖技术碎片", link: "/技术碎片/README", activeMatch: "/技术碎片/" },
   {
-    text: "🧰实用工具",
-    link: "/工具/开发者工具/内网穿透工具",
-    activeMatch: "/工具/",
+    text: "🗂️杂记",
+    link: "/杂记/工具/开发者工具/IDEA",
+    activeMatch: "/杂记/",
   },
 ];
