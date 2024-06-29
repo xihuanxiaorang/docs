@@ -633,3 +633,14 @@ public @interface SpringBootApplication {
 </configuration>
 ```
 
+## 微信测试号
+
+为方便开发者开发和体验小程序、小游戏的各种能力，开发者可以申请小程序或小游戏的测试号，并使用此账号在开发者工具创建项目进行开发测试，以及真机预览体验。
+
+### 申请测试号
+
+申请测试号的过程非常简单。只需访问 [申请地址](https://mp.weixin.qq.com/wxamp/sandbox?doc=1) ，并使用微信扫描二维码，即可获得为自己分配好的小程序和小游戏测试账号。<br />![img](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406282313494.jpg)
+
+### 登录测试号
+
+申请成功后，进入 [微信公众平台首页](https://mp.weixin.qq.com/)，扫描登录二维码，选择已有的小程序测试号或小游戏测试号登录即可。<br />![img](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406282314015.png)

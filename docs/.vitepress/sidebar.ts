@@ -10,6 +10,7 @@ export const sidebar: DefaultTheme.Sidebar = {
         { text: "正则表达式", link: "/正则表达式" },
         { text: "MapStruct", link: "/MapStruct" },
         { text: "Git", link: "/Git" },
+        { text: "Uniapp工程化模板搭建", link: "/Uniapp工程化模板搭建" },
         {
           text: "ORM框架",
           base: "/技术碎片/ORM框架",
@@ -122,10 +123,6 @@ export const sidebar: DefaultTheme.Sidebar = {
         {
           text: "搭建Vue3企业级项目模板",
           link: "/搭建Vue3企业级项目模板",
-        },
-        {
-          text: "uniapp+vue3+ts项目模板搭建",
-          link: "/uniapp+vue3+ts项目模板搭建",
         },
       ],
     },
