@@ -500,3 +500,429 @@ commitizen 是一个 cli 工具，用于规范化 git commit 信息，可以代�
 
 使用 `git add .` 命令将所有的变更文件添加到暂存区，然后再执行 `git cz` 命令提交代码，可以看到终端中有了对应的步骤和信息提示，非常好！一切都在咱们的预料当中，满足了咱们的诉求。<br />![image-20240629184546759](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406291845046.png)
 
+### Stylelint
+
+[Stylelint](https://www.stylelint.cn/) 是一个强大、先进的 CSS 代码检查器（linter），可以帮助你规避 CSS 代码中的错误并保持一致的编码风格。
+
+建议在使用 Stylelint 的同时使用格式化工具 Prettier。代码检查工具和格式化工具是互相补充的，能够辅助你编写一致且正确的代码。
+
+1. 使用 `pnpm add -D stylelint stylelint-config-html stylelint-config-recess-order stylelint-config-recommended stylelint-config-recommended-scss stylelint-config-recommended-vue stylelint-prettier` 命令安装 Stylelint 相关依赖；
+
+2. 在项目根目录下创建一个名为 `.stylelintrc.cjs` 的配置文件，文件内容如下所示：
+
+   ```js
+   module.exports = {
+     root: true,
+     extends: [
+       // stylelint-config-standard 替换成了更宽松的 stylelint-config-recommended
+       'stylelint-config-recommended',
+       // stylelint-config-standard-scss 替换成了更宽松的 stylelint-config-recommended-scss
+       'stylelint-config-recommended-scss',
+       'stylelint-config-recommended-vue/scss',
+       'stylelint-config-html/vue',
+       'stylelint-config-recess-order',
+     ],
+     plugins: ['stylelint-prettier'],
+     overrides: [
+       // 扫描 .vue/html 文件中的<style>标签内的样式
+       {
+         files: ['**/*.{vue,html}'],
+         customSyntax: 'postcss-html',
+       },
+       {
+         files: ['**/*.{css,scss}'],
+         customSyntax: 'postcss-scss',
+       },
+     ],
+     // 自定义规则
+     rules: {
+       'prettier/prettier': true,
+       // 允许 global 、export 、v-deep等伪类
+       'selector-pseudo-class-no-unknown': [
+         true,
+         {
+           ignorePseudoClasses: ['global', 'export', 'v-deep', 'deep'],
+         },
+       ],
+       'unit-no-unknown': [
+         true,
+         {
+           ignoreUnits: ['rpx'],
+         },
+       ],
+       // 处理小程序page标签不认识的问题
+       'selector-type-no-unknown': [
+         true,
+         {
+           ignoreTypes: ['page'],
+         },
+       ],
+       'comment-empty-line-before': 'never', // never|always|always-multi-line|never-multi-line
+       'custom-property-empty-line-before': 'never',
+       'no-empty-source': null,
+       'comment-no-empty': null,
+       'no-duplicate-selectors': null,
+       'scss/comment-no-empty': null,
+       'selector-class-pattern': null,
+       'font-family-no-missing-generic-family-keyword': null,
+     },
+   }
+   ```
+
+3. 如果有一些文件需要排除，可以再创建一个 `.stylelintignore` 文件在项目根目录下，里面添加要排除的文件或者文件夹名称即可。
+
+   ```
+   dist/
+   src/uni_modules/
+   ```
+
+4. 修改 `package.json` 文件，让 lint-staged 作用于 Stylelint
+
+   ```json
+   {
+     // ...
+     
+     "lint-staged": {
+       "**/*.{html,vue,ts,cjs,json,md}": [
+         "prettier --write"
+       ],
+       "**/*.{vue,js,ts,jsx,tsx}": [
+         "eslint --fix"
+       ],
+       "**/*.{vue,css,scss,html}": [ // [!code ++]
+         "stylelint --fix" // [!code ++]
+       ] // [!code ++]
+     },
+     
+     // ...
+   }
+   ```
+
+   故意书写不符合要求的 css 样式，可以看到在提交代码的过程中会输出详细的错误信息并且中断了代码提交，这非常好，符合咱们的预期！如下所示：<br />![image-20240630103651890](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406301036439.png)
+
+## TS 类型校验
+
+打开 `tsconfig.json` 文件，发现报错，错误信息如下所示：<br />![image-20240314171841557](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202403141718623.png)
+
+根据提示咱们需要在当前文件的 `compilerOptions` 选项中添加 `"ignoreDeprecations": "5.0"` 选项！
+
+```json
+{
+  "extends": "@vue/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "types": [
+      "@dcloudio/types"
+    ],
+    "ignoreDeprecations": "5.0" // [!code ++]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ]
+}
+
+```
+
+此时我们打开 `pages/index/index.vue` 文件，给 `image` 内置组件的 mode 属性赋值为 “xxx”，如下所示：
+
+```vue {3}
+<template>
+  <view class="content">
+    <image class="logo" mode="xxx" src="/static/logo.png" />
+    <view class="text-area">
+      <text class="title">
+        {{ title }}
+      </text>
+    </view>
+  </view>
+</template>
+```
+
+在  `image` 内置组件的 mode 属性中很显然是没有 “xxx” 的属性值的，但是代码中并没有错误提示，所以为了符合 TS 类型校验，我们需要额外配置 TS类型校验：
+
+1. 安装类型声明文件：`pnpm add -D @types/node miniprogram-api-typings @uni-helper/uni-app-types`；
+
+2. 配置 `tsconfig.json` 文件：
+
+   ```json
+   {
+     "extends": "@vue/tsconfig/tsconfig.json",
+     "compilerOptions": {
+       "sourceMap": true,
+       "baseUrl": ".",
+       "paths": {
+         "@/*": [
+           "./src/*"
+         ]
+       },
+       "lib": [
+         "esnext",
+         "dom"
+       ],
+       "types": [
+         "@dcloudio/types",
+         "@uni-helper/uni-app-types", // [!code ++]
+         "miniprogram-api-typings" // [!code ++]
+       ],
+       "ignoreDeprecations": "5.0"
+     },
+     "include": [
+       "src/**/*.ts",
+       "src/**/*.d.ts",
+       "src/**/*.tsx",
+       "src/**/*.vue"
+     ]
+   }
+   ```
+   
+3. 当引入 uniapp 内置组件类型之后，发现文件报如下错误：<br />![image-20240629234431354](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406292344593.png)
+
+   参考其他人提出的 issue [webstorm 上会对模版上的 class 显示异常 · Issue #63 · uni-helper/uni-app-types (github.com)](https://github.com/uni-helper/uni-app-types/issues/63)，需要进行如下处理：
+
+   ```json {22-26}
+   {
+     "extends": "@vue/tsconfig/tsconfig.json",
+     "compilerOptions": {
+       "sourceMap": true,
+       "baseUrl": ".",
+       "paths": {
+         "@/*": [
+           "./src/*"
+         ]
+       },
+       "lib": [
+         "esnext",
+         "dom"
+       ],
+       "types": [
+         "@dcloudio/types",
+         "@uni-helper/uni-app-types",
+         "miniprogram-api-typings"
+       ],
+       "ignoreDeprecations": "5.0"
+     },
+     "vueCompilerOptions": {
+       "plugins": [
+         "@uni-helper/uni-app-types/volar-plugin"
+       ]
+     },
+     "include": [
+       "src/**/*.ts",
+       "src/**/*.d.ts",
+       "src/**/*.tsx",
+       "src/**/*.vue"
+     ]
+   }
+   ```
+   
+
+## UI 组件库
+
+以下两种 UI 组件库任选其一即可，推荐使用 wot-design-uni 组件库。
+
+### Wot Design Uni
+
+`wot-design-uni` 组件库基于 `vue3` + `Typescript` 构建，参照 `wot design` 的设计规范进行开发，提供 70+ 高质量组件，支持暗黑模式、国际化和自定义主题，旨在给开发者提供统一的UI交互，同时提高研发的开发效率。
+
+1. **安装**：使用 `pnpm add wot-design-uni` 命令安装 wot-design-uni 组件库；
+
+2. **关于 SCSS**：wot-design-uni 依赖 SCSS，你需要使用 `pnpm i sass -D` 命令安装此插件，否则无法正常运行。如果已安装，请略过。
+
+3. **配置 easycom 自动引入组件**：传统vue组件，需要安装、引用、注册，三个步骤后才能使用组件。`easycom` 将其精简为一步。只要组件路径符合规范（具体见[easycom](https://uniapp.dcloud.net.cn/collocation/pages.html#easycom)），就可以不用引用、注册，直接在页面中使用。
+
+   > [!tip]
+   >
+   > - uni-app 考虑到编译速度，直接在 `pages.json` 内修改 `easycom` 不会触发重新编译，需要改动页面内容触发。
+   > - 请确保您的 pages.json 中只有一个 easycom 字段，否则请自行合并多个引入规则。
+
+   ```json
+   // pages.json
+   {
+       "easycom": {
+         "autoscan": true,
+         "custom": {
+           "^wd-(.*)": "wot-design-uni/components/wd-$1/wd-$1.vue" // [!code ++]
+         }
+       },
+   	
+   	// 此为本身已有的内容
+   	"pages": [
+   		// ......
+   	]
+   }
+   ```
+
+4. **UI 组件类型提示**：如果你使用 `pnpm` ，请在根目录下创建一个 `.npmrc` 文件，参见[issue](https://github.com/antfu/unplugin-vue-components/issues/389)。
+
+   ```
+   // .npmrc
+   public-hoist-pattern[]=@vue*
+   // or
+   // shamefully-hoist = true
+   ```
+
+5. **Volar 支持**：如果您使用 `Volar`，请在 `tsconfig.json` 中通过 `compilerOptions.type` 指定全局组件类型。
+
+   > [!tip]
+   >
+   > cli 项目使用 `uni_modules` 安装无需配置，对 `Volar` 的支持自动生效，`HbuildX `项目不支持此配置，故此步骤仅在 `cli` 项目使用 `npm` 安装时需要配置。
+
+   ```json
+   // tsconfig.json
+   {
+     "compilerOptions": {
+       "types": ["wot-design-uni/global"]
+     }
+   }
+   ```
+
+   
+
+6. **使用**：`Wot Design Uni` 安装、配置完成之后，支持组件自动引入，故可以直接在 SFC 中使用，无需在页面内 import，也不需要在components 内声明，即可在任意页面使用。值得注意的是，`uni-app` 平台不支持全局挂载组件，所以 `Message`、`Toast` 等组件仍需在SFC 中显式使用，例如：
+
+   ```html
+   <wd-toast></wd-toast>
+   ```
+
+   > [!tip]
+   >
+   > 使用 uni_modules 安装时 `Wot Design Uni` 的组件天然支持 `easycom` 规范，无需额外配置就可以自动引入组件，而使用 npm 安装需要自行配置 `easycom` 或 `@uni-helper/vite-plugin-uni-components`。
+
+### uview-plus
+
+咱们使用的 UI 框架是 [uview-plus](https://uiadmin.net/uview-plus/), uview-plus 是全面兼容 nvue 的 uni-app 生态框架，全面的组件和便捷的工具会让你信手拈来，如鱼得水，基于 uView2.0 初步修改，后续会陆续修复 vue3 兼容性，以及组合式 API 改造等。
+
+1. **安装**：使用 `pnpm i uview-plus` 命令安装 uview-plus
+
+   > [!note]
+   >
+   > 此安装方式必须要按照[npm方式安装的配置](https://uiadmin.net/uview-plus/components/npmSetting.html)中的说明配置了才可用，且项目名称不能有**中文**字符。
+
+2. **关于 SCSS**：uview-plus 依赖 SCSS，你必须要安装此插件，否则无法正常运行。请通过以下命令安装对 sass(scss) 的支持，如果已安装，请略过。
+
+   ```js
+   // 安装sass
+   pnpm i sass -D
+   
+   // 安装sass-loader，注意需要版本10，否则可能会导致vue与sass的兼容问题而报错
+   pnpm i sass-loader@10 -D
+   ```
+
+3. **配置步骤**：
+
+   1. 引入 uview-plus 主 JS 库：在项目 `src` 目录中的 `main.ts` 中，引入并使用 uview-plus 的 JS 库。
+
+      ```ts
+      import { createSSRApp } from 'vue'
+      import App from './App.vue'
+      import uviewPlus from 'uview-plus' // [!code ++]
+      
+      export function createApp() {
+        const app = createSSRApp(App)
+        app.use(uviewPlus)  // [!code ++]
+        return {
+          app,
+        }
+      }
+      ```
+
+   2. 引入 uview-plus 的全局 SCSS 主题文件：在项目根目录的 `uni.scss` 中引入此文件。
+
+      ```scss
+      @import 'uview-plus/theme.scss';
+      ```
+
+   3. 引入 uview-plus 基础样式：
+
+      > [!note]
+      >
+      > 在 `App.vue` 中**首行**的位置引入，注意给 style 标签加入 lang="scss" 属性
+
+      ```css
+      <style lang="scss">
+      @import 'uview-plus/index.scss';
+      </style>
+      ```
+
+   4. 配置 easycom 组件模式：此配置需要在项目 `src` 目录的 `pages.json` 中进行。
+
+      > [!tip]
+      >
+      > 1. uni-app 为了调试性能的原因，修改 `easycom` 规则不会实时生效，配置完后，您需要重启 HX 或者重新编译项目才能正常使用uview-plus 的功能。
+      > 2. 请确保您的 `pages.json` 中只有一个 `easycom` 字段，否则请自行合并多个引入规则。
+
+      ```json {2-10}
+      {
+        "easycom": {
+          "autoscan": true,
+          // 注意一定要放在custom里，否则无效，https://ask.dcloud.net.cn/question/131175
+          "custom": {
+            "^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
+            "^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+            "^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue"
+          }
+        },
+      
+        // 此为本身已有的内容
+        "pages": [
+          // ......
+        ]
+      }
+      ```
+
+   5. typescript 支持：在 tsconfig.json 中参考如下配置增加 "uview-plus/types"
+
+      ```json
+      {
+        "extends": "@vue/tsconfig/tsconfig.json",
+        "compilerOptions": {
+          "sourceMap": true,
+          "baseUrl": ".",
+          "paths": {
+            "@/*": [
+              "./src/*"
+            ]
+          },
+          "lib": [
+            "esnext",
+            "dom"
+          ],
+          "types": [
+            "@dcloudio/types",
+            "@uni-helper/uni-app-types",
+            "miniprogram-api-typings",
+            "uview-plus/types" // [!code ++]
+          ],
+          "ignoreDeprecations": "5.0"
+        },
+        "vueCompilerOptions": {
+          "plugins": [
+            "@uni-helper/uni-app-types/volar-plugin"
+          ]
+        },
+        "include": [
+          "src/**/*.ts",
+          "src/**/*.d.ts",
+          "src/**/*.tsx",
+          "src/**/*.vue"
+        ],
+        "exclude": [
+          "dist",
+          "node_modules"
+        ]
+      }
+      ```
+
