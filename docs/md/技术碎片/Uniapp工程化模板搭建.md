@@ -600,7 +600,9 @@ commitizen 是一个 cli 工具，用于规范化 git commit 信息，可以代�
 
    故意书写不符合要求的 css 样式，可以看到在提交代码的过程中会输出详细的错误信息并且中断了代码提交，这非常好，符合咱们的预期！如下所示：<br />![image-20240630103651890](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406301036439.png)
 
-## TS 类型校验
+## 准备工作
+
+### TS 类型校验
 
 打开 `tsconfig.json` 文件，发现报错，错误信息如下所示：<br />![image-20240314171841557](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202403141718623.png)
 
@@ -729,11 +731,11 @@ commitizen 是一个 cli 工具，用于规范化 git commit 信息，可以代�
    ```
    
 
-## UI 组件库
+### UI 组件库
 
 以下两种 UI 组件库任选其一即可，推荐使用 wot-design-uni 组件库。
 
-### Wot Design Uni
+#### Wot Design Uni
 
 `wot-design-uni` 组件库基于 `vue3` + `Typescript` 构建，参照 `wot design` 的设计规范进行开发，提供 70+ 高质量组件，支持暗黑模式、国际化和自定义主题，旨在给开发者提供统一的UI交互，同时提高研发的开发效率。
 
@@ -801,11 +803,11 @@ commitizen 是一个 cli 工具，用于规范化 git commit 信息，可以代�
    >
    > 使用 uni_modules 安装时 `Wot Design Uni` 的组件天然支持 `easycom` 规范，无需额外配置就可以自动引入组件，而使用 npm 安装需要自行配置 `easycom` 或 `@uni-helper/vite-plugin-uni-components`。
 
-### uview-plus
+#### uview-plus
 
 咱们使用的 UI 框架是 [uview-plus](https://uiadmin.net/uview-plus/), uview-plus 是全面兼容 nvue 的 uni-app 生态框架，全面的组件和便捷的工具会让你信手拈来，如鱼得水，基于 uView2.0 初步修改，后续会陆续修复 vue3 兼容性，以及组合式 API 改造等。
 
-1. **安装**：使用 `pnpm i uview-plus` 命令安装 uview-plus
+1. **安装**：使用 `pnpm i uview-plus` 命令安装 uview-plus；
 
    > [!note]
    >
@@ -925,4 +927,385 @@ commitizen 是一个 cli 工具，用于规范化 git commit 信息，可以代�
         ]
       }
       ```
+
+### 自动导入 Api
+
+[unplugin/unplugin-auto-import: Auto import APIs on-demand for Vite, Webpack and Rollup (github.com)](https://github.com/unplugin/unplugin-auto-import) 插件可以实现如下功能：
+
+- 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+- 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+- 自动导入 @vueuse/core 相关函数，如：useStorage、useTitle 等
+
+1. **安装**：使用 `pnpm i -D unplugin-auto-import` 命令安装 unplugin-auto-import 插件；
+
+2. **配置**：
+
+   ```ts {2,6,8,14-22,24-28}
+   // vite.config.ts
+   import { resolve } from 'path'
+   
+   import { defineConfig } from 'vite'
+   import uni from '@dcloudio/vite-plugin-uni'
+   import AutoImport from 'unplugin-auto-import/vite'
+   
+   const pathSrc = resolve(__dirname, 'src')
+   
+   // https://vitejs.dev/config/
+   export default defineConfig({
+     plugins: [
+       uni(),
+       AutoImport({
+         // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+         // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+         imports: ['vue'],
+         // 是否在 vue 模板中自动导入
+         vueTemplate: true,
+         // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+         dts: resolve(pathSrc, 'types', 'auto-import.d.ts'),
+       }),
+     ],
+     resolve: {
+       alias: {
+         '@': pathSrc,
+       },
+     },
+   })
+   ```
+
+   使用 `pnpm run dev:mp-weixin` 命令运行到微信开发者工具，可以发现在 `src/types` 目录下会新生成一个 `auto-import.d.ts` 类型声明文件。
+
+3. **使用**：删除 `pages/index/index.vue` 文件中的 `import { ref } from 'vue'` 语句，程序照样正常工作。如下所示：
+
+   ```vue
+   <template>
+     <view class="content">
+       <image class="logo" src="/static/logo.png" />
+       <view class="text-area">
+         <text class="title">{{ title }}</text>
+       </view>
+     </view>
+   </template>
+   
+   <script lang="ts" setup>
+   import { ref } from 'vue' // [!code --]
+   
+   const title = ref('Hello')
+   </script>
+   
+   <style>
+   .content {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+   }
+   
+   .logo {
+     height: 200rpx;
+     width: 200rpx;
+     margin-top: 200rpx;
+     margin-left: auto;
+     margin-right: auto;
+     margin-bottom: 50rpx;
+   }
+   
+   .text-area {
+     display: flex;
+     justify-content: center;
+   }
+   
+   .title {
+     font-size: 36rpx;
+     color: #8f8f94;
+   }
+   </style>
+   ```
+
+### [uni-use](https://github.com/uni-helper/uni-use) & [VueUse](https://www.vueusejs.com/) 集成
+
+uni-use 是 uni-app (vue3) 组合式工具集，基本上属于 VueUse 在 Uniapp 中的实现。
+
+VueUse 是基于 Vue 组合式 API 的实用工具集，如 `useStorage` 函数可以实现状态持久化存储（localStorage|SessionStorage）；`useFullscreen` 函数可以非常方便地实现全屏模式，等等。
+
+1. 安装 `pnpm i @uni-helper/uni-use @vueuse/core@9` 插件；为什么没有使用 `@vueuse/core` 最新的 v10 版本呢？因为运行到微信小程序的时候会报如下错误：<br />![image-20240630233153197](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406302331453.png)
+
+   如果你希望使用 `@vueuse/core` v10，请参考 [uni-app#4604](https://github.com/dcloudio/uni-app/issues/4604)。
+
+2. 与 `unplugin-auto-import` 结合使用：
+
+   ```ts {7,19}
+   // vite.config.ts
+   import { resolve } from 'path'
+   
+   import { defineConfig } from 'vite'
+   import uni from '@dcloudio/vite-plugin-uni'
+   import AutoImport from 'unplugin-auto-import/vite'
+   import { uniuseAutoImports } from '@uni-helper/uni-use'
+   
+   const pathSrc = resolve(__dirname, 'src')
+   
+   // https://vitejs.dev/config/
+   export default defineConfig({
+     plugins: [
+       uni(),
+       AutoImport({
+         // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+         // 自动导入 @vueuse/core 相关函数，如：useStorage、useTitle 等
+         // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+         imports: ['vue', '@vueuse/core', uniuseAutoImports()],
+         // 是否在 vue 模板中自动导入
+         vueTemplate: true,
+         // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+         dts: resolve(pathSrc, 'types', 'auto-import.d.ts'),
+       }),
+     ],
+     resolve: {
+       alias: {
+         '@': pathSrc,
+       },
+     },
+   })
+   ```
+
+### [环境变量与模式](https://vitejs.cn/vite3-cn/guide/env-and-mode.html#env-files)
+
+1. 在项目根目录下创建 `.env` 和 `.env.development` 文件：
+
+   ::: code-group
+
+   ```[.env]
+   # 变量必须以 VITE_ 为前缀才能暴露给外部读取
+   
+   # 网站标题，应用名称
+   VITE_APP_TITLE = 'uniapp-vue3-ts-starter'
+   # 微信小程序AppID
+   VITE_WX_APPID = 'wx1fd9ae6397699e13'
+   
+   # 是否去除console
+   VITE_DELETE_CONSOLE = true
+   # 是否开启sourcemap
+   VITE_SHOW_SOURCEMAP = false
+   ```
+
+   ```[.env.development]
+   # 开发环境
+   NODE_ENV = 'development'
+   
+   # 是否去除console
+   VITE_DELETE_CONSOLE = false
+   # 是否开启sourcemap
+   VITE_SHOW_SOURCEMAP = true
+   ```
+
+   :::
+
+2. **TypeScript 的智能提示**：在 `env.d.ts` 文件中按下面这样增加 `ImportMetaEnv` 的定义：
+
+   ```ts {10-20}
+   /// <reference types="vite/client" />
+   
+   declare module '*.vue' {
+     import { DefineComponent } from 'vue'
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
+     const component: DefineComponent<{}, {}, any>
+     export default component
+   }
+   
+   interface ImportMetaEnv {
+     /** 网站标题，应用名称 */
+     readonly VITE_APP_TITLE: string
+     /** 微信小程序AppID */
+     readonly VITE_WX_APPID: string
+     // 更多环境变量...
+   }
+   
+   interface ImportMeta {
+     readonly env: ImportMetaEnv
+   }
+   ```
+
+3. **使用**：
+
+   ```ts {25-27,50-62}
+   // vite.config.ts
+   import { defineConfig, loadEnv } from 'vite'
+   import uni from '@dcloudio/vite-plugin-uni'
+   import AutoImport from 'unplugin-auto-import/vite'
+   import { uniuseAutoImports } from '@uni-helper/uni-use'
+   import path from 'node:path'
+   
+   const pathSrc = path.resolve(__dirname, 'src')
+   
+   // https://vitejs.dev/config/
+   export default defineConfig(({ command, mode }) => {
+     // mode: 区分生产环境还是开发环境
+     console.log('command, mode -> ', command, mode)
+     // pnpm dev:h5 时得到 => serve development
+     // pnpm build:h5 时得到 => build production
+     // pnpm dev:mp-weixin 时得到 => build development (注意区别，command为build)
+     // pnpm build:mp-weixin 时得到 => build production
+     // pnpm dev:app 时得到 => build development (注意区别，command为build)
+     // pnpm build:app 时得到 => build production
+     // dev 和 build 命令可以分别使用 .env.development 和 .env.production 的环境变量
+   
+     const { UNI_PLATFORM } = process.env
+     console.log('UNI_PLATFORM -> ', UNI_PLATFORM) // 得到 mp-weixin, h5, app 等
+   
+     const env = loadEnv(mode, path.resolve(process.cwd(), 'env'))
+     const { VITE_SHOW_SOURCEMAP, VITE_DELETE_CONSOLE } = env
+     console.log('环境变量 env -> ', env)
+     return {
+       // 自定义env目录
+       envDir: './env',
+       // 自定义别名
+       resolve: {
+         alias: {
+           '@': pathSrc,
+         },
+       },
+       plugins: [
+         uni(),
+         AutoImport({
+           // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+           // 自动导入 @vueuse/core 相关函数，如：useStorage、useTitle 等
+           // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+           imports: ['vue', '@vueuse/core', uniuseAutoImports()],
+           // 是否在 vue 模板中自动导入
+           vueTemplate: true,
+           // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+           dts: path.resolve(pathSrc, 'types', 'auto-import.d.ts'),
+         }),
+       ],
+       build: {
+         // 方便非h5端调试
+         sourcemap: VITE_SHOW_SOURCEMAP === 'true', // 默认是false
+         target: 'es6',
+         // 开发环境不用压缩
+         minify: mode === 'development' ? false : 'terser',
+         terserOptions: {
+           compress: {
+             drop_console: VITE_DELETE_CONSOLE === 'true',
+             drop_debugger: true,
+           },
+         },
+       },
+     }
+   })
+   ```
+
+### [pinia](https://pinia.vuejs.org/zh/) 状态存储
+
+Pinia 是 Vue 的专属状态管理库，它允许你跨组件或页面共享状态。
+
+1. **安装**：使用 `pnpm add pinia` 命令安装 Pinia；
+
+2. **自动导入 Api**：
+
+   ```ts {12,14}
+   // vite.config.ts
+   export default defineConfig(({ command, mode }) => {
+     	// ...
+     
+       plugins: [
+         uni(),
+         AutoImport({
+           // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+           // 自动导入 @vueuse/core 相关函数，如：useStorage、useTitle 等
+           // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+           // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+           imports: ['vue', '@vueuse/core', uniuseAutoImports(), 'pinia'],
+           // 指定自动导入函数的查找目录
+           dirs: ['src/stores'],
+           // 是否在 vue 模板中自动导入
+           vueTemplate: true,
+           // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+           dts: path.resolve(pathSrc, 'types', 'auto-import.d.ts'),
+         }),
+       ],
+         
+       // ...
+     }
+   })
+   ```
+
+3. **使用**：
+
+   1. 在 `src/stores` 目录下创建一个 `modules` 文件夹，以后不同模块功能的状态存储文件都放在该文件夹下。
+   2. 在 `src/stores` 目录下新建一个 `index.ts` 文件；
+      1. 创建 pinia 实例
+      2. 定义并导出全局注册 pinia 实例的函数
+      3. 集中统一导出各个模块
+   3. 在 `main.ts` 文件中全局注册 pinia
+
+::: code-group
+
+```ts [src/stores/modules/counter.ts]
+export const useCounterStore = defineStore('counter', () => {
+  const count = useStorage('count', 0)
+
+  return { count }
+})
+```
+
+```ts [src/stores/index.ts]
+import type { App } from 'vue'
+
+const store = createPinia()
+
+// 全局注册 store
+export function setupStore(app: App<Element>) {
+  app.use(store)
+}
+
+export * from './modules/counter'
+export { store }
+```
+
+```ts [src/main.ts]
+import { createSSRApp } from 'vue'
+import App from './App.vue'
+import { setupStore } from '@/stores' // [!code ++]
+
+export function createApp() {
+  const app = createSSRApp(App)
+  // 全局注册store状态管理
+  setupStore(app) // [!code ++]
+  return {
+    app,
+  }
+}
+```
+
+```ts [src/pages/index/index.vue]
+<template>
+  <wd-swiper :current="0" :list="swiperList" autoplay></wd-swiper>
+
+  <wd-grid :column="3" border>
+    <wd-grid-item icon="picture" text="文字" />
+    <wd-grid-item icon="picture" text="文字" />
+    <wd-grid-item icon="picture" text="文字" />
+    <wd-grid-item icon="picture" text="文字" />
+    <wd-grid-item icon="picture" text="文字" />
+    <wd-grid-item icon="picture" text="文字" />
+  </wd-grid>
+
+  <wd-button @click="count++">+1</wd-button>
+</template>
+
+<script lang="ts" setup>
+const swiperList = ref([
+  'https://unpkg.com/wot-design-uni-assets/redpanda.jpg',
+  'https://unpkg.com/wot-design-uni-assets/capybara.jpg',
+  'https://unpkg.com/wot-design-uni-assets/panda.jpg',
+  'https://img.yzcdn.cn/vant/cat.jpeg',
+  'https://unpkg.com/wot-design-uni-assets/meng.jpg',
+])
+
+const { count } = storeToRefs(useCounterStore())
+</script>
+
+<style lang="scss" scoped></style>
+```
+
+:::
 
