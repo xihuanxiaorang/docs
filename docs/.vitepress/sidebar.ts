@@ -185,6 +185,10 @@ export const sidebar: DefaultTheme.Sidebar = {
       collapsed: false,
       items: [
         {
+          text: "导读",
+          link: "/README",
+        },
+        {
           text: "统一参数校验",
           link: "/SpringBoot-统一参数校验",
         },
