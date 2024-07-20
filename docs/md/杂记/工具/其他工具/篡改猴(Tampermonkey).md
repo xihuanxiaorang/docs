@@ -42,12 +42,50 @@
 
 **!!! 使用前请仔细阅读 [注意事项](https://greasyfork.org/zh-CN/scripts/416688-字体渲染-自用脚本#warning) 与 [使用说明](https://greasyfork.org/zh-CN/scripts/416688-字体渲染-自用脚本#guide)！仔细阅读 [注意事项](https://greasyfork.org/zh-CN/scripts/416688-字体渲染-自用脚本#warning) 与 [使用说明](https://greasyfork.org/zh-CN/scripts/416688-字体渲染-自用脚本#guide)！阅读 [注意事项](https://greasyfork.org/zh-CN/scripts/416688-字体渲染-自用脚本#warning) 与 [使用说明](https://greasyfork.org/zh-CN/scripts/416688-字体渲染-自用脚本#guide)！ !!!** <br />![image-20230811155838997](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202308111559603.png)
 
-添加自定义字体，具体步骤如下所示：
+打开插件，双击铃铛进入添加自定义字体界面；<br />![image-20231118190301156](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202311181935146.png)
 
-1. 下载安装霞骛文楷屏幕阅读版字体，[Releases · lxgw/LxgwWenKai-Screen (github.com)](https://github.com/lxgw/LxgwWenKai-Screen/releases/)
-2. 打开插件，双击铃铛进入添加自定义字体界面；<br />![image-20231118190301156](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202311181935146.png)
-3. 点击字体添加辅助工具； <br />![image-20231118190502634](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202311181936952.png)
-4. 依次填写字体的中文名称：`霞鹜文楷 屏幕阅读版`，英文名称：`LXGW WenKai GB Screen`，PostScript 名称：`LXGWWenKai-Screen`；最后保存即可生效！
+添加自定义字体，具体步骤如下所示：参考自 [如何优雅正确地下载及使用更多中文及英文字体？ · F9y4ng/GreasyFork-Scripts · Discussion #64 (github.com)](https://github.com/F9y4ng/GreasyFork-Scripts/discussions/64)
+
+- 打开 **[字客网](https://www.fontke.com/)** 首页。
+- 搜索你所需要的字体名称，如：“**汉仪旗黑**”。
+- 进入字体介绍页面：如 [汉仪旗黑 55S Version 5.01](https://www.fontke.com/font/165462969)
+- 先进入 **介绍页面** 的 **[下载](https://www.fontke.com/font/165462969/download/)** 标签页下载字体文件，并在本地计算机安装好字体。
+- 再进入 **介绍页面** 的 **[参数](https://www.fontke.com/font/165462969/detail/)** 标签页，如下图例1~6：
+
+1. 在**参数**标签页中找到**名称参数**的下拉菜单，根据操作系统选择对应的中英文字体选项。<br />![1](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202407201411987.png)
+
+2. **确认英文字体名：** <br />![2](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202407201413268.png)
+
+   > *注1：部分下载为字体家族集合的单个字体文件包含多字重，这时可选取“**字体全名**”作为英文字体名来选择使用哪种字重的字体。*
+   >
+   > *注2：如果字体的英文名称未提供或仅提供了中文名称，可用字体名的**拼音全拼**作为英文名称，并确保该名称是**独一无二**的。*
+
+3. **确认中文字体名：** <br />![3](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202407201415432.png)
+
+4. **确认PostScript名称：** <br />![4](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202407201415990.png)
+
+   > *注3：**PostScript名称**，为可选属性，为使新增字体在全局生效，需提供准确的PostScript名称。*
+   >
+   > *注4：如因**注1**的原因，使用“**字体全名**”作为英文字体名，则无需额外添加**PostScript名称**。*
+
+5. **将以上找到的中英文字体名以及PostScript名称，按自定义字体格式添加至自定义字体表：**
+
+   ```
+   {"ch":"汉仪旗黑","en","HYQiHei","ps":"HYQiHei-EES"}
+   ```
+
+   **如果该字体的英文“字体家族名称”与“字体全名”一致，则无需填写PostScript名称。**
+
+   ```
+   {"ch":"汉仪旗黑","en","HYQiHei"}
+   ```
+
+   ![5](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202407201426281.png)
+
+6. **保存数据，“程序会自动重建字体列表全局缓存”。**
+
+   - 重启浏览器，使安装新字体后的 **系统字体缓存** 在浏览器中生效。
+   - 优雅开心的使用新字体吧！
 
 ### [m3u8 视频在线提取工具](https://blog.luckly-mjw.cn/tool-show/m3u8-downloader/index.html)
 
