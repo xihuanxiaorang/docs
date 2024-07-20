@@ -194,6 +194,21 @@ export const sidebar: DefaultTheme.Sidebar = {
         },
       ],
     },
+    {
+      text: "SpringSecurity",
+      base: "/后端开发/Spring全家桶/SpringSecurity",
+      collapsed: false,
+      items: [
+        {
+          text: "导读",
+          link: "/README",
+        },
+        {
+          text: "SpringSecurity 初体验",
+          link: "/SpringSecurity初体验",
+        },
+      ],
+    },
   ],
   "/后端开发/juc": [
     { text: "导读", link: "/后端开发/juc/README" }

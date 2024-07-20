@@ -1,9 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Ubuntu+Mono:wght@400;700&display=swap");
 :root {
-  --monospace: "JetBrains Mono", "Roboto Mono", "Noto Sans SC", "Fira Code",
-    "Ubuntu Mono";
-  --vp-font-family-base: var(--monospace); /* normal text font */
-  --vp-font-family-mono: var(--monospace); /* code font */
+  --vp-font-family-base: "HarmonyOS Sans SC", "LXGW WenKai Mono"; /* normal text font */
+  --vp-font-family-mono: "JetBrains Mono", "HarmonyOS Sans SC"; /* code font */
   --vp-custom-block-info-border: #b1b3b8;
   --vp-custom-block-note-border: #3367dd;
   --vp-custom-block-warning-border: #936700;
@@ -20,7 +17,8 @@
     margin-bottom: 30px;
   }
 
-  h4, h5 {
+  h4,
+  h5 {
     margin-top: 20px;
   }
 
