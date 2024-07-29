@@ -145,6 +145,14 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
   ],
+  "/后端开发/java": [
+    {
+      text: "基础",
+      base: "/后端开发/java",
+      collapsed: false,
+      items: [{ text: "泛型", link: "/泛型" }],
+    },
+  ],
   "/后端开发/设计模式": [
     { text: "导读", link: "/后端开发/设计模式/README" },
     { text: "七大设计原则", link: "/后端开发/设计模式/七大设计原则" },

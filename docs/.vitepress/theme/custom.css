@@ -8,6 +8,10 @@
   --vp-custom-block-tip-border: #3d8937;
   --vp-custom-block-caution-border: #c11e30;
 
+  body {
+    font-size: 15px;
+  }
+
   a {
     text-decoration: none; /** no underline */
   }

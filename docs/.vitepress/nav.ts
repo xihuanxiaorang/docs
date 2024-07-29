@@ -6,6 +6,11 @@ export const nav: DefaultTheme.NavItem[] = [
     activeMatch: "/后端开发/",
     items: [
       {
+        text: "Java核心技术",
+        link: "/后端开发/java/泛型",
+        activeMatch: "/后端开发/java/",
+      },
+      {
         text: "研磨设计模式",
         link: "/后端开发/设计模式/README",
         activeMatch: "/后端开发/设计模式/",
