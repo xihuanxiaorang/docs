@@ -82,7 +82,7 @@ export const nav: DefaultTheme.NavItem[] = [
   },
   {
     text: "💯项目实战",
-    link: "/项目/项目模板/搭建Vue3企业级项目模板",
+    link: "/项目/vue3/待办清单",
     activeMatch: "/项目/",
   },
   { text: "🔖技术碎片", link: "/技术碎片/README", activeMatch: "/技术碎片/" },

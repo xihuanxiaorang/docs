@@ -9,6 +9,10 @@ export const sidebar: DefaultTheme.Sidebar = {
     { text: "Git", link: "/技术碎片/Git" },
     { text: "Uniapp工程化模板搭建", link: "/技术碎片/Uniapp工程化模板搭建" },
     {
+      text: "搭建Vue3企业级项目模板",
+      link: "/技术碎片/搭建Vue3企业级项目模板",
+    },
+    {
       text: "ORM框架",
       base: "/技术碎片/ORM框架",
       items: [
@@ -110,17 +114,6 @@ export const sidebar: DefaultTheme.Sidebar = {
     },
   ],
   "/项目/": [
-    {
-      text: "项目模板",
-      base: "/项目/项目模板",
-      collapsed: false,
-      items: [
-        {
-          text: "搭建Vue3企业级项目模板",
-          link: "/搭建Vue3企业级项目模板",
-        },
-      ],
-    },
     {
       text: "vue3",
       base: "/项目/vue3",
