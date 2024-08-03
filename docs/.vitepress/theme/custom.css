@@ -12,6 +12,10 @@
     font-size: 15px;
   }
 
+  li p {
+    margin: 0;
+  }
+
   a {
     text-decoration: none; /** no underline */
   }

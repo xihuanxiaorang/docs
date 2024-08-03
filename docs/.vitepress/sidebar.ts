@@ -150,7 +150,13 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "基础",
       base: "/后端开发/java",
       collapsed: false,
-      items: [{ text: "泛型", link: "/泛型" }],
+      items: [
+        { text: "泛型", link: "/泛型" },
+        {
+          text: "嵌套类",
+          link: "/嵌套类",
+        },
+      ],
     },
   ],
   "/后端开发/设计模式": [
@@ -218,9 +224,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
   ],
-  "/后端开发/juc": [
-    { text: "导读", link: "/后端开发/juc/README" }
-  ],
+  "/后端开发/juc": [{ text: "导读", link: "/后端开发/juc/README" }],
   "/后端开发/MySQL": [
     { text: "通用表表达式", link: "/后端开发/MySQL/通用表表达式" },
     { text: "窗口函数", link: "/后端开发/MySQL/窗口函数" },
