@@ -46,6 +46,11 @@ export const nav: DefaultTheme.NavItem[] = [
         link: "/前端开发/TypeScript从入门到放弃/TypeScript学习环境搭建",
         activeMatch: "/前端开发/TypeScript从入门到放弃/",
       },
+      {
+        text: "玩转微信小程序",
+        link: "/前端开发/玩转微信小程序/README",
+        activeMatch: "/前端开发/玩转微信小程序/",
+      },
     ],
   },
   {

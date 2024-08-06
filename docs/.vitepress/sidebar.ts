@@ -113,6 +113,12 @@ export const sidebar: DefaultTheme.Sidebar = {
       link: "/前端开发/TypeScript从入门到放弃/TypeScript学习环境搭建",
     },
   ],
+  "/前端开发/玩转微信小程序/": [
+    {
+      text: "邂逅微信小程序",
+      link: "/前端开发/玩转微信小程序/README",
+    },
+  ],
   "/项目/": [
     {
       text: "vue3",
