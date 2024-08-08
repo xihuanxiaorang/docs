@@ -12,10 +12,10 @@ hero:
   actions:
     - theme: brand
       text: 开始阅读
-      link: /other/guide-to-reading
+      link: /guide-to-reading
     - theme: alt
       text: 关于
-      link: /about/me
+      link: /me
 
 features:
   - icon: 🧗
