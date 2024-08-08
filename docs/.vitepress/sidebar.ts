@@ -545,12 +545,16 @@ export const sidebar: DefaultTheme.Sidebar = {
           link: "/Windows-Terminal美化",
         },
         {
-          text: "Windows11 中安装 Linux 教程 | WLS2 的使用",
+          text: "Windows11中安装Linux教程 | WLS2的使用",
           link: "/Windows11中安装Linux教程之WLS2的使用",
         },
         {
-          text: "美化 Github 个人主页",
+          text: "美化Github个人主页",
           link: "/美化Github个人主页",
+        },
+        {
+          text: "更换Windows默认字体",
+          link: "/更换Windows默认字体",
         },
       ],
     },
