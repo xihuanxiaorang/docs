@@ -208,6 +208,17 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
     {
+      text: "SpringCloud",
+      base: "/后端开发/Spring全家桶/SpringCloud",
+      collapsed: false,
+      items: [
+        {
+          text: "Nacos-Discovery&Config",
+          link: "/Nacos-Discovery&Config",
+        },
+      ],
+    },
+    {
       text: "SpringSecurity",
       base: "/后端开发/Spring全家桶/SpringSecurity",
       collapsed: false,

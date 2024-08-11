@@ -40,6 +40,7 @@
     border-radius: 0;
     border-left: 0.25em solid var(--vp-custom-block-info-border);
     font-size: 15px;
+    padding: 0 5px 0 16px;
   }
   .custom-block.note {
     border-color: var(--vp-custom-block-note-border);
