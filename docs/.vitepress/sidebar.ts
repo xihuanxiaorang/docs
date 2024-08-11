@@ -13,6 +13,10 @@ export const sidebar: DefaultTheme.Sidebar = {
       link: "/技术碎片/搭建Vue3企业级项目模板",
     },
     {
+      text: "DevIssues",
+      link: "/技术碎片/DevIssues",
+    },
+    {
       text: "ORM框架",
       base: "/技术碎片/ORM框架",
       items: [
