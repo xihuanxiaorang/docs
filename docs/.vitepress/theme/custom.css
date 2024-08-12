@@ -34,6 +34,7 @@
     font-size: 17px;
   }
 
+  /* 自定义块样式调整 */
   .custom-block {
     background-color: transparent;
     border: none;
@@ -78,5 +79,28 @@
   }
   .custom-block-title .caution {
     color: var(--vp-custom-block-caution-border);
+  }
+
+  /* 内容区域加宽显示 */
+  @media (min-width: 960px) {
+    .VPContent.has-sidebar {
+      padding-right: 10px;
+    }
+  
+  
+    .VPDoc.has-sidebar.has-aside {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    
+    .VPDoc.has-sidebar.has-aside .aside {
+      padding: 0;
+    }
+  
+    .VPDoc.has-aside .content-container {
+      max-width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    } 
   }
 }
