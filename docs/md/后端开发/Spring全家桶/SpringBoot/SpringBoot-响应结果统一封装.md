@@ -304,6 +304,10 @@ public class BizException extends RuntimeException {
 >          add-mappings: false
 >    ```
 
+> [!tip]
+>
+> <strong style="color:#ae3520;">使用 `@ExceptionHandler` 注解指定一个特定异常类型时，它会捕获该异常类型及其子类的异常</strong>！
+
 ```java
 @Slf4j
 @RestControllerAdvice
@@ -313,6 +317,14 @@ public class GlobalExceptionHandler {
     public <T> R<T> handleException(BindException e) {
         log.error("参数校验异常信息，异常堆栈信息：{}", e.getMessage(), e);
         String msg = e.getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(","));
+        return R.fail(ResultCode.PARAM_ERROR.getCode(), msg);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public <T> R<T> handleException(MethodArgumentNotValidException e) {
+        log.error("参数校验异常信息，异常堆栈信息：{}", e.getMessage(), e);
+        String msg = e.getBindingResult().getFieldErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining(","));
         return R.fail(ResultCode.PARAM_ERROR.getCode(), msg);
     }
 

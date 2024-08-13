@@ -209,6 +209,10 @@ export const sidebar: DefaultTheme.Sidebar = {
           text: "响应结果统一封装",
           link: "/SpringBoot-响应结果统一封装",
         },
+        {
+          text: "统一参数校验",
+          link: "/SpringBoot-统一参数校验",
+        },
       ],
     },
     {

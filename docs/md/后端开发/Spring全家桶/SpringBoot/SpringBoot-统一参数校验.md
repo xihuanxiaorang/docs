@@ -1,4 +1,4 @@
-# SpringBoot - 统一参数校验
+# 统一参数校验
 
 ## 为什么要进行接口参数校验？
 
@@ -99,13 +99,13 @@
 >
 > 如果 SringBoot 版本小于 `2.3.x`，`spring-boot-starter-web` 启动器会自动引入 `spring-boot-starter-validation` 依赖；如果版本大于等于 `2.3.x` 版本的话，则需要手动引入 `spring-boot-starter-validation` 依赖！
 >
-> 对于 `spring-boot-starter-validation` 启动器而言，其会自动引入 `hibernate-validator` 依赖！
+> 对于 `spring-boot-starter-validation` 启动器而言，它会自动引入 `hibernate-validator` 依赖！
 
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-validation</artifactId>
-    <version>${springboot.version}</version>
+    <version>2.3.12.RELEASE</version>
 </dependency>
 ```
 
@@ -117,19 +117,19 @@
 | `@NotEmpty`          | 字符串同上，对于集合（`Map`,`List`,`Set`）不能为空，必须有元素 |
 | `@NotNull`           | 不能为 `null`                                                |
 | `@Null`              | 必须为 `null`                                                |
-| `@Min(value)`        | 被注释的元素必须是一个数字，其值必须大于等于指定的最小值     |
-| `@Max(value)`        | 被注释的元素必须是一个数字，其值必须小于等于指定的最大值     |
-| `@DecimalMin(value)` | 被注释的元素必须是一个数字，其值必须大于等于指定的最小值     |
-| `@DecimalMax(value)` | 被注释的元素必须是一个数字，其值必须小于等于指定的最大值     |
-| `@Size(max, min)`    | 被注释的元素的大小必须在指定的范围内                         |
-| `@Range`             | 被注释的元素必须在合适的范围内                               |
-| `@Length`            | 被注释的字符串的大小必须在指定的范围内                       |
-| `@Past`              | 被注释的元素必须是一个过去的日期                             |
-| `@Future`            | 被注释的元素必须是一个将来的日期                             |
-| `@AssertTrue`        | 被注释的元素必须为 `true`                                    |
-| `@AssertFalse`       | 被注释的元素必须为 `false`                                   |
-| `@Pattern(value)`    | 被注释的元素必须符合指定的正则表达式                         |
-| `@Email`             | 被注释的元素必须是电子邮箱地址                               |
+| `@Min(value)`        | 被标注的元素必须是一个数字，其值必须大于等于指定的最小值     |
+| `@Max(value)`        | 被标注的元素必须是一个数字，其值必须小于等于指定的最大值     |
+| `@DecimalMin(value)` | 被标注的元素必须是一个数字，其值必须大于等于指定的最小值     |
+| `@DecimalMax(value)` | 被标注的元素必须是一个数字，其值必须小于等于指定的最大值     |
+| `@Size(max, min)`    | 被标注的元素的大小必须在指定的范围内                         |
+| `@Range`             | 被标注的元素必须在合适的范围内                               |
+| `@Length`            | 被标注的字符串的大小必须在指定的范围内                       |
+| `@Past`              | 被标注的元素必须是一个过去的日期                             |
+| `@Future`            | 被标注的元素必须是一个将来的日期                             |
+| `@AssertTrue`        | 被标注的元素必须为 `true`                                    |
+| `@AssertFalse`       | 被标注的元素必须为 `false`                                   |
+| `@Pattern(value)`    | 被标注的元素必须符合指定的正则表达式                         |
+| `@Email`             | 被标注的元素必须是电子邮箱地址                               |
 
 ### 参数校验
 
@@ -173,14 +173,14 @@
    @RestController
    @RequestMapping("/user")
    public class UserController {
-       @PostMapping
+       @PutMapping
        public User save(@Valid @RequestBody User user) {
            return user;
        }
    }
    ```
 
-现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 POST 请求 http://127.0.0.1:8888/user ，其中 `application/json` 类型的请求体数据如下所示：
+现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 PUT 请求 http://localhost:8888/user ，其中 `application/json` 类型的请求体数据如下所示：
 
 ```json
 {
@@ -192,88 +192,65 @@
 }
 ```
 
-可知，`password` 密码的长度并不满足 6-20 位之间，并且 `age` 年龄小于要求的最小值 0，验证失败，此时抛出 `MethodArgumentNotValidException` 异常，控制台打印如下异常信息：<br />![image-20231014025108148](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310140251248.png)返回结果如下所示：<br />![image-20231014025305261](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310140253325.png)
+可知，`password` 密码的长度并不满足 6-20 位之间，并且 `age` 年龄小于要求的最小值 0，验证失败，此时抛出 `MethodArgumentNotValidException` 异常，控制台打印如下异常信息：<br />![image-20240812223802925](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408122238048.png)
 
-此时咱们应该在全局异常处理器中定义一个异常处理方法专门用来捕获 `MethodArgumentNotValidException` 异常，对于不知道如何实现的小伙伴可以查看 [SpringBoot-返回结果统一封装](./SpringBoot-返回结果统一封装.md) 文章。
+返回结果如下所示：<br />![image-20240812224851257](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408122248349.png)
 
-> [!TIP]
+小伙伴们如果不清楚为什么输出如此格式的响应结果，可以查看 [SpringBoot-响应结果统一封装](./SpringBoot-响应结果统一封装.md#全局异常处理器) 文章。
+
+> [!tip]
 >
-> - 当没有使用 `@RequestBody` 注解进行标注时，此时抛出的异常为 `BindException`，对应请求的 `Content-Type` 类型为 ` application/x-www-form-urlencoded` 或 `multipart/form-data` ➡️ 表单提交；
+> - 当没有使用 `@RequestBody` 注解进行标注时，此时抛出的异常为 `BindException`，对应请求的 `Content-Type` 类型为 ` application/x-www-form-urlencoded` 或 `multipart/form-data` ➡️ 对应的表单提交；
 >
 > - 如果使用 `@RequestBody` 注解进行标注的话，则抛出的异常为 `MethodArgumentNotValidException`，对应请求的 `Content-Type` 类型为 `application/json`；
 >
-> 使用 `@ExceptionHandler` 注解指定一个特定异常类型时，它会捕获该异常类型及其子类的异常！由于 `MethodArgumentNotValidException` 是 `BindException` 的子类，所以咱们直接捕获 `BindException` 异常即可覆盖以上这两种情况。
-
-具体代码实现如下所示：
-
-```java
-@ExceptionHandler(BindException.class)
-public ResponseEntity<Result<Void>> handleException(BindException e) {
-    log.error("参数校验异常信息，异常堆栈信息：{}", e.getMessage(), e);
-    String msg = e.getFieldErrors().stream()
-            .map(DefaultMessageSourceResolvable::getDefaultMessage)
-            .collect(Collectors.joining(","));
-    return ResponseEntity.badRequest()
-            .body(Result.fail(ResultCode.VALIDATION_ERROR.getCode(), msg));
-}
-```
-
-再次发送请求，返回结果如下所示：<br />![image-20231014030918177](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310140309244.png)
-
-可以发现，已经将校验失败的信息放入封装好的结果类中并且返回！
 
 #### 路径变量和请求参数
 
 验证路径变量和请求参数的方式与验证请求体的方式略有不同。在这种情况下，咱们不用验证复杂的 Java Bean 对象，因为路径变量和请求参数是基础数据类型（如 `int` 等）或它们的包装类型（如 `Integer` 等），因此咱们不需要像上面那样给类中的字段添加约束注解，而是直接在 SpringBoot 控制器的方法入参处声明一个约束注解（在本例中为 `@NotBlank` 和 `@Min` 注解）即可。
 
 ```java
-@GetMapping("echo")
-public User query(@NotBlank(message = "用户名不能为空") @RequestParam String username,
-                  @Min(value = 0, message = "年龄最小为{value}") @RequestParam Integer age) {
-    return User.builder().id(1L).username(username).password("123456").age(age).email("15019474951@163.com").build();
+@RestController
+@RequestMapping("/user")
+public class UserController {
+    @PutMapping
+    public User save(@Valid @RequestBody User user) {
+        return user;
+    }
+
+    @GetMapping("echo") // [!code ++]
+    public User query(@NotBlank(message = "用户名不能为空") @RequestParam String username,  // [!code ++]
+                      @Min(value = 0, message = "年龄最小为{value}") @RequestParam Integer age) {  // [!code ++]
+        return User.builder().id(1L).username(username).password("123456").age(age).email("15019474951@163.com").build();  // [!code ++]
+    }  // [!code ++]
 }
 ```
 
-现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 GET 请求 http://localhost:8888/user/echo?username=&age=-1 ，返回结果如下所示：<br />![image-20231014115151939](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141151006.png)
+现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 GET 请求 http://localhost:8888/user/echo?username=&age=-1 ，返回结果如下所示：<br />![image-20240812232018007](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408122320106.png)
 
 可以发现，传入的用户名为空以及年龄小于 0 居然都通过了校验，这是为什么呢？这是因为在这种情况下，咱们<strong style="color:#ae3520;">除了需要在方法入参处声明约束注解（如 `@NotBlank`、`@Min` 等）之外，还必须在 `Controller` 类上标注 `@Validated` 注解</strong>，否则的话，约束注解是不会生效的！修改之后的代码如下所示：
 
 ```java
 @RestController
 @RequestMapping("/user")
-@Validated
+@Validated // [!code ++]
 public class UserController {
-    @PostMapping
+    @PutMapping
     public User save(@Valid @RequestBody User user) {
         return user;
     }
 
-    @GetMapping("echo")
-    public User query(@NotBlank(message = "用户名不能为空") @RequestParam String username,
-                      @Min(value = 0, message = "年龄最小为{value}") @RequestParam Integer age) {
-        return User.builder().id(1L).username(username).password("123456").age(age).email("15019474951@163.com").build();
-    }
+    @GetMapping("echo") 
+    public User query(@NotBlank(message = "用户名不能为空") @RequestParam String username,  
+                      @Min(value = 0, message = "年龄最小为{value}") @RequestParam Integer age) {  
+        return User.builder().id(1L).username(username).password("123456").age(age).email("15019474951@163.com").build();  
+    }  
 }
 ```
 
-再次发送 GET 请求 http://localhost:8888/user/echo?username=&age=-1 ，发现校验已经生效，不过验证失败，抛出 `ConstraintViolationException` 异常，控制台打印如下异常信息：<br />![image-20231014115548000](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141155082.png)返回结果如下所示：<br />![image-20231014115755580](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141157642.png)
+再次发送 GET 请求 http://localhost:8888/user/echo?username=&age=-1 ，发现校验已经生效，不过验证失败，抛出 `ConstraintViolationException` 异常，控制台打印如下异常信息：<br />![image-20240812232706765](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408122327880.png)
 
-SpringBoot 并没有为此异常注册默认的异常处理程序，因此它将在默认情况下返回 HTTP 状态为 500 的响应（内部服务器错误）。如果咱们想返回 HTTP 状态 400（这是有意义的，因为客户端提供了一个无效的参数，使其成为一个错误的请求），咱们可以在全局异常处理器中定义一个异常处理方法专门用来捕获 `ConstraintViolationException` 异常，具体代码实现如下所示：
-
-```java
-@ExceptionHandler(ConstraintViolationException.class)
-public ResponseEntity<Result<Void>> handleException(ConstraintViolationException e) {
-    log.error("参数校验异常信息，异常堆栈信息：{}", e.getMessage(), e);
-    String msg = e.getConstraintViolations().stream().map(ConstraintViolation::getMessage)
-            .collect(Collectors.joining(","));
-    return ResponseEntity.badRequest()
-            .body(Result.fail(ResultCode.VALIDATION_ERROR.getCode(), msg));
-}
-```
-
-再次发送请求，返回结果如下所示：<br />![image-20231014120331155](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141203219.png)
-
-可以发现，已经将校验失败的信息放入封装好的结果类中并且返回！
+返回结果如下所示：<br />![image-20240812232955770](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408122329872.png)
 
 #### 快速失败模式
 
@@ -285,23 +262,23 @@ public class ValidatorConfiguration {
     @Bean
     public Validator validator(AutowireCapableBeanFactory beanFactory) {
         try (ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class)
-                .configure()
-                .failFast(true)
-                .constraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory))
-                .buildValidatorFactory()) {
+             .configure()
+             .failFast(true)
+             .constraintValidatorFactory(new SpringConstraintValidatorFactory(beanFactory))
+             .buildValidatorFactory()) {
             return validatorFactory.getValidator();
         }
     }
 }
 ```
 
-启用快速失败验证，这有助于提高验证的效率和准确性，因为它可以在发现第一个错误时立即停止验证，而不浪费时间验证其他字段。
+启用快速失败验证，这有助于提高验证的效率和准确性，因为它可以在发现第一个错误时立即停止验证，而不用再浪费时间验证其他字段。
 
 > [!NOTE]
 >
 > 如果当前配置类 `ValidatorConfiguration` 是在一个公共模块当中，则必须在<strong style="color:#ae3520;">自定义的自动配置类（即配置在 `spring.factories` 文件中的类）上标注 `@AutoConfigureBefore(ValidationAutoConfiguration.class)` 注解，在 SpringBoot 自带的 `ValidationAutoConfiguration` 自动配置类之前被加载</strong>，否则的话，上面自定义的 `Validator` 组件并不会生效！
 
-再次发送请求，返回结果如下所示：<br />![image-20231014163756147](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141637215.png)
+再次发送请求，返回结果如下所示：<br />![image-20240812233409283](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408122334377.png)
 
 可以看到其在遇到第一个验证失败，即用户名为空的情况，验证会立即终止并抛出异常，不再进行后续字段的验证，由此说明咱们的快速失败模式已成功启用！
 
@@ -309,7 +286,7 @@ public class ValidatorConfiguration {
 
 级联校验是指在验证一个对象时，会同时校验其关联（嵌套）对象，这样可以确保整个对象的数据完整性和有效性。
 
-在原有 `User` 类的基础上，增加一个 `Address ` 类，该 `Address ` 类作为 `User` 类中的一个属性，如下所示：
+增加一个 `Address ` 类，然后在 `User` 类中添加一个 `Address ` 类型的属性，如下所示：
 
 ```java
 @Data
@@ -329,8 +306,8 @@ public class Address {
 ```java
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @NotNull(message = "id不能为空")
     private Long id;
@@ -345,17 +322,16 @@ public class User {
     @NotBlank(message = "邮箱不能为空")
     @Email(message = "邮箱格式不正确")
     private String email;
-    @NotNull(message = "地址不能为空")
-    @Valid
-    private Address address;
+    @Valid // [!code ++]
+    private Address address; // [!code ++]
 }
 ```
 
 > [!IMPORTANT]
 >
-> <strong style="color:#ae3520;">确保验证对象的关联对象上标注有 `@Valid` 注解</strong>，这样才会触发级联校验！！！
+> <strong style="color:#ae3520;">请确保验证对象的关联对象属性上标注有 `@Valid` 注解</strong>，这样才会触发级联校验！！！
 
-现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 POST 请求 http://127.0.0.1:8888/user ，其中 `application/json` 类型的请求体数据如下所示：
+现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 PUT 请求 http://localhost:8888/user ，其中 `application/json` 类型的请求体数据如下所示：
 
 ```json
 {
@@ -372,7 +348,9 @@ public class User {
 }
 ```
 
-可知，在传递的 JSON 数据中，嵌套对象对应的 `address` 属性中的 `city` 字段为空，如果级联校验生效的话，将会导致验证失败，抛出 `MethodArgumentNotValidException` 异常，现在来看看是不是这样呢？控制台打印如下异常信息：<br />![image-20231014170742164](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141707245.png)返回结果如下所示：<br />![image-20231014171116446](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141711504.png)
+可知，在传递的 JSON 数据中，嵌套对象对应的 `address` 属性中的 `city` 字段为空，如果级联校验生效的话，将会导致验证失败，抛出 `MethodArgumentNotValidException` 异常，现在来看看是不是这样呢？控制台打印如下异常信息：<br />![image-20240812234248907](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408122342028.png)
+
+返回结果如下所示：<br />![image-20240812234433576](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408122344676.png)
 
 #### 分组校验
 
@@ -381,24 +359,18 @@ public class User {
 1. **定义验证分组**：创建以下两个分组接口，
 
    ```java
-   public interface Insert extends Default {
+   public interface Insert {
    }
    ```
 
    ```java
-   public interface Update extends Default {
+   public interface Update {
    }
    ```
 
-   > [!IMPORTANT]
-   >
-   > <strong style="color:#ae3520;">如果对其中某个组进行校验的话，那么默认的组就不会进行校验！</strong>
-   >
-   > 比如校验 `Update` 组，那么就算 `username` 用户名为空也不会进行校验。如果想在对某个组进行校验的同时对默认的组进行校验的话，可以让分组接口继承 `javax.validation.groups.Default` 接口即可。
+2. **在约束注解中指定分组**：修改原有 `User` 类，给主键 `id` 上标注的 `@NotNull` 注解指定分组为 `Update`，这样的话，这意味着主键 `id` 上标注的 `@NotNull` 注解只会在 `Update` 分组校验时才会生效，如下所示：
 
-2. **在约束注解中指定分组**：修改原有 `User` 类，给主键 `id` 上标注的 `@NotNull` 注解指定分组为 `Update`，这样的话，这意味着主键 `id` 上标注 `@NotNull` 注解只在使用 `Update` 分组验证时才会生效，如下所示：
-
-   ```java
+   ```java {6}
    @Data
    @Builder
    @AllArgsConstructor
@@ -425,24 +397,24 @@ public class User {
 
    > [!IMPORTANT]
    >
-   > 约束注解上不区分组的话，会使用默认分组：`javax.validation.groups.Default`。
+   > <strong style="color:#ae3520;">约束注解如果没有明确指定分组，则默认属于 `javax.validation.groups.Default` 分组，即只在默认分组校验时生效</strong>。
 
-3. **在控制器方法中指定分组**：在控制器方法中，使用 `@Validated` 注解并指定要使用的分组。修改原有 `UserController` 类，将原有的 `save()` 方法改成 PUT 请求，然后新增一个 `create()` 方法对应 POST 请求，如下所示：
+3. **在控制器方法中指定分组**：在控制器方法中，使用 `@Validated` 注解并指定要使用的分组。修改原有 `UserController` 类，新增一个 POST 请求的 `create()` 方法 ，如下所示：
 
-   ```java
+   ```java {12}
    @RestController
    @RequestMapping("/user")
    @Validated
    public class UserController {
-       @PostMapping
-       public User create(@Validated(Insert.class) @RequestBody User user) {
-           // 此处只会验证 Insert 分组下的约束注解
-           return user;
-       }
+       @PostMapping // [!code ++]
+       public User create(@Validated(Insert.class) @RequestBody User user) { // [!code ++]
+           // 此处只会校验 Insert 分组下的约束注解 // [!code ++]
+           return user; // [!code ++]
+       } // [!code ++]
    
        @PutMapping
        public User save(@Validated(Update.class) @RequestBody User user) {
-           // 此处只会验证 Update 分组下的约束注解
+           // 此处只会校验 Update 分组下的约束注解
            return user;
        }
    
@@ -454,7 +426,7 @@ public class User {
    }
    ```
 
-现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 PUT 请求 http://127.0.0.1:8888/user ，即对应的 `save()` 方法，`Update` 分组的情况，其中 `application/json` 类型的请求体数据如下所示：
+现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 PUT 请求 http://localhost:8888/user ，即对应的 `save()` 方法，`Update` 分组的情况，其中 `application/json` 类型的请求体数据如下所示：
 
 ```json
 {
@@ -471,47 +443,80 @@ public class User {
 }
 ```
 
-可知，在传递的 JSON 数据中，主键 `id` 为空，如果分组校验生效的话，将会导致验证失败，抛出 `MethodArgumentNotValidException` 异常，现在来看看是不是这样呢？控制台打印如下异常信息：<br />![image-20231014184747268](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141847364.png)返回结果如下所示：<br />![image-20231014185002341](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141850404.png)
+可知，在传递的 JSON 数据中，主键 `id` 为空，如果分组校验生效的话，将会导致验证失败，抛出 `MethodArgumentNotValidException` 异常，现在来看看是不是这样呢？果然如此，控制台打印如下异常信息：<br />![image-20240813115822190](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131158315.png)
 
-现在发送 POST 请求 http://127.0.0.1:8888/user ，即对应的 `create()` 方法，`Insert` 分组的情况，其中 `application/json` 类型的请求体数据如下所示：
+返回结果如下所示：<br />![image-20240813115638766](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131156927.png)
 
-```json
-{
-  "id": null,
-  "username": "",
-  "password": "amet qui dolor in",
-  "email": "r.fswmkbwn@gblykenzi.cm",
-  "address": {
-    "province": "甘肃省",
-    "city": "重庆市",
-    "street": "quis in"
-  },
-  "age": 125
-}
-```
-
-可知，在传递的 JSON 数据中，除了主键 `id` 为空之外，用户名 `username` 也为空，分析一下：因为主键 `id` 只在 `Update` 分组验证时才会生效，所以即使主键 `id` 为空也不会失败，然而 `Insert` 继承自 `Default` 分组，所以会校验出 `username` 用户名不满足约束条件，导致验证失败，抛出 `MethodArgumentNotValidException` 异常，现在来看看到底是不是咱们分析的这样呢？控制台打印如下异常信息：<br />![image-20231014191539671](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141915753.png)返回结果如下所示：<br/>![image-20231014191711678](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141917743.png)
-
-可以看到，完全符合咱们的预期！现在为了避免 `username` 的干扰，现在使其不为空，专注于主键 `id` 上的 `@NotNull` 注解是否真的只在 `Update` 分组验证时才会生效，再次发送 POST 请求 http://127.0.0.1:8888/user ，JSON 数据如下所示：
+现在发送 POST 请求 http://localhost:8888/user ，即对应的 `create()` 方法，`Insert` 分组的情况，其中 `application/json` 类型的请求体数据如下所示：
 
 ```json
 {
     "id": null,
-    "username": "段强",
-    "password": "enim eu",
-    "email": "y.egcp@shhdgfel.tel",
+    "username": "",
+    "password": "amet qui dolor in",
+    "email": "r.fswmkbwn@gblykenzi.cm",
     "address": {
-        "province": "四川省",
-        "city": "云浮市",
-        "street": "incididunt"
+        "province": "甘肃省",
+        "city": "重庆市",
+        "street": "quis in"
     },
-    "age": 103
+    "age": 125
 }
 ```
 
-返回结果如下所示：<br/>![image-20231014192318899](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310141923973.png)
+通过传递的 JSON 数据可知，除了主键 `id` 为空之外，用户名 `username` 也为空。简单分析一下：因为主键 `id` 只在 `Update` 分组校验时才会生效，所以即使主键 `id` 为空也没事。然而，`username` 用户名为空显然不满足约束条件，理论上应该在校验中被检测出来。但实际上，即使用户名为空也能通过校验，返回结果如下所示：<br />![image-20240813120832611](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131208733.png)
 
-可以发现，即使主键 `id` 为空，也没有验证失败，从而说明主键 `id` 上的 `@NotNull` 注解真的只在 `Update` 分组验证时才会生效，在 `Insert` 分组下并不会生效！
+发生这种情况的原因是什么呢？正如前面所提到的，约束注解如果没有明确指定分组，则默认属于默认分组，即只在默认分组校验时生效。然而，我们现在校验的是 `Insert` 分组下的约束注解，并没有校验默认分组下的约束注解，因此即使用户名为空也不会报错。
+
+若要同时校验 `Insert` 和默认分组下的约束注解，有两种方式可供选择：
+
+- <strong style="color:#ae3520;">让 `Insert` 分组继承自 `Default` 默认分组</strong>；
+
+  - 这种方式使得 `Insert` 分组自动包含了 `Default` 分组的所有约束注解。
+  - 通过继承 `Default`，任何在 `Insert` 分组下的校验也会同时触发默认分组的校验。
+
+  ```java {3}
+  import javax.validation.groups.Default;
+  
+  public interface Insert extends Default {
+  }
+  ```
+
+- <strong style="color:#ae3520;">使用 `@Validated` 注解同时指定 `Insert` 和 `Default` 分组</strong>；
+
+  - 在控制器类或方法上使用 `@Validated` 注解，并同时指定 `Insert` 和 `Default` 分组。
+  - 这样做可以确保在进行校验时，既会校验 `Insert` 分组下的约束注解，也会校验默认分组下的约束注解。
+  
+  ```java {6}
+  @RestController
+  @RequestMapping("/user")
+  @Validated
+  public class UserController {
+      @PostMapping
+      public User create(@Validated({Insert.class, Default.class}) @RequestBody User user) {
+          // 此处只会校验 Insert 分组下的约束注解
+          return user;
+      }
+  
+      @PutMapping
+      public User save(@Validated(Update.class) @RequestBody User user) {
+          // 此处只会校验 Update 分组下的约束注解
+          return user;
+      }
+  
+      @GetMapping("echo")
+      public User query(@NotBlank(message = "用户名不能为空") @RequestParam String username,
+                        @Min(value = 0, message = "年龄最小为{value}") @RequestParam Integer age) {
+          return User.builder().id(1L).username(username).password("123456").age(age).email("15019474951@163.com").build();
+      }
+  }
+  ```
+
+再次发送 POST 请求 http://localhost:8888/user ，发现已经可以校验出 `username` 用户名不满足约束条件，导致验证失败，抛出 `MethodArgumentNotValidException` 异常，控制台打印如下异常信息：<br />![image-20240813122418750](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131224892.png)
+
+返回结果如下所示：<br/>![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131226328.png)
+
+可以看到，完全符合咱们的预期！
 
 > [!TIP]
 >
@@ -526,9 +531,9 @@ public class User {
 
 #### 自定义校验规则
 
-Spring Validation 虽然为咱们提供了许多特性，几乎可以满足日常开发中绝大多数参数校验场景，但是，当现有的约束注解不满足实际项目需要时该怎么办呢？不用慌！Spring Validation 作为一个优秀的框架，为了能应对更多复杂的业务场景，其具备很好的扩展能力，因此咱们只需要仿照现有的 `NotEmpty ` 注解和 `NotEmptyValidatorForArray` 校验器稍微进行改造一下，即可实现自己的校验规则。具体实现步骤如下所示：
+Spring Validation 虽然为咱们提供了许多特性，几乎可以满足日常开发中绝大多数参数校验场景，但是，当现有的约束注解不满足实际项目需要时该怎么办呢？不用慌！Spring Validation 作为一个优秀的框架，为了能应对更多复杂的业务场景，其具备很好的扩展能力，因此咱们只需要<strong style="color:#ae3520;">仿照现有的 `NotEmpty ` 注解和 `NotEmptyValidatorForArray` 校验器稍微进行改造一下，即可实现自己的校验规则</strong>。具体实现步骤如下所示：
 
-1. 创建一个自定义的约束注解，使用 `@Constraint` 注解标注该注解，并指定关联的校验器，其中校验器负责执行实际的验证逻辑；
+1. **创建一个自定义的约束注解**：使用 `@Constraint` 注解标注该注解，并指定关联的校验器，其中校验器负责执行实际的验证逻辑；
 
    ```java
    @Constraint(validatedBy = UserStatusValidator.class)
@@ -543,7 +548,7 @@ Spring Validation 虽然为咱们提供了许多特性，几乎可以满足日�
    }
    ```
 
-2. 创建校验器，该校验器必须实现 `ConstraintValidator` 接口，并提供自定义的验证逻辑；
+2. **创建校验器**：该校验器必须实现 `ConstraintValidator` 接口，并提供自定义的验证逻辑；
 
    ```java
    public class UserStatusValidator implements ConstraintValidator<UserStatus, Integer> {
@@ -557,7 +562,7 @@ Spring Validation 虽然为咱们提供了许多特性，几乎可以满足日�
    }
    ```
 
-3. 应用自定义的约束注解：修改原有的 `User` 类，增加一个被 `@UserStatus` 约束注解标注的属性 `status`，如下所示：
+3. **应用自定义的约束注解**：修改原有的 `User` 类，增加一个被 `@UserStatus` 约束注解标注的属性 `status`，如下所示：
 
    ```java
    @Data
@@ -581,12 +586,12 @@ Spring Validation 虽然为咱们提供了许多特性，几乎可以满足日�
      @NotNull(message = "地址不能为空")
      @Valid
      private Address address;
-     @UserStatus
-     private Integer status;
+     @UserStatus // [!code ++]
+     private Integer status; // [!code ++]
    }
    ```
 
-现在发送 POST 请求 http://127.0.0.1:8888/user ，即对应的 `create()` 方法，`Insert` 分组的情况，其中 `application/json` 类型的请求体数据如下所示：
+现在发送 POST 请求 http://localhost:8888/user ，即对应的 `create()` 方法，`Insert` 分组的情况，其中 `application/json` 类型的请求体数据如下所示：
 
 ```json
 {
@@ -604,12 +609,84 @@ Spring Validation 虽然为咱们提供了许多特性，几乎可以满足日�
 }
 ```
 
-可知，在传递的 JSON 数据中，`status` 属性明显不符合要求，值没有在 [1, 2, 3] 之中，如果咱们自定义的校验规则生效的话，将会导致验证失败，抛出 `MethodArgumentNotValidException` 异常，现在来看看是不是这样呢？控制台打印如下异常信息：<br />![image-20231014212922486](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310142129594.png)返回结果如下所示：<br/>![image-20231014213118637](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310142131698.png)
+通过传递的 JSON 数据可知，`status` 属性的值明显不符合要求，其值不在 [1, 2, 3] 之内。如果自定义的校验规则生效，这将导致验证失败，并抛出 `MethodArgumentNotValidException` 异常。现在我们来看看实际情况是否如此，控制台打印了如下异常信息：<br />![image-20240813141243149](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131412295.png)
+
+返回结果如下所示：<br/>![image-20240813141409703](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131414832.png)
+
+#### 手动校验
+
+以上的示例都是通过约束注解来实现自动校验的。但在某些情况下，我们可能希望以编程的方式手动调用校验。这时就需要从容器中注入 `Validator` 对象，然后调用其 `validate()` 方法进行验证。
+
+修改原有 `UserController` 类，新增一个 POST 请求的 `manual()` 方法 ，如下所示：
+
+```java
+@RestController
+@RequestMapping("/user")
+@Validated
+@RequiredArgsConstructor // [!code ++]
+public class UserController {
+    private final Validator validator; // [!code ++]
+
+    @PostMapping
+    public User create(@Validated({Insert.class}) @RequestBody User user) {
+        // 此处只会校验 Insert 分组下的约束注解
+        return user;
+    }
+
+    @PutMapping
+    public User save(@Validated(Update.class) @RequestBody User user) {
+        // 此处只会校验 Update 分组下的约束注解
+        return user;
+    }
+
+    @GetMapping("echo")
+    public User query(@NotBlank(message = "用户名不能为空") @RequestParam String username,
+                      @Min(value = 0, message = "年龄最小为{value}") @RequestParam Integer age) {
+        return User.builder().id(1L).username(username).password("123456").age(age).email("15019474951@163.com").build();
+    }
+
+    @PostMapping("/manual")  // [!code ++]
+    public User manual(@RequestBody User user) {  // [!code ++]
+        // 手动校验，Insert 分组  // [!code ++]
+        final Set<ConstraintViolation<User>> constraintViolations = validator.validate(user, Insert.class);  // [!code ++]
+        if (!constraintViolations.isEmpty()) {  // [!code ++]
+            throw new ConstraintViolationException(constraintViolations);  // [!code ++]
+        }  // [!code ++]
+        return user;  // [!code ++]
+    }  // [!code ++]
+}
+```
+
+现在测试前端传递的参数不满足约束条件的情况，举个栗子，发送 POST 请求 http://localhost:8888/manual ，其中 `application/json` 类型的请求体数据如下所示：
+
+```json
+{
+    "id": null,
+    "username": "",
+    "password": "amet qui dolor in",
+    "email": "r.fswmkbwn@gblykenzi.cm",
+    "address": {
+        "province": "甘肃省",
+        "city": "重庆市",
+        "street": "quis in"
+    },
+    "status": 1,
+    "age": 125
+}
+```
+
+通过传递的 JSON 数据可知，用户名 `username` 为空不满足约束条件。如果手动校验生效的话，应该抛出 `ConstraintViolationException` 异常。现在来看看是不是这样呢？果然如此，控制台打印了如下异常信息：<br />![image-20240813151902493](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131519661.png)
+
+返回结果如下所示：<br/>![image-20240813153024586](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131530722.png)
 
 ### 约束注解与校验器的绑定原理
 
-以 `@NotEmpty` 约束注解为例，其定义如下所示：<br />![image-20231014214034000](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310142140074.png)
+以 `@NotEmpty` 约束注解为例，其定义如下所示：<br />![image-20240813144541330](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131445467.png)
 
-可知，`@NotEmpty` 注解可以用来校验字符串，集合，Map 以及数组类型的属性，而为了满足该注解可以用于校验多种类型的数据，所以需要为该注解适配多个对应的校验器，具体实现位于 `org.hibernate.validator.internal.metadata.core.ConstraintHelper` 类中，<br />![image-20231014214251669](https://fastly.jsdelivr.net/gh/xihuanxiaorang/img/202310142142754.png)
+可知，`@NotEmpty` 注解可以用来校验字符串，集合，Map 以及数组类型的属性，而为了满足该注解可以用于校验多种类型的数据，所以需要为该注解适配多个对应的校验器，具体实现位于 `org.hibernate.validator.internal.metadata.core.ConstraintHelper` 类中，<br />![image-20240813145039521](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408131450677.png)
 
 如果约束注解的名称为 `xxx`，那么校验器的名称就是 `xxxValidator`，再细分到具体的类型则为 `xxxValidatorFor...`。
+
+## 参考资料🎁
+
+- [Spring Validation 最佳实践及其实现原理，参数校验没那么简单！](https://segmentfault.com/a/1190000023471742)
