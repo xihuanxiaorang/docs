@@ -118,3 +118,10 @@ File ➡ settings ➡ Editor ➡ File Types ➡ Ignore Files and Folders，配�
 
 对某个类快速生成测试类：选中需要生成测试代码的类 ➡ 右键 ➡ Go To ➡ Test ➡ Create New Test。<br />![](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202404031625987.png)
 
+## 激活🚀
+
+1. 访问 [JETBRA.IN CHECKER | IPFS](https://3.jetbra.in/) 网站，选择一个在线的节点进入，如下所示：<br />![image-20240907181203506](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202409071812676.png)
+2. 下载 & 解压 jetbra.zip <br />![image-20240907181348206](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202409071813297.png)
+3. 双击运行 `scripts` 文件夹中的 `install-current-user.vbs` 程序，如下所示：<br />![image-20240907182002635](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202409071820697.png)
+4. 然后回到刚才的网站，点击对应软件的图标复制激活码，将其粘贴到要激活软件的激活码处。<br />![image-20240907182607887](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202409071826975.png)
+
