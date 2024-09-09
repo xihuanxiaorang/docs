@@ -64,6 +64,16 @@ export const sidebar: DefaultTheme.Sidebar = {
       ],
     },
   ],
+  "/前端开发/HTML+CSS奇幻之旅/": [
+    {
+      text: "CSS",
+      base: "/前端开发/HTML+CSS奇幻之旅/CSS",
+      collapsed: false,
+      items: [
+        { text: "Grid网格布局", link: "/Grid网格布局" },
+      ],
+    },
+  ],
   "/前端开发/Vue3学习之旅/": [
     { text: "导读", link: "/前端开发/Vue3学习之旅/README" },
     {

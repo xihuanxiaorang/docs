@@ -37,6 +37,11 @@ export const nav: DefaultTheme.NavItem[] = [
     activeMatch: "/前端开发/",
     items: [
       {
+        text: "HTML+CSS奇幻之旅",
+        link: "/前端开发/HTML+CSS奇幻之旅/CSS/Grid网格布局",
+        activeMatch: "/前端开发/HTML+CSS奇幻之旅/",
+      },
+      {
         text: "Vue3学习之旅",
         link: "/前端开发/Vue3学习之旅/README",
         activeMatch: "/前端开发/Vue3学习之旅/",
