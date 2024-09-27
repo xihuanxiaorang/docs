@@ -53,7 +53,7 @@ export const nav: DefaultTheme.NavItem[] = [
       },
       {
         text: "玩转微信小程序",
-        link: "/前端开发/玩转微信小程序/README",
+        link: "/前端开发/玩转微信小程序/尚硅谷2024最新版微信小程序开发教程+项目实战（慕尚花坊）/邂逅微信小程序",
         activeMatch: "/前端开发/玩转微信小程序/",
       },
     ],

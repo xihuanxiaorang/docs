@@ -69,9 +69,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "CSS",
       base: "/前端开发/HTML+CSS奇幻之旅/CSS",
       collapsed: false,
-      items: [
-        { text: "Grid网格布局", link: "/Grid网格布局" },
-      ],
+      items: [{ text: "Grid网格布局", link: "/Grid网格布局" }],
     },
   ],
   "/前端开发/Vue3学习之旅/": [
@@ -129,8 +127,24 @@ export const sidebar: DefaultTheme.Sidebar = {
   ],
   "/前端开发/玩转微信小程序/": [
     {
-      text: "邂逅微信小程序",
-      link: "/前端开发/玩转微信小程序/README",
+      text: "尚硅谷2024微信小程序开发教程+项目实战（慕尚花坊）",
+      base: "/前端开发/玩转微信小程序/尚硅谷2024最新版微信小程序开发教程+项目实战（慕尚花坊）",
+      collapsed: false,
+      items: [
+        { text: "邂逅微信小程序", link: "/邂逅微信小程序" },
+        {
+          text: "小程序代码构成",
+          link: "/小程序代码构成",
+          items: [
+            { text: "小程序配置", link: "/小程序配置" },
+            { text: "基础组件", link: "/基础组件" },
+            { text: "WXML语法", link: "/WXML语法" },
+            { text: "WXSS样式", link: "/WXSS样式" },
+            { text: "事件系统", link: "/事件系统" },
+          ],
+        },
+        { text: "字体图标与背景图片", link: "/字体图标与背景图片" },
+      ],
     },
   ],
   "/项目/": [
