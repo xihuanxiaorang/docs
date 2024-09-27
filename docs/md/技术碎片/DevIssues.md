@@ -43,3 +43,13 @@
     <artifactId>spring-cloud-starter-loadbalancer</artifactId>
 </dependency>
 ```
+
+## 微信小程序云开发 Tab 按钮灰色
+
+常见云开发 Tab 灰色的情况如下： 
+
+1. 授权了第三方服务商使用云开发，需要到[微信公众平台](mp.weixin.qq.com)解除绑定后使用，在设置 ➡️ 第三方设置中解除绑定即可，如下图所示：<br />![img](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202408181101488.png)
+2. 用户不是小程序的管理员或开发者，将无法进入云开发。
+3. 使用了测试号，将无法使用云开发，请使用正式的小程序账号使用云开发。
+4. 公众号目前仅支持共享环境使用小程序云开发，公众号本身无法开通云开发，参考文档 [在公众号中使用云开发 | 微信开放文档 (qq.com)](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/basis/web.html)
+
