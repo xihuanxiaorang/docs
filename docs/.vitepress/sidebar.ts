@@ -143,7 +143,18 @@ export const sidebar: DefaultTheme.Sidebar = {
           ],
         },
         { text: "字体图标与背景图片", link: "/字体图标与背景图片" },
+      ],
+    },
+    {
+      text: "其他",
+      base: "/前端开发/玩转微信小程序",
+      collapsed: false,
+      items: [
         { text: "代码片段", link: "/代码片段" },
+        {
+          text: "手摸手带你跑通微信小程序官方示例",
+          link: "/手摸手带你跑通微信小程序官方示例",
+        },
       ],
     },
   ],
