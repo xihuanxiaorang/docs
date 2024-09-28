@@ -143,6 +143,7 @@ export const sidebar: DefaultTheme.Sidebar = {
           ],
         },
         { text: "字体图标与背景图片", link: "/字体图标与背景图片" },
+        { text: "代码片段", link: "/代码片段" },
       ],
     },
   ],
