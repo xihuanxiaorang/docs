@@ -9,7 +9,7 @@
   --vp-custom-block-caution-border: #c11e30;
 
   body {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   li p {
@@ -102,5 +102,12 @@
       margin-left: 0;
       margin-right: 0;
     } 
+  }
+
+  u {
+    /* 下划线与文字的偏移量 */
+    text-underline-offset: 5px;
+    /* 下划线的粗细 */
+    text-decoration-thickness: 3px;
   }
 }

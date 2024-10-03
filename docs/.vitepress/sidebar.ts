@@ -140,6 +140,7 @@ export const sidebar: DefaultTheme.Sidebar = {
             { text: "WXML语法", link: "/WXML语法" },
             { text: "WXSS样式", link: "/WXSS样式" },
             { text: "事件系统", link: "/事件系统" },
+            { text: "自定义组件", link: "/自定义组件" },
           ],
         },
         { text: "字体图标与背景图片", link: "/字体图标与背景图片" },
