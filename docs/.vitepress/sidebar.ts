@@ -151,6 +151,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       base: "/前端开发/玩转微信小程序",
       collapsed: false,
       items: [
+        { text: "简易双向绑定", link: "/简易双向绑定" },
         { text: "代码片段", link: "/代码片段" },
         {
           text: "手摸手带你跑通微信小程序官方示例",
