@@ -123,6 +123,12 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "学习环境搭建",
       link: "/前端开发/TypeScript从入门到放弃/TypeScript学习环境搭建",
     },
+    {
+      text: "TypeScript教程-阮一峰",
+      base: "/前端开发/TypeScript从入门到放弃/TypeScript教程-阮一峰",
+      collapsed: false,
+      items: [{text: "any 类型", link: "/any类型"}],
+    },
   ],
   "/前端开发/玩转微信小程序/": [
     {
