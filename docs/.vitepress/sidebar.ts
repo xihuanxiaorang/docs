@@ -9,8 +9,8 @@ export const sidebar: DefaultTheme.Sidebar = {
     { text: "Git", link: "/技术碎片/Git" },
     { text: "Uniapp工程化模板搭建", link: "/技术碎片/Uniapp工程化模板搭建" },
     {
-      text: "搭建Vue3企业级项目模板",
-      link: "/技术碎片/搭建Vue3企业级项目模板",
+      text: "Vue3工程化模板搭建",
+      link: "/技术碎片/Vue3工程化模板搭建",
     },
     { text: "DevIssues", link: "/技术碎片/DevIssues" },
     { text: "代码片段", link: "/技术碎片/代码片段" },
@@ -127,7 +127,7 @@ export const sidebar: DefaultTheme.Sidebar = {
       text: "TypeScript教程-阮一峰",
       base: "/前端开发/TypeScript从入门到放弃/TypeScript教程-阮一峰",
       collapsed: false,
-      items: [{text: "any 类型", link: "/any类型"}],
+      items: [{ text: "any 类型", link: "/any类型" }],
     },
   ],
   "/前端开发/玩转微信小程序/": [
