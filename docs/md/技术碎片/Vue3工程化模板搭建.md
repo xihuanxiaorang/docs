@@ -12,9 +12,9 @@ outline: [2,3]
 >
 > 确保你安装了最新版本的 [Node.js](https://nodejs.org/)，并且你的当前工作目录正是打算创建项目的目录。
 
-在 Vue3 官方文档 [快速上手 | Vue.js (vuejs.org)](https://cn.vuejs.org/guide/quick-start.html#creating-a-vue-application) 小节中，推荐使用 `pnpm create vue@latest` 创建项目，这一指令将会安装并执行 [create-vue](https://github.com/vuejs/create-vue)，它是 Vue 官方的项目脚手架工具。你将会看到一些诸如 TypeScript 和测试支持之类的可选功能提示，如下所示：<br />![image-20241006110053678](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410061100046.png)
+在 Vue3 官方文档 [快速上手 | Vue.js (vuejs.org)](https://cn.vuejs.org/guide/quick-start.html#creating-a-vue-application) 小节中，推荐使用 `pnpm create vue@latest` 创建项目，这一指令将会安装并执行 [create-vue](https://github.com/vuejs/create-vue)，它是 Vue 官方的项目脚手架工具。你将会看到一些诸如 TypeScript 和测试支持之类的可选功能提示，如下所示：<br />![image-20241008215852152](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082158505.png)
 
-在项目被创建后，通过以下步骤安装依赖并启动开发服务器，如下所示：<br />![image-20241006110228737](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410061102059.png)
+在项目创建后，按照提示安装依赖并启动开发服务器，如下所示：<br />![image-20241008220026529](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082200981.png)
 
 ## 推荐插件安装
 
@@ -115,9 +115,9 @@ trim_trailing_whitespace = false
 
 ##### 安装
 
-首先使用 `pnpm dlx @antfu/eslint-config@latest` 命令进行安装，如下所示：<br />![image-20241006164506625](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410061645038.png)
+首先使用 `pnpm dlx @antfu/eslint-config@latest` 命令进行安装，如下所示：<br />![image-20241008220527600](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082205049.png)
 
-执行以上操作之后会帮咱们创建一个 `eslint.config.js` 和 `.vscode/settings.json` 文件，并且还会添加相关依赖。咱们需要使用 `pnpm install` 命令安装这些依赖，如下所示：<br />![image-20241006165006136](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410061650328.png)
+执行以上操作之后会帮咱们创建一个 `eslint.config.js` 和 `.vscode/settings.json` 文件，并且还会添加相关依赖。咱们需要使用 `pnpm install` 命令安装这些依赖，如下所示：<br />![image-20241008220617289](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082206497.png)
 
 然后，在 package.json 文件中添加如下脚本：
 
@@ -130,7 +130,7 @@ trim_trailing_whitespace = false
 }
 ```
 
-执行 `pnpm lint` 命令可以查看当前项目中出现的 ESLint 问题，如下所示：<br />![image-20241006165505692](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410061655992.png)
+执行 `pnpm lint` 命令可以查看当前项目中出现的 ESLint 问题，如下所示：<br />![image-20241008220748783](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082207225.png)
 
 发现有这么多 ESLint 问题之后，咱们可以使用 `pnpm lint:fix` 命令来一键自动修复所有的  ESLint 问题。
 
@@ -263,7 +263,7 @@ trim_trailing_whitespace = false
 
 #### 安装
 
-首先使用 `pnpm add -D saas postcss postcss-html stylelint stylelint-config-standard-scss stylelint-config-recess-order` 命令安装 Stylelint 相关依赖，如下所示：<br />![image-20241006230950871](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410062309092.png)
+首先使用 `pnpm add -D sass postcss postcss-html postcss-scss stylelint stylelint-config-standard-scss stylelint-config-recess-order` 命令安装 Stylelint 相关依赖，如下所示：<br />![image-20241008223758589](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082237852.png)
 
 然后在项目根目录下新增 `stylelint.config.js` 配置文件，内容如下所示：
 
@@ -278,6 +278,10 @@ export default {
         {
             files: ['**/*.(vue|html)'],
             customSyntax: 'postcss-html',
+        },
+        {
+            files: ['**/*.scss'],
+            customSyntax: 'postcss-scss',
         },
     ],
     rules: {
@@ -294,7 +298,7 @@ export default {
                 ignoreUnits: ['rpx'],
             },
         ],
-        'comment-empty-line-before': 'never', // never|always|always-multi-line|never-multi-line
+        'comment-empty-line-before': 'never',
         'custom-property-empty-line-before': 'never',
         'no-empty-source': null,
         'comment-no-empty': null,
@@ -304,7 +308,6 @@ export default {
         'font-family-no-missing-generic-family-keyword': null,
     },
 }
-
 ```
 
 最后在 package.json 文件中添加如下脚本：
@@ -318,9 +321,9 @@ export default {
 }
 ```
 
-执行 `pnpm run stylelint` 命令可以查看当前项目中出现的 Stylelint 问题，如下所示：<br />![image-20241006225707805](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410062257161.png)
+执行 `pnpm stylelint` 命令可以查看当前项目中出现的 Stylelint 问题，如下所示：<br />![image-20241008223942334](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082239759.png)
 
-发现有这么多 Stylelint 问题之后，咱们可以使用 `pnpm run stylelint:fix` 命令来一键自动修复所有的 Stylelint 问题。
+发现有这么多 Stylelint 问题之后，咱们可以使用 `pnpm stylelint:fix` 命令来一键自动修复所有的 Stylelint 问题。
 
 ### husky
 
@@ -391,7 +394,7 @@ pnpm run lint-staged
 
 #### 测试
 
-此时，在 `main.ts` 文件中定义不使用的变量，使其不符合 eslint 规范，然后通过 `git add .` 命令将工作区的代码全部保存到暂存区之后使用 `git commit` 命令进行提交，从终端中可以看到，确实是先执行 lint-staged，然后 eslint 输出了错误信息并且中断了 git commit 过程，这非常好，符合咱们的预期！如下所示：<br />![image-20241007121917006](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410071219416.png)
+此时，在 `main.ts` 文件中定义不使用的变量，使其不符合 eslint 规范，然后通过 `git add .` 命令将工作区的代码全部保存到暂存区之后使用 `git commit` 命令进行提交，从终端中可以看到，确实是先执行 lint-staged，然后 eslint 输出了错误信息并且中断了 git commit 过程，这非常好，符合咱们的预期！如下所示：<br />![image-20241008224725378](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082247687.png)
 
 ### commitlint
 
@@ -462,9 +465,9 @@ npx --no -- commitlint --edit ${1}
 
 #### 测试
 
-故意填写不符合规范的提交信息，测试效果如下所示：<br />![image-20241007162542215](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410071625483.png)
+故意填写不符合规范的提交信息，测试效果如下所示：<br />![image-20241008225047501](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082250751.png)
 
-咱们接着使用一个符合规范的提交信息来看看效果，可以看到没有报错也没有被中断，符合咱们的预期，这意味着 commitlint 就已经配置成功啦！如下所示：<br />![image-20241007162941474](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410071629693.png)
+咱们接着使用一个符合规范的提交信息来看看效果，可以看到没有报错也没有被中断，符合咱们的预期，这意味着 commitlint 就已经配置成功啦！如下所示：<br />![image-20241008225259862](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082253082.png)
 
 ### commitizen
 
@@ -490,7 +493,7 @@ commitizen（简称 cz 或 Cz）是一个工具，用于生成符合一定规范
 
 #### 安装
 
-首先使用 `pnpm i -g commitizen` 命令<u>全局</u>安装 commitizen cli 工具。引入 commitizen 可以帮助咱们便捷式地创建符合 commitlint 规范的 commit message。<br />![image-20241007164110629](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410071641818.png)
+首先使用 `pnpm i -g commitizen` 命令<u>全局</u>安装 commitizen cli 工具。引入 commitizen 可以帮助咱们便捷式地创建符合 commitlint 规范的 commit message。<br />![image-20241008225516641](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082255844.png)
 
 然后执行 `commitizen init cz-conventional-changelog --pnpm --save-dev --save-exact` 命令，使其支持 Angular 的 commit message 格式。其中 cz-conventional-changelog 是 commitizen 的 conventional-changelog 适配器，使用该适配器，commitizen 将以 AngularJS 的 commit message 规范逐步引导咱们完成 commit message 的创建。
 
@@ -498,7 +501,7 @@ commitizen（简称 cz 或 Cz）是一个工具，用于生成符合一定规范
 
 #### 测试
 
-使用 `git add .` 命令将所有的变更文件添加到暂存区，然后再执行 `git cz` 命令提交代码，如下所示：<br />![image-20241007165625030](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410071656392.png)
+使用 `git add .` 命令将所有的变更文件添加到暂存区，然后再执行 `git cz` 命令提交代码，如下所示：<br />![image-20241008225754392](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410082257760.png)
 
 可以看到终端中有了对应的步骤和信息提示，非常好！一切都在咱们的预料当中，满足了咱们的诉求。
 
