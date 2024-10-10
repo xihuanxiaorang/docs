@@ -920,29 +920,29 @@ export default defineConfig({
        runs-on: ubuntu-latest
        steps:
          - name: Checkout
-           uses: actions/checkout@v3
+           uses: actions/checkout@v4
            with:
              fetch-depth: 0 # 如果未启用 lastUpdated，则不需要
          - name: Setup pnpm
-           uses: pnpm/action-setup@v2 # 如果使用 pnpm，请取消注释
+           uses: pnpm/action-setup@v3 # 如果使用 pnpm，请取消注释
            with:
              version: 8.6.12 # 指定需要的 pnpm 版本
          # - uses: oven-sh/setup-bun@v1 # 如果使用 Bun，请取消注释
          - name: Setup Node
-           uses: actions/setup-node@v3
+           uses: actions/setup-node@v4
            with:
-             node-version: 18
+             node-version: 20
              cache: pnpm # 或 pnpm / yarn
          - name: Setup Pages
-           uses: actions/configure-pages@v3
+           uses: actions/configure-pages@v4
          - name: Install dependencies
            run: pnpm install # 或 pnpm install / yarn install / bun install
          - name: Build with VitePress
            run: |
-             pnpm run docs:build
+             pnpm docs:build  # 或 pnpm docs:build / yarn docs:build / bun run docs:build
              touch docs/.vitepress/dist/.nojekyll
          - name: Upload artifact
-           uses: actions/upload-pages-artifact@v2
+           uses: actions/upload-pages-artifact@v3
            with:
              path: docs/.vitepress/dist
    
@@ -957,7 +957,7 @@ export default defineConfig({
        steps:
          - name: Deploy to GitHub Pages
            id: deployment
-           uses: actions/deploy-pages@v2
+           uses: actions/deploy-pages@v4
    ```
 
    > [!TIP]
@@ -1027,7 +1027,7 @@ VitePress 使用 [Inter](https://rsms.me/inter/) 作为默认字体，并且将�
    >
    > 为了避免在生成后的输出中包含 Inter 字体，请从 `vitepress/theme-without-fonts` 中导入主题；
 
-   ```ts{4}
+   ```ts {4}
    // https://vitepress.dev/guide/custom-theme
    import { h } from "vue";
    import type { Theme } from "vitepress";
@@ -1054,4 +1054,5 @@ VitePress 使用 [Inter](https://rsms.me/inter/) 作为默认字体，并且将�
 - 官方文档：[VitePress | 由 Vite 和 Vue 驱动的静态站点生成器](https://vitepress.dev/zh/) 👍
 - [vitepress搭建并部署网站 | AlbertZhang的文档网站 (bugdesigner.cn)](https://docs.bugdesigner.cn/README.html)
 - [VuePress 博客优化之开启 Algolia 全文搜索 · Issue #267 · mqyqingfeng/Blog (github.com)](https://github.com/mqyqingfeng/Blog/issues/267)
+- [给 VitePress 添加 algolia 搜索 | ChoDocs](https://chodocs.cn/program/vitepress-algolia/)
 
