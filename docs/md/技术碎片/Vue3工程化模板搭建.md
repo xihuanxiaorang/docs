@@ -505,3 +505,320 @@ commitizen（简称 cz 或 Cz）是一个工具，用于生成符合一定规范
 
 可以看到终端中有了对应的步骤和信息提示，非常好！一切都在咱们的预料当中，满足了咱们的诉求。
 
+## 清理工作
+
+清理由脚手架生成的不必要的文件：
+
+1. 删除 `assets` 目录下的所有静态资源及其引用；
+
+2. 删除 `components` 目录下的所有公共组件以及引用；
+
+3. 删除 `stores` 目录下的所有文件；
+
+4. 删除 `views` 目录下的所有页面组件及其引用；
+
+5. 新增 home 页面，如下所示：
+
+   ```vue
+   <template>
+   	<h1>Home</h1>
+   </template>
+   ```
+
+6. 修改路由配置文件，如下所示：
+
+   ```typescript
+   import { createRouter, createWebHistory } from 'vue-router'
+   
+   const router = createRouter({
+       history: createWebHistory(import.meta.env.BASE_URL),
+       routes: [
+           {
+               path: '/',
+               name: 'Home',
+               component: () => import('@/views/home/index.vue'),
+           },
+       ],
+   })
+   
+   export default router
+   ```
+
+## 准备工作
+
+### [CSS 预处理器](https://vitejs.cn/vite3-cn/guide/features.html#css)
+
+Vite 同时提供了对 `.scss`, `.sass`, `.less`, `.styl` 和 `.stylus` 文件的内置支持。没有必要为它们安装特定的 Vite 插件，但必须安装相应的预处理器依赖：`pnpm add -D sass`。
+
+如果使用的是单文件组件，可以通过 `<style lang="scss">`（或其他预处理器）自动开启。
+
+> [!note]
+>
+> 如果控制台抛出警告信息："Deprecation Warning: The legacy JS API is deprecated and will be removed in Dart Sass 2.0.0."，则需要将以下配置添加到 `vite.config.ts` 文件中：
+>
+> ```typescript {20-26}
+> import { fileURLToPath, URL } from 'node:url'
+> 
+> import { defineConfig } from 'vite'
+> import vue from '@vitejs/plugin-vue'
+> import vueJsx from '@vitejs/plugin-vue-jsx'
+> import vueDevTools from 'vite-plugin-vue-devtools'
+> 
+> // https://vitejs.dev/config/
+> export default defineConfig({
+>     plugins: [
+>         vue(),
+>         vueJsx(),
+>         vueDevTools(),
+>     ],
+>     resolve: {
+>         alias: {
+>             '@': fileURLToPath(new URL('./src', import.meta.url))
+>         }
+>     },
+>     css: {
+>         preprocessorOptions: {
+>             scss: {
+>                 api: 'modern-compiler',
+>             },
+>         },
+>     },
+> })
+> ```
+
+### [ElementPlus](https://element-plus.org/zh-CN/) 集成
+
+#### 安装
+
+推荐使用 `pnpm install element-plus` 命令安装 Element Plus。
+
+#### [按需导入](https://element-plus.org/zh-CN/guide/quickstart.html#按需导入)
+
+首先，需要安装 `unplugin-vue-components` 和 `unplugin-auto-import` 这两款插件：
+
+```shell
+pnpm add -D unplugin-vue-components unplugin-auto-import
+```
+
+然后使用插件的话需要修改 `vite.config.ts` 配置文件：
+
+```typescript {1,6-8,12,20-46}
+import { resolve } from 'node:path'
+import { fileURLToPath, URL } from 'node:url'
+
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import AutoImport from 'unplugin-auto-import/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
+import { defineConfig } from 'vite'
+import vueDevTools from 'vite-plugin-vue-devtools'
+
+const pathSrc = resolve(__dirname, 'src')
+
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [
+        vue(),
+        vueJsx(),
+        vueDevTools(),
+        AutoImport({
+            resolvers: [
+                // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+                ElementPlusResolver(),
+            ],
+            // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+            // 自动导入 VueRouter 相关函数，如：useRouter 等
+            // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+            // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+            imports: ['vue', 'vue-router', 'pinia'],
+            // 是否在 vue 模板中自动导入
+            vueTemplate: true,
+            // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+            dts: resolve(pathSrc, 'typings', 'auto-imports.d.ts'),
+        }),
+        Components({
+            resolvers: [
+                // 自动导入 Element Plus 组件
+                ElementPlusResolver(),
+            ],
+            // 组件名称包含目录，防止同名组件冲突
+            directoryAsNamespace: true,
+            // 指定自定义组件位置(默认:src/components)
+            dirs: ['src/components', 'src/**/components'],
+            // 指定自动导入组件TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+            dts: resolve(pathSrc, 'typings', 'components.d.ts'),
+        }),
+    ],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler',
+            },
+        },
+    },
+})
+```
+
+### [iconify](https://iconify.design/) 集成
+
+以下步骤参考自：[Icon 图标 | Element Plus (element-plus.org)](https://element-plus.org/zh-CN/component/icon.html#自动导入)
+
+使用 [unplugin-icons](https://github.com/antfu/unplugin-icons) 和 [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 从 iconify 中自动导入任何图标集。您可以参考[此模板](https://github.com/sxzz/element-plus-best-practices/blob/db2dfc983ccda5570033a0ac608a1bd9d9a7f658/vite.config.ts#L21-L58)。
+
+#### 安装
+
+使用 `pnpm i -D unplugin-icons @iconify/json` 命令安装 `unplugin-icons` 和 `iconify`。
+
+#### 自动导入
+
+修改 `vite.config.ts` 配置文件：
+
+```typescript {7-8,26-27,43-47,56-59}
+import { resolve } from 'node:path'
+import { fileURLToPath, URL } from 'node:url'
+
+import vue from '@vitejs/plugin-vue'
+import vueJsx from '@vitejs/plugin-vue-jsx'
+import AutoImport from 'unplugin-auto-import/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+import Icons from 'unplugin-icons/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
+import { defineConfig } from 'vite'
+import vueDevTools from 'vite-plugin-vue-devtools'
+
+const pathSrc = resolve(__dirname, 'src')
+
+// https://vitejs.dev/config/
+export default defineConfig({
+    plugins: [
+        vue(),
+        vueJsx(),
+        vueDevTools(),
+        AutoImport({
+            resolvers: [
+                // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+                ElementPlusResolver(),
+                // 自动导入图标组件
+                IconsResolver(),
+            ],
+            // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+            // 自动导入 VueRouter 相关函数，如：useRouter 等
+            // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+            // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+            imports: ['vue', 'vue-router', 'pinia'],
+            // 是否在 vue 模板中自动导入
+            vueTemplate: true,
+            // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+            dts: resolve(pathSrc, 'typings', 'auto-imports.d.ts'),
+        }),
+        Components({
+            resolvers: [
+                // 自动导入 Element Plus 组件
+                ElementPlusResolver(),
+                // 自动注册图标组件
+                IconsResolver({
+                    // 只启用 element-plus 图标集，其他图标库 https://icon-sets.iconify.design/
+                    enabledCollections: ['ep'],
+                }),
+            ],
+            // 组件名称包含目录，防止同名组件冲突
+            directoryAsNamespace: true,
+            // 指定自定义组件位置(默认:src/components)
+            dirs: ['src/components', 'src/**/components'],
+            // 指定自动导入组件TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+            dts: resolve(pathSrc, 'typings', 'components.d.ts'),
+        }),
+        Icons({
+            // 自动安装图标库
+            autoInstall: true,
+        }),
+    ],
+    resolve: {
+        alias: {
+            '@': fileURLToPath(new URL('./src', import.meta.url)),
+        },
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler',
+            },
+        },
+    },
+})
+```
+
+#### 使用
+
+```html
+<template>
+    <div>
+        <i-ep-user />
+        <el-icon :size="50" color="#1976D2">
+            <i-ep-edit />
+        </el-icon>
+    </div>
+</template>
+```
+
+### [VueUse](https://vueuse.org/) 集成
+
+VueUse 是一个基于 [组合式 API](https://vuejs.ac.cn/guide/extras/composition-api-faq.html) 的实用函数集合，如 `useStorage` 函数可以实现状态持久化存储（localStorage|SessionStorage）；`useFullscreen` 函数可以非常方便地实现全屏模式，等等。
+
+#### 安装
+
+使用 `pnpm i @vueuse/core` 安装 VueUse。
+
+#### 自动导入
+
+可以通过 `unplugin-auto-import` 插件实现自动导入 VueUse 相关函数，修改 `vite.config.ts` 配置文件：
+
+```ts {13,15}
+export default defineConfig({
+  plugins: [
+     AutoImport({
+        resolvers: [
+          // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+          ElementPlusResolver(),
+          // 自动导入图标组件
+          IconsResolver()
+        ],
+        // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+        // 自动导入 VueRouter 相关函数，如：useRouter 等
+        // 自动导入 Pinia 相关函数，如：createPinia，defineStore，storeToRefs 等
+        // 自动导入 @vueuse/core 相关函数，如：useStorage、useTitle 等
+        // 参考自： https://github.com/sxzz/element-plus-best-practices/blob/main/vite.config.ts
+        imports: ['vue', 'vue-router', 'pinia', '@vueuse/core'],
+        // 是否在 vue 模板中自动导入
+        vueTemplate: true,
+        // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
+        dts: resolve(pathSrc, 'typings', 'auto-imports.d.ts')
+      }),
+    // ...
+  ]
+})
+```
+
+#### 使用
+
+```typescript {2}
+export const useCounterStore = defineStore('counter', () => {
+    const count = useStorage('count', 0)
+    const increment = () => {
+        count.value++
+    }
+    const decrement = () => {
+        count.value--
+    }
+
+    return { count, increment, decrement }
+})
+```
+
