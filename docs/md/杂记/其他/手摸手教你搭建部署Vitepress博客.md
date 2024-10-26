@@ -1,3 +1,7 @@
+---
+outline: [2,4]
+---
+
 # 手摸手教你搭建部署Vitepress博客
 
 ## 介绍📢
@@ -671,6 +675,27 @@ export default defineConfig({
 
 #### Algolia Search
 
+如果要使用 Algolia Search，则需要在 `.vitepress/config.ts` 文件中将 `themeConfig.search.provider` 选项设置为 `'algolia'`，并配置相关选项。
+
+```ts
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+  themeConfig: {
+    search: {
+      provider: "algolia",
+      options: {
+        appId: "...",  // Application ID
+        apiKey: "...", // Search API Key
+        indexName: "..."
+      }
+    },
+  }
+})
+```
+
+##### 方案一：DocSearch
+
 VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/what-is-docsearch) 搜索文档站点。
 
 申请使用 [Algolia DocSearch](https://docsearch.algolia.com/apply/)，如下所示：<br />![image-20240314003539289](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202403140035441.png)
@@ -682,9 +707,126 @@ VitePress 支持使用 [Algolia DocSearch](https://docsearch.algolia.com/docs/wh
 - 您的网站必须对公众开放
 - 您的网站必须位于生产环境
 
-填写完后，等待一段时间（我等了 x 天），如果申请通过，我们就会收到邮件：<br />
+填写完后，等待一段时间（我等了 x 天），如果申请通过，会收到如下类似的邮件回复：<br />![image-20241026184329418](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410261843601.png)
 
-<span style="background-color: rgb(251, 228, 231);">TODO</span>
+将邮件中的 `appId`、`appKey` 以及 `indexName` 填写到 `.vitepress/config.ts` 配置文件中。
+
+##### 方案二：CI 自动爬取数据
+
+###### 注册账号
+
+访问 [Sign in | Algolia](https://dashboard.algolia.com/users/sign_in) 页面，直接选择以 Github 或 Google 身份进行注册登录。
+
+###### 创建应用
+
+进入控制台页面 ➡️ 点击侧边栏最下面的小齿轮进入 Settings 页面 ➡️ Applications。<br />![image-20241026190331631](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410261903755.png)
+
+点击创建应用按钮，创建一个名称为 `blog` 的应用。<br />![image-20241026190600495](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410261906627.png)
+
+###### 创建索引
+
+点击侧边栏倒数第二个数据库图案的按钮 ➡️ 选择 Indices 进入索引页面 ➡️ 点击创建索引按钮，创建一个名称为 `vitepress` 的索引。<br />![image-20241026191947063](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410261919184.png)
+
+###### 获取 API Key
+
+点击侧边栏最下面的小齿轮进入 Settings 页面 ➡️ API Keys。<br />![image-20241026212414778](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262124899.png)![image-20241026212639877](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262126160.png)
+
+其中的 Application ID、<u>Search API Key</u> 以及前一个步骤中的 index 名称填写到 `.vitepress/config.ts` 配置文件中。
+
+```ts
+import { defineConfig } from 'vitepress'
+
+export default defineConfig({
+  themeConfig: {
+    search: {
+      provider: "algolia",
+      options: {
+        appId: "JVQLZAZ5WZ",  // Application ID
+        apiKey: "be1f7f40204057a7ff0aefcbb00a90f0", // Search API Key
+        indexName: "vitepress"
+      }
+    },
+  }
+})
+```
+
+至于 <u>Admin API Key</u> 会在后面的 CI 步骤中被用到。
+
+###### 创建 crawlerConfig.json
+
+在项目的根目录下创建 `crawlerConfig.json` 文件，该文件用于告诉 algolia 需要爬取哪些内容。
+
+```json
+{
+  "index_name": "vitepress", // 替换成自己创建的索引名称
+  "start_urls": [
+    "https://docs.xiaorang.fun/" // 替换成自己的文档地址
+  ],
+  "selectors": {
+    "lvl0": {
+      "selector": "",
+      "default_value": "Documentation"
+    },
+    "lvl1": ".content h1",
+    "lvl2": ".content h2",
+    "lvl3": ".content h3",
+    "lvl4": ".content h4",
+    "lvl5": ".content h5",
+    "text": ".content p, .content li",
+    "lang": {
+      "selector": "/html/@lang",
+      "type": "xpath",
+      "global": true
+    }
+  },
+  "strip_chars": " .,;:#",
+  "selectors_exclude": [
+    ".sr-only"
+  ],
+  "custom_settings": {
+    "attributesForFaceting": [
+      "lang",
+      "tags"
+    ]
+  }
+}
+```
+
+###### 编写 CI 脚本
+
+在项目根目录下的 `.github/workflows` 文件夹中新建一个 `algolia.yml` 文件，内容如下所示：
+
+```yaml
+name: algolia
+on:
+  push:
+    branches:
+      - main
+jobs:
+  algolia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get the content of algolia.json as config
+        id: algolia_config
+        run: echo "config=$(cat crawlerConfig.json | jq -r tostring)" >> $GITHUB_OUTPUT
+      - name: Push indices to Algolia
+        uses: signcl/docsearch-scraper-action@master
+        env:
+          APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
+          API_KEY: ${{ secrets.ALGOLIA_API_KEY }}
+          CONFIG: ${{ steps.algolia_config.outputs.config }}
+```
+
+然后需要在 Github Secrets 中新建两个字段 `ALGOLIA_APPLICATION_ID` 和 `ALGOLIA_API_KEY`，值分别为前面步骤中获取到的 Application ID 和 <u>Admin API Key</u>。<br />![image-20241026215148195](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262151334.png)
+
+###### 测试
+
+在完成以上步骤之后，提交并推送代码至 Github，这样就会触发 Github Action，执行咱们编写的 CI 脚本，如下所示：<br />![image-20241026220019199](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262200327.png)
+
+运行成功之后，咱们回到 algolia，可以发现已经成功爬取到咱们网站的数据。<br />![image-20241026220641780](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262206919.png)
+
+咱们访问一下文档/博客地址，可以看到已经可以成功搜索到数据。<br />![image-20241026220925701](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410262209835.png)
 
 ### outline
 
@@ -762,15 +904,8 @@ import markdownItPlantuml from "markdown-it-textual-uml";
 export default defineConfig({
   markdown: {
     lineNumbers: true,
-    container: {
-      tipLabel: "💡提示",
-      warningLabel: "❗警告",
-      noteLabel: "📢注意",
-      importantLabel: "🎯重要",
-      cautionLabel: "⚡小心",
-    },
     config: (md) => {
-      md.use(markdownItPlantuml);
+      md.use(markdownItPlantuml); // [!code ++]
     },
   },
 }
@@ -888,7 +1023,7 @@ export default defineConfig({
 
 2. 在项目的 `.github/workflows` 目录中创建一个名为 `deploy.yml` 的文件，其中包含这样的内容：
 
-   ```yaml{35-38}
+   ```yaml {35-38}
    # 构建 VitePress 站点并将其部署到 GitHub Pages 的示例工作流程
    #
    name: Deploy VitePress site to Pages
@@ -998,7 +1133,7 @@ export default defineConfig({
       })
       ```
 
-小伙伴们可以自行尝试一下，如果觉得不对的可以到这个 [部署到Github Pages之后，如果使用自定义域名的话样式会丢失 · Issue #3513 · vuejs/vitepress](https://github.com/vuejs/vitepress/issues/3513) 上提出自己的想法。
+小伙伴们可以自行尝试一下，如果觉得不对的可以到这个 [部署到Github Pages之后，如果使用自定义域名的话样式会丢失](https://github.com/vuejs/vitepress/issues/3513) Issue 上提出自己的想法。
 
 ### 如何使用自定义字体
 
@@ -1046,13 +1181,5 @@ VitePress 使用 [Inter](https://rsms.me/inter/) 作为默认字体，并且将�
        // ...
      },
    } satisfies Theme;
-   
    ```
-
-## 参考资料🎁
-
-- 官方文档：[VitePress | 由 Vite 和 Vue 驱动的静态站点生成器](https://vitepress.dev/zh/) 👍
-- [vitepress搭建并部署网站 | AlbertZhang的文档网站 (bugdesigner.cn)](https://docs.bugdesigner.cn/README.html)
-- [VuePress 博客优化之开启 Algolia 全文搜索 · Issue #267 · mqyqingfeng/Blog (github.com)](https://github.com/mqyqingfeng/Blog/issues/267)
-- [给 VitePress 添加 algolia 搜索 | ChoDocs](https://chodocs.cn/program/vitepress-algolia/)
 
