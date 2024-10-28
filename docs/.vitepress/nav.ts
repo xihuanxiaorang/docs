@@ -1,4 +1,4 @@
-import { DefaultTheme } from "vitepress";
+import {DefaultTheme} from "vitepress";
 
 export const nav: DefaultTheme.NavItem[] = [
   {
@@ -43,7 +43,7 @@ export const nav: DefaultTheme.NavItem[] = [
       },
       {
         text: "Vue3学习之旅",
-        link: "/前端开发/Vue3学习之旅/README",
+        link: "/前端开发/Vue3学习之旅/官方文档阅读/基础/创建一个应用",
         activeMatch: "/前端开发/Vue3学习之旅/",
       },
       {
@@ -95,7 +95,7 @@ export const nav: DefaultTheme.NavItem[] = [
     link: "/项目/vue3/待办清单",
     activeMatch: "/项目/",
   },
-  { text: "🔖技术碎片", link: "/技术碎片/README", activeMatch: "/技术碎片/" },
+  {text: "🔖技术碎片", link: "/技术碎片/README", activeMatch: "/技术碎片/"},
   {
     text: "🗂️杂记",
     link: "/杂记/工具/开发者工具/IDEA",
