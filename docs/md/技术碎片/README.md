@@ -644,3 +644,70 @@ public @interface SpringBootApplication {
 ### 登录测试号
 
 申请成功后，进入 [微信公众平台首页](https://mp.weixin.qq.com/)，扫描登录二维码，选择已有的小程序测试号或小游戏测试号登录即可。<br />![img](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img/202406282314015.png)
+
+## 使用 Github Actions 自动化部署 Vue3 项目
+
+实现步骤：
+
+1. 在项目根目录下的 `.github/workflow` 文件夹下新建一个 `deploy.yml` 文件，其内容如下所示：
+
+   ```yaml
+   name: Deploy Github Pages
+   
+   on:
+     push:
+       branches:
+         - main
+   
+   permissions:
+     contents: write
+   
+   jobs:
+     build-and-deploy:
+       concurrency: ci-${{ github.ref }}
+       runs-on: ubuntu-latest
+       steps:
+         - name: Checkout 🛎️
+           uses: actions/checkout@v4
+   
+         - name: Install and Build 🔧
+           run: |
+             npm install
+             npm run build
+   
+         - name: Deploy 🚀
+           uses: JamesIves/github-pages-deploy-action@v4
+           with:
+             folder: dist
+   ```
+
+2. 参考 [构建生产版本 | Vite 官方中文文档](https://cn.vitejs.dev/guide/build.html#relative-base)，需要修改 vite 配置文件，<u>设置相对基础路径</u>，否则的话部署上去会出现找不到静态资源的情况！
+
+   ```ts
+   import { fileURLToPath, URL } from 'node:url'
+   
+   import { defineConfig } from 'vite'
+   import vue from '@vitejs/plugin-vue'
+   import vueDevTools from 'vite-plugin-vue-devtools'
+   
+   // https://vite.dev/config/
+   export default defineConfig({
+     base: './', // [!code ++]
+     plugins: [vue(), vueDevTools()],
+     resolve: {
+       alias: {
+         '@': fileURLToPath(new URL('./src', import.meta.url)),
+       },
+     },
+   })
+   ```
+
+3. 提交并推送代码至 Github 仓库，观察 Actions 情况，会自动触发 workflow。<br />![image-20241028221712413](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410282217744.png)
+
+4. 当 workflow 运行成功之后，会在当前仓库下创建一个名为 `gh-pages` 的分支。<br />![image-20241028222044691](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410282220852.png)
+
+5. 配置从 `gh-pages` 分支部署项目。<br />![image-20241028222625905](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410282226052.png)
+
+6. 等待一会儿，等它部署成功之后，点击代码仓库右侧的 `github-pages` 字样就能看到部署的网站。<br />![image-20241028222851494](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410282228709.png)![image-20241028223401233](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410282234376.png)
+
+7. 点击网址即可访问。<br />![image-20241028223517976](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202410282235121.png)
