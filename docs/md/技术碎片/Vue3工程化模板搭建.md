@@ -1,7 +1,5 @@
 ---
-
 outline: [2,3]
-
 ---
 
 # Vue3 工程化模板搭建
@@ -635,7 +633,7 @@ export default defineConfig({
             // 是否在 vue 模板中自动导入
             vueTemplate: true,
             // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
-            dts: resolve(pathSrc, 'typings', 'auto-imports.d.ts'),
+            dts: resolve(pathSrc, 'types', 'auto-imports.d.ts'),
         }),
         Components({
             resolvers: [
@@ -647,7 +645,7 @@ export default defineConfig({
             // 指定自定义组件位置(默认:src/components)
             dirs: ['src/components', 'src/**/components'],
             // 指定自动导入组件TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
-            dts: resolve(pathSrc, 'typings', 'components.d.ts'),
+            dts: resolve(pathSrc, 'types', 'components.d.ts'),
         }),
     ],
     resolve: {
@@ -666,6 +664,10 @@ export default defineConfig({
 ```
 
 ### [iconify](https://iconify.design/) 集成
+
+> [!tip]
+>
+> 建议使用 VSCode 的用户安装 [Iconify IntelliSense](https://marketplace.visualstudio.com/items?itemName=antfu.iconify) 扩展。
 
 以下步骤参考自：[Icon 图标 | Element Plus (element-plus.org)](https://element-plus.org/zh-CN/component/icon.html#自动导入)
 
@@ -716,7 +718,7 @@ export default defineConfig({
             // 是否在 vue 模板中自动导入
             vueTemplate: true,
             // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
-            dts: resolve(pathSrc, 'typings', 'auto-imports.d.ts'),
+            dts: resolve(pathSrc, 'types', 'auto-imports.d.ts'),
         }),
         Components({
             resolvers: [
@@ -733,7 +735,7 @@ export default defineConfig({
             // 指定自定义组件位置(默认:src/components)
             dirs: ['src/components', 'src/**/components'],
             // 指定自动导入组件TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
-            dts: resolve(pathSrc, 'typings', 'components.d.ts'),
+            dts: resolve(pathSrc, 'types', 'components.d.ts'),
         }),
         Icons({
             // 自动安装图标库
@@ -757,7 +759,7 @@ export default defineConfig({
 
 #### 使用
 
-```html
+```vue
 <template>
     <div>
         <i-ep-user />
@@ -799,7 +801,7 @@ export default defineConfig({
         // 是否在 vue 模板中自动导入
         vueTemplate: true,
         // 指定自动导入函数TS类型声明文件路径，为true时在项目根目录自动创建，为false时关闭自动生成
-        dts: resolve(pathSrc, 'typings', 'auto-imports.d.ts')
+        dts: resolve(pathSrc, 'types', 'auto-imports.d.ts')
       }),
     // ...
   ]
@@ -820,5 +822,707 @@ export const useCounterStore = defineStore('counter', () => {
 
     return { count, increment, decrement }
 })
+```
+
+### [TailwindCSS](https://tailwindcss.com/) 集成
+
+> [!tip]
+>
+> 建议使用 VSCode 的用户安装 [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) 扩展。
+
+#### 安装
+
+1. 安装 `tailwindcss` 及其对等依赖，然后生成 `tailwind.config.js` 和 `postcss.config.js` 文件。
+
+   ```sh
+   pnpm install -D tailwindcss postcss autoprefixer
+   npx tailwindcss init -p
+   ```
+
+2. 配置模板路径：在 `tailwind.config.js` 文件中添加所有模板文件的路径。
+
+   ```js {3}
+   /** @type {import('tailwindcss').Config} */
+   export default {
+       content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+       theme: {
+           extend: {}
+       },
+       plugins: []
+   }
+   ```
+
+3. 添加 Tailwind 指令：将每个 Tailwind 层的 `@tailwind` 指令添加到 `/src/styles/index.scss` 文件中。
+
+   ```scss
+   @tailwind base;
+   @tailwind components;
+   @tailwind utilities;
+   ```
+
+4. 在 `main.ts` 文件中引入 `/src/styles/index.scss` 文件。
+
+   ```ts {5}
+   import { createPinia } from 'pinia'
+   import { createApp } from 'vue'
+   import App from './App.vue'
+   import setupPlugins from './plugins'
+   import '@/styles/index.scss'
+   
+   const app = createApp(App)
+   setupPlugins(app)
+   app.use(createPinia())
+   
+   app.mount('#app')
+   ```
+
+#### 使用
+
+::: code-group
+
+```vue [src/layout/default/index.vue]
+<template>
+    <div class="w-screen h-screen grid grid-rows-[84px_1fr] grid-cols-[200px_1fr]">
+        <div class="bg-[lightblue]">
+            Header
+        </div>
+        <div class="bg-[lightgreen] row-start-1 row-span-2">
+            Left
+        </div>
+        <div class="bg-[#f5f5f5]">
+            <RouterView />
+        </div>
+    </div>
+</template>
+```
+
+```vue [src/views/home/index.vue]
+<script setup lang="ts">
+    import { useCounterStore } from '@/stores/counter'
+
+    function handleClick() {
+        ElMessage({
+            message: 'Congrats, this is a success message.',
+            type: 'success',
+        })
+    }
+
+    const date = ref('')
+
+    const { count } = storeToRefs(useCounterStore())
+    function handleChange(value: number | undefined) {
+        count.value = value
+    }
+</script>
+
+<template>
+<div class="w-full h-full p-[10px]">
+    <h1 class="text-5xl font-bold text-orange-600 mt-[10px]">
+        Home
+    </h1>
+    <div class="mt-[10px]">
+        <el-button>
+            Default
+    </el-button>
+        <el-button type="primary">
+            Primary
+    </el-button>
+        <el-button type="success" @click="handleClick">
+            Success
+    </el-button>
+        <el-button type="info">
+            Info
+    </el-button>
+        <el-button type="warning">
+            Warning
+    </el-button>
+        <el-button type="danger">
+            Danger
+    </el-button>
+    </div>
+    <el-date-picker
+                    v-model="date"
+                    class="mt-[10px]"
+                    type="date"
+                    placeholder="选择日期"
+                    />
+    <div class="mt-[10px]">
+        <i-ep-user />
+        <el-icon :size="50" color="#1976D2">
+            <i-ep-edit />
+    </el-icon>
+    </div>
+    <el-input-number v-model="count" class="mt-[10px]" :min="1" :max="10" @change="handleChange" />
+    </div>
+</template>
+```
+
+:::
+
+### Svg 图标集成
+
+ElementPlus 图标库有时满足不了实际开发需要，因此需要通过集成 [vite-plugin-svg-icons](https://github.com/vbenjs/vite-plugin-svg-icons) 插件来使用第三方（如 [Material Symbols & Icons](https://fonts.google.com/icons)、[iconfont](https://www.iconfont.cn/)、[ByteDance IconPark](https://iconpark.oceanengine.com/official)）图标库解决。
+
+#### 安装
+
+1. 使用 `pnpm install vite-plugin-svg-icons -D` 命令安装插件
+
+2. 在 `main.ts` 文件中引入注册脚本：`import 'virtual:svg-icons-register'`
+
+3. 创建 `src/assets/icons` 文件夹用于存放从第三方图标库上下载的 svg 图标
+
+4. 修改 `vite.config.ts` 配置文件：
+
+   ```ts
+   import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+   
+   export default defineConfig({
+       plugins: [
+           // ...
+           createSvgIconsPlugin({
+               // 指定需要缓存的图标文件夹
+               iconDirs: [resolve(pathSrc, 'assets/icons')],
+               // 指定symbolId格式
+               symbolId: 'icon-[dir]-[name]'
+           })
+           // ...
+       ]
+   })
+   ```
+
+5. 组件封装
+
+   ::: code-group
+
+   ```vue [src/components/SvgIcon/index.vue]
+   <script lang="ts" setup>
+       const props = withDefaults(
+           defineProps<{
+               prefix?: string
+               iconClass: string
+               color?: string
+           }>(),
+           {
+               prefix: 'icon',
+           },
+       )
+   
+       const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`)
+   </script>
+   
+   <template>
+   <svg aria-hidden="true" class="svg-icon">
+       <use :fill="color" :xlink:href="symbolId" />
+       </svg>
+   </template>
+   
+   <style lang="scss" scoped>
+       .svg-icon {
+           display: inline-block;
+           width: 1em;
+           height: 1em;
+           overflow: hidden;
+           vertical-align: -0.15em; /* 因icon大小被设置为和字体大小一致，而span等标签的下边缘会和字体的基线对齐，故需设置一个往下的偏移比例，来纠正视觉上的未对齐效果 */
+           outline: none;
+           fill: currentcolor; /* 定义元素的颜色，currentColor是一个变量，这个变量的值就表示当前元素的color值，如果当前元素未设置color值，则从父元素继承 */
+       }
+   </style>
+   ```
+
+   :::
+
+#### 使用
+
+```vue {3-4,10-12}
+<script setup lang="ts">
+    // ...
+    const icons = import.meta.glob('../../assets/icons/*.svg', { eager: true })
+    const iconNames = Object.keys(icons).map(key => key.replace(/.*\/([^/]+)\.svg$/, '$1'))
+</script>
+
+<template>
+	<div class="w-full h-full p-[10px]">
+        // ...
+        <div class="mt-[10px] text-6xl">
+            <svg-icon v-for="icon in iconNames" :key="icon" :icon-class="icon" />
+        </div>
+    </div>
+</template>
+```
+
+### ECharts 集成
+
+#### 介绍
+
+ECharts 是一款由百度公司开发的开源可视化图表库，它提供了丰富的图表类型和强大的数据可视化能力，适用于 Web 应用程序中的数据展示和分析。ECharts 的设计目标是为开发者提供一个简单、灵活且功能丰富的工具，帮助他们快速创建美观且交互性强的图表。
+
+1. **丰富的图表类型**：ECharts 支持多种图表类型，包括折线图、柱状图、饼图、散点图、地图、热力图等。
+2. **高度可定制**：用户可以自由定制图表的各个方面，从颜色、样式到动画效果等。
+3. **良好的交互性**：支持鼠标悬停、点击、缩放等多种交互操作，使图表更加生动和易于理解。
+4. **高性能**：即使在处理大量数据时也能保持良好的性能表现。
+5. **跨平台**：支持多种浏览器环境，包括移动设备浏览器。
+6. **国际化**：支持多种语言，可以方便地切换不同的语言环境。
+7. **插件扩展**：通过插件机制，可以扩展图表功能，实现更多自定义效果。
+8. **API 文档完善**：提供了详细的 API 文档和示例代码，方便开发者快速上手。
+
+#### 安装
+
+使用 `pnpm add echarts` 命令安装 ECharts。
+
+#### 使用
+
+##### 封装组件
+
+::: code-group
+
+```ts [useChart.ts]
+import { onMounted, Ref, shallowRef, unref, watch, markRaw, onBeforeMount } from "vue";
+import echarts from "./config";
+import { useDebounceFn } from '@vueuse/core'
+import { ECOption } from "./types";
+
+export const useChart = (elRef: Ref<HTMLElement | undefined> | HTMLElement, option: Ref<ECOption> | ECOption) => {
+  const chart = shallowRef<echarts.ECharts>();
+  
+  const render = (option: Ref<ECOption> | ECOption) => {
+    if (!chart.value) return
+    try {
+      chart.value.clear()
+      chart.value.setOption(unref(option), { notMerge: true });
+    } catch (error) {
+      console.error('渲染图表时发生错误:', error);
+    }
+  }
+
+  const init = () => {
+    if (chart.value) return
+    const container = unref(elRef)
+    if (!container) {
+      console.error('无法找到容器元素');
+      return;
+    }
+    try {
+      chart.value = echarts.getInstanceByDom(container) || markRaw(echarts.init(container))
+      render(option);
+    } catch (error) {
+      console.error('初始化图表时发生错误:', error);
+    }
+  }
+
+  const resize = () => {
+    if (chart.value) {
+      chart.value.resize({ animation: { duration: 300 } })
+    }
+  }
+
+  const debounceResize = useDebounceFn(resize, 300, { maxWait: 800 })
+
+  onMounted(() => {
+    init()
+    window.addEventListener('resize', debounceResize)
+  })
+
+  onBeforeMount(() => {
+    chart.value?.dispose()
+    window.removeEventListener('resize', debounceResize)
+  })
+
+  watch(
+    () => option,
+    (newOption) => {
+      render(newOption)
+    },
+    { deep: true }
+  )
+}
+```
+
+```ts [config.ts]
+// 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
+import * as echarts from 'echarts/core'
+// 引入柱状图图表，图表后缀都为 Chart
+import { BarChart, PieChart } from 'echarts/charts'
+// 引入标题，提示框，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
+import {
+  DatasetComponent,
+  GridComponent,
+  TitleComponent,
+  TooltipComponent,
+  TransformComponent,
+  VisualMapComponent,
+} from 'echarts/components'
+// 标签自动布局、全局过渡动画等特性
+import { LabelLayout, UniversalTransition } from 'echarts/features'
+// 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
+import { CanvasRenderer } from 'echarts/renderers'
+
+// 注册必须的组件
+echarts.use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  VisualMapComponent,
+  BarChart,
+  PieChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer,
+])
+
+export default echarts
+```
+
+```ts [types.ts]
+// 系列类型的定义后缀都为 SeriesOption
+import type { BarSeriesOption, PieSeriesOption } from 'echarts/charts'
+// 组件类型的定义后缀都为 ComponentOption
+import type {
+  DatasetComponentOption,
+  GridComponentOption,
+  TitleComponentOption,
+  TooltipComponentOption,
+  VisualMapComponentOption,
+} from 'echarts/components'
+import type { ComposeOption } from 'echarts/core'
+
+// 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
+export type ECOption = ComposeOption<
+  | BarSeriesOption
+  | PieSeriesOption
+  | TitleComponentOption
+  | TooltipComponentOption
+  | GridComponentOption
+  | DatasetComponentOption
+  | VisualMapComponentOption
+>
+```
+
+```vue [src/components/Chart/index.vue]
+<script setup lang="ts">
+import { shallowRef, toRefs } from "vue";
+import { useChart } from "./useChart";
+import { ECOption } from "./types";
+
+const props = withDefaults(defineProps<{
+  options: ECOption;
+}>(), {});
+const { options } = toRefs(props);
+const container = shallowRef<HTMLElement>();
+useChart(container, options)
+</script>
+
+<template>
+  <div class="container" ref="container"></div>
+</template>
+
+<style scoped>
+.container {
+  width: 100%;
+  height: 100%;
+}
+</style>
+```
+
+:::
+
+##### 使用
+
+```vue
+<script setup lang="ts">
+import Chart from '@/components/Chart/index.vue'
+import { ECOption } from '@/components/Chart/types';
+import { ref } from 'vue';
+
+const options = ref<ECOption>({
+  "title": {
+    "text": "电影当日综合票房排行",
+    "subtext": "数据来自猫眼电影（非实时）",
+    "textStyle": {
+      "fontSize": 24,
+      "color": "hsl(0deg, 100%, 100%)"
+    },
+    "subtextStyle": {
+      "fontSize": 14,
+      "color": "hsl(0deg, 20%, 75%)"
+    }
+  },
+  "grid": {
+    "left": "3%",
+    "right": "4%",
+    "bottom": "3%",
+    "top": 80,
+    "containLabel": true
+  },
+  "xAxis": {
+    "type": "value",
+    "splitLine": {
+      "lineStyle": {
+        "type": "dashed",
+        "color": "#333"
+      }
+    },
+    "axisLabel": {
+      "fontWeight": "bold",
+      "color": "#eee",
+      "fontSize": 14,
+      "fontFamily": "Raleway",
+      "margin": 24
+    }
+  },
+  "yAxis": {
+    "type": "category",
+    "data": [
+      "你好，李焕英",
+      "唐人街探案3",
+      "刺杀小说家",
+      "人潮汹涌",
+      "熊出没·狂野大陆",
+      "新神榜：哪吒重生",
+      "侍神令"
+    ],
+    "inverse": true,
+    "axisLine": {
+      "show": false
+    },
+    "axisTick": {
+      "show": false
+    },
+    "axisLabel": {
+      "fontWeight": "bold",
+      "color": "hsl(0deg, 100%, 98%)",
+      "fontSize": 14,
+      "margin": 24
+    }
+  },
+  "series": [
+    {
+      "name": "综合票房",
+      "type": "bar",
+      "data": [
+        3570.68,
+        1228.29,
+        690.94,
+        644.34,
+        409.9,
+        368.5,
+        98.75
+      ],
+      "barMaxWidth": 14,
+      "emphasis": {
+        "focus": "self",
+        "label": {
+          "show": true,
+          "position": "right",
+          "color": "hsl(0deg, 100%, 60%)",
+          "fontSize": 14,
+          "fontWeight": "bold"
+        },
+        "itemStyle": {
+          "color": {
+            "type": "linear",
+            "x": 0,
+            "y": 0,
+            "x2": 1,
+            "y2": 1,
+            "colorStops": [
+              {
+                "offset": 0,
+                "color": "hsl(0deg, 100%, 60%)"
+              },
+              {
+                "offset": 1,
+                "color": "hsl(0deg, 80%, 60%)"
+              }
+            ]
+          },
+          "shadowBlur": 24
+        }
+      },
+      "itemStyle": {
+        "color": {
+          "type": "linear",
+          "x": 0,
+          "y": 0,
+          "x2": 1,
+          "y2": 1,
+          "colorStops": [
+            {
+              "offset": 0,
+              "color": "hsl(0deg, 80%, 50%)"
+            },
+            {
+              "offset": 1,
+              "color": "hsl(0deg, 100%, 60%)"
+            }
+          ]
+        },
+        "borderRadius": [
+          0,
+          4,
+          4,
+          0
+        ],
+        "shadowBlur": 8,
+        "shadowColor": "hsl(0deg, 100%, 50%, 0.3)"
+      }
+    }
+  ],
+  "visualMap": [
+    {
+      "show": false,
+      "min": 0,
+      "max": 3600,
+      "dimension": 0,
+      "inRange": {
+        "opacity": [
+          0.3,
+          1
+        ]
+      }
+    }
+  ]
+})
+
+const options2 = ref<ECOption>({
+  title: {
+    text: "电影当日综合票房占比",
+    subtext: "数据来自猫眼电影（非实时）",
+    textStyle: {
+      fontSize: 24,
+      color: "hsl(0deg, 100%, 100%)",
+    },
+    subtextStyle: {
+      fontSize: 14,
+      color: "hsl(0deg, 20%, 75%)",
+    },
+  },
+  tooltip: {
+    trigger: "item",
+    padding: [14, 24],
+    borderWidth: 0,
+    extraCssText: "box-shadow: 0 0 24px hsl(0, 100%, 50%, 0.2);",
+    textStyle: {
+      fontWeight: "bold",
+      color: "hsl(0deg, 0%, 40%)",
+    },
+  },
+  color: [
+    "hsl(0deg, 100%, 70%)",
+    "hsl(0deg, 90%, 60%)",
+    "hsl(0deg, 80%, 50%)",
+    "hsl(0deg, 70%, 45%)",
+    "hsl(0deg, 60%, 40%)",
+    "hsl(0deg, 50%, 35%)",
+    "hsl(0deg, 40%, 30%)",
+  ],
+  series: [
+    {
+      type: "pie",
+      radius: ["50%", "70%"],
+      startAngle: 160,
+      top: 60,
+      label: {
+        show: true,
+        position: "outer",
+        alignTo: "labelLine",
+        edgeDistance: "3%",
+        distanceToLabelLine: 20,
+        color: "hsl(0deg, 100%, 98%)",
+        fontSize: 14,
+        fontWeight: "bold",
+        formatter: "{b} {d|{d}%}",
+        rich: {
+          d: {
+            backgroundColor: "hsl(0deg, 100%, 70%)",
+            borderRadius: 4,
+            padding: [4, 8],
+            color: "white",
+            fontWeight: "bold",
+          },
+        },
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 18,
+          fontWeight: "bold",
+        },
+      },
+      labelLine: {
+        smooth: true,
+        lineStyle: {
+          type: "dashed",
+        },
+      },
+      data: [
+        {
+          "name": "你好，李焕英",
+          "value": 3570.68
+        },
+        {
+          "name": "唐人街探案3",
+          "value": 1228.29
+        },
+        {
+          "name": "刺杀小说家",
+          "value": 690.94
+        },
+        {
+          "name": "人潮汹涌",
+          "value": 644.34
+        },
+        {
+          "name": "熊出没·狂野大陆",
+          "value": 409.9
+        },
+        {
+          "name": "新神榜：哪吒重生",
+          "value": 368.5
+        },
+        {
+          "name": "侍神令",
+          "value": 98.75
+        }
+      ],
+    },
+  ],
+  "backgroundColor": "transparent",
+})
+</script>
+
+<template>
+  <div class="wrapper">
+    <Chart :options="options" class="chart" />
+    <Chart :options="options2" class="chart" />
+  </div>
+</template>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: hsl(210deg, 20%, 10%);
+}
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-items: center;
+}
+
+.wrapper .chart {
+  width: 80%;
+  height: 400px;
+}
+</style>
 ```
 
