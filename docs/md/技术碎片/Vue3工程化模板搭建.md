@@ -726,8 +726,8 @@ export default defineConfig({
                 ElementPlusResolver(),
                 // 自动注册图标组件
                 IconsResolver({
-                    // 只启用 element-plus 图标集，其他图标库 https://icon-sets.iconify.design/
-                    enabledCollections: ['ep'],
+                    // 只启用 icon-park 图标集，其他图标库 https://icon-sets.iconify.design/
+                  	enabledCollections: ['icon-park-outline'],
                 }),
             ],
             // 组件名称包含目录，防止同名组件冲突
@@ -762,9 +762,9 @@ export default defineConfig({
 ```vue
 <template>
     <div>
-        <i-ep-user />
+        <i-icon-park-outline-user />
         <el-icon :size="50" color="#1976D2">
-            <i-ep-edit />
+          <i-icon-park-outline-edit-two />
         </el-icon>
     </div>
 </template>
@@ -1050,7 +1050,7 @@ ElementPlus 图标库有时满足不了实际开发需要，因此需要通过�
 </template>
 ```
 
-### ECharts 集成
+### [ECharts](https://github.com/apache/echarts) 集成
 
 #### 介绍
 
@@ -1075,37 +1075,109 @@ ECharts 是一款由百度公司开发的开源可视化图表库，它提供了
 
 ::: code-group
 
-```ts [useChart.ts]
-import { onMounted, Ref, shallowRef, unref, watch, markRaw, onBeforeMount } from "vue";
-import echarts from "./config";
+```ts [src/composables/echart.ts]
+import type { Ref } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
-import { ECOption } from "./types";
+import {
+  markRaw,
+  onBeforeMount,
+  onMounted,
+  shallowRef,
+  unref,
+  watch,
+} from 'vue'
+// 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
+import type { ComposeOption } from 'echarts/core'
+import * as echarts from 'echarts/core'
+// 系列类型的定义后缀都为 SeriesOption
+import type { BarSeriesOption, PieSeriesOption } from 'echarts/charts'
+// 引入柱状图图表，图表后缀都为 Chart
+import { BarChart, PieChart } from 'echarts/charts'
+// 组件类型的定义后缀都为 ComponentOption
+import type {
+  DatasetComponentOption,
+  GridComponentOption,
+  LegendComponentOption,
+  TitleComponentOption,
+  TooltipComponentOption,
+  VisualMapComponentOption,
+} from 'echarts/components'
+// 引入标题，提示框，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
+import {
+  DatasetComponent,
+  GridComponent,
+  LegendComponent,
+  TitleComponent,
+  TooltipComponent,
+  TransformComponent,
+  VisualMapComponent,
+} from 'echarts/components'
+// 标签自动布局、全局过渡动画等特性
+import { LabelLayout, UniversalTransition } from 'echarts/features'
+// 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
+import { CanvasRenderer } from 'echarts/renderers'
 
-export const useChart = (elRef: Ref<HTMLElement | undefined> | HTMLElement, option: Ref<ECOption> | ECOption) => {
-  const chart = shallowRef<echarts.ECharts>();
-  
+// 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
+export type ECOption = ComposeOption<
+  | BarSeriesOption
+  | PieSeriesOption
+  | TitleComponentOption
+  | TooltipComponentOption
+  | GridComponentOption
+  | LegendComponentOption
+  | DatasetComponentOption
+  | VisualMapComponentOption
+>
+
+// 注册必须的组件
+echarts.use([
+  TitleComponent,
+  LegendComponent,
+  TooltipComponent,
+  GridComponent,
+  DatasetComponent,
+  TransformComponent,
+  VisualMapComponent,
+  BarChart,
+  PieChart,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer,
+])
+
+export function useChart(
+  elRef: Ref<HTMLElement | undefined> | HTMLElement,
+  option: Ref<ECOption> | ECOption,
+) {
+  const chart = shallowRef<echarts.ECharts>()
+
   const render = (option: Ref<ECOption> | ECOption) => {
-    if (!chart.value) return
+    if (!chart.value)
+      return
     try {
       chart.value.clear()
-      chart.value.setOption(unref(option), { notMerge: true });
-    } catch (error) {
-      console.error('渲染图表时发生错误:', error);
+      chart.value.setOption(unref(option), { notMerge: true })
+    }
+    catch (error) {
+      console.error('渲染图表时发生错误:', error)
     }
   }
 
   const init = () => {
-    if (chart.value) return
+    if (chart.value)
+      return
     const container = unref(elRef)
     if (!container) {
-      console.error('无法找到容器元素');
-      return;
+      console.error('无法找到容器元素')
+      return
     }
     try {
-      chart.value = echarts.getInstanceByDom(container) || markRaw(echarts.init(container))
-      render(option);
-    } catch (error) {
-      console.error('初始化图表时发生错误:', error);
+      chart.value
+        = echarts.getInstanceByDom(container) || markRaw(echarts.init(container))
+      render(option)
+    }
+    catch (error) {
+      console.error('初始化图表时发生错误:', error)
     }
   }
 
@@ -1132,93 +1204,33 @@ export const useChart = (elRef: Ref<HTMLElement | undefined> | HTMLElement, opti
     (newOption) => {
       render(newOption)
     },
-    { deep: true }
+    { deep: true },
   )
 }
 ```
 
-```ts [config.ts]
-// 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
-import * as echarts from 'echarts/core'
-// 引入柱状图图表，图表后缀都为 Chart
-import { BarChart, PieChart } from 'echarts/charts'
-// 引入标题，提示框，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
-import {
-  DatasetComponent,
-  GridComponent,
-  TitleComponent,
-  TooltipComponent,
-  TransformComponent,
-  VisualMapComponent,
-} from 'echarts/components'
-// 标签自动布局、全局过渡动画等特性
-import { LabelLayout, UniversalTransition } from 'echarts/features'
-// 引入 Canvas 渲染器，注意引入 CanvasRenderer 或者 SVGRenderer 是必须的一步
-import { CanvasRenderer } from 'echarts/renderers'
-
-// 注册必须的组件
-echarts.use([
-  TitleComponent,
-  TooltipComponent,
-  GridComponent,
-  DatasetComponent,
-  TransformComponent,
-  VisualMapComponent,
-  BarChart,
-  PieChart,
-  LabelLayout,
-  UniversalTransition,
-  CanvasRenderer,
-])
-
-export default echarts
-```
-
-```ts [types.ts]
-// 系列类型的定义后缀都为 SeriesOption
-import type { BarSeriesOption, PieSeriesOption } from 'echarts/charts'
-// 组件类型的定义后缀都为 ComponentOption
-import type {
-  DatasetComponentOption,
-  GridComponentOption,
-  TitleComponentOption,
-  TooltipComponentOption,
-  VisualMapComponentOption,
-} from 'echarts/components'
-import type { ComposeOption } from 'echarts/core'
-
-// 通过 ComposeOption 来组合出一个只有必须组件和图表的 Option 类型
-export type ECOption = ComposeOption<
-  | BarSeriesOption
-  | PieSeriesOption
-  | TitleComponentOption
-  | TooltipComponentOption
-  | GridComponentOption
-  | DatasetComponentOption
-  | VisualMapComponentOption
->
-```
-
 ```vue [src/components/Chart/index.vue]
-<script setup lang="ts">
-import { shallowRef, toRefs } from "vue";
-import { useChart } from "./useChart";
-import { ECOption } from "./types";
+<script lang="ts" setup>
+import type { ECOption } from '@/composables/echarts'
+import { useChart } from '@/composables/echarts'
 
-const props = withDefaults(defineProps<{
-  options: ECOption;
-}>(), {});
-const { options } = toRefs(props);
-const container = shallowRef<HTMLElement>();
+const props = withDefaults(
+  defineProps<{
+    options: ECOption
+  }>(),
+  {},
+)
+const { options } = toRefs(props)
+const container = shallowRef<HTMLElement>()
 useChart(container, options)
 </script>
 
 <template>
-  <div class="container" ref="container"></div>
+  <div ref="container" class="chat" />
 </template>
 
 <style scoped>
-.container {
+.chat {
   width: 100%;
   height: 100%;
 }
@@ -1232,7 +1244,7 @@ useChart(container, options)
 ```vue
 <script setup lang="ts">
 import Chart from '@/components/Chart/index.vue'
-import { ECOption } from '@/components/Chart/types';
+import { ECOption } from '@/hooks/echarts';
 import { ref } from 'vue';
 
 const options = ref<ECOption>({
@@ -1526,3 +1538,253 @@ body {
 </style>
 ```
 
+### [VueI18n](https://github.com/intlify/vue-i18n) 集成
+
+#### 介绍
+
+`vue-i18n` 是一个用于 Vue.js 的国际化插件，它提供了简单而强大的方法来管理多语言应用。通过 `vue-i18n`，你可以轻松地切换语言、翻译文本、格式化日期和数字等。
+
+1. **多语言支持**：支持多种语言，可以在应用中动态切换语言。
+2. **组件化**：提供 `i18n` 组件，可以在模板中直接使用。
+3. **插值**：支持变量插值，可以在翻译字符串中插入变量。
+4. **复数形式**：支持复数形式的翻译。
+5. **日期和数字格式化**：提供内置的方法来格式化日期和数字。
+6. **自定义过滤器**：可以自定义过滤器来处理特定的翻译需求。
+7. **懒加载**：支持按需加载语言包，提高应用性能。
+8. **Vue 3 支持**：兼容 Vue 3。
+
+#### 安装
+
+使用 `pnpm add vue-i18n@10` 命令安装 VueI18n。
+
+#### 使用
+
+##### [ElementPlus 国际化](https://element-plus.org/zh-CN/guide/i18n.html)
+
+咱们可以通过语言标识读取 ElementPlus 对应的语言包并返回，然后利用 ElementPlus 提供的 [ConfigProvider](https://element-plus.org/en-US/component/config-provider.html) 组件进行全局配置国际化的设置。
+
+::: code-group
+
+```ts [src/stores/modules/app.ts]
+import { LanguageEnum } from '@/enums/LanguageEnum'
+import defaultSettings from '@/settings'
+import { store } from '@/stores'
+import enUS from 'element-plus/es/locale/lang/en'
+import zhCN from 'element-plus/es/locale/lang/zh-cn'
+
+export const useAppStore = defineStore('app', () => {
+  /**
+   * 语言
+   */
+  const language = useStorage('language', defaultSettings.language)
+
+  /**
+   * 根据语言标识读取ElementPlus对应的语言包
+   */
+  const locale = computed(() => {
+    return language.value === LanguageEnum.ZH_CN ? zhCN : enUS
+  })
+
+  /**
+   * 切换语言
+   *
+   * @param lang 语言
+   */
+  const changeLanguage = (lang: string) => {
+    language.value = lang
+  }
+
+  return { language, locale, changeLanguage }
+})
+
+/**
+ * 用于在组件外使用 store
+ * 官方文档解释了如何在组件外部使用 Pinia Store：
+ * https://pinia.vuejs.org/core-concepts/outside-component-usage.html#using-a-store-outside-of-a-component
+ */
+export function useAppStoreHook() {
+  return useAppStore(store)
+}
+```
+
+```vue [src/App.vue]
+<script lang="ts" setup>
+import { useAppStore } from '@/stores'
+
+const { locale } = storeToRefs(useAppStore())
+</script>
+
+<template>
+  <el-config-provider :locale="locale">
+    <router-view />
+  </el-config-provider>
+</template>
+```
+
+```ts [src/types/global.d.ts]
+declare global {
+  /**
+   * 系统设置
+   */
+  interface AppSettings {
+    /**
+     * 语言(zh-CN | en-US)
+     */
+    language: string
+  }
+}
+
+export {}
+```
+
+```ts [src/settings.ts]
+import { LanguageEnum } from '@/enums/LanguageEnum'
+
+const defaultSettings: AppSettings = {
+  language: LanguageEnum.ZH_CN,
+}
+
+export default defaultSettings
+```
+
+```ts [src/enums/LanguageEnum.ts]
+/**
+ * 语言枚举
+ */
+export enum LanguageEnum {
+  /**
+   * 中文
+   */
+  ZH_CN = 'zh-CN',
+
+  /**
+   * 英文
+   */
+  EN_US = 'en-US',
+}
+```
+
+:::
+
+##### 自定义语言包
+
+创建 `src/lang/package` 语言包目录，存放自定义的语言文件。
+
+::: code-group
+
+```json [zh-cn.json]
+{
+  "langSelect": {
+    "message": {
+      "success": "切换语言成功！"
+    }
+  }
+}
+```
+
+```json [en-us.json]
+{
+  "langSelect": {
+    "message": {
+      "success": "Switch Language Successful!"
+    }
+  }
+}
+```
+
+:::
+
+##### 创建 i18n 实例
+
+```ts
+import type { App } from 'vue'
+import { LanguageEnum } from '@/enums/LanguageEnum'
+import { useAppStoreHook } from '@/stores'
+import { createI18n } from 'vue-i18n'
+// 本地语言包
+import enUS from './package/en-us.json'
+import zhCN from './package/zh-cn.json'
+
+export type MessageSchema = typeof zhCN
+const appStore = useAppStoreHook()
+
+const i18n = createI18n<
+  [MessageSchema],
+  LanguageEnum.ZH_CN | LanguageEnum.EN_US
+>({
+  legacy: false,
+  locale: appStore.language,
+  fallbackLocale: LanguageEnum.ZH_CN,
+  messages: {
+    [LanguageEnum.ZH_CN]: zhCN,
+    [LanguageEnum.EN_US]: enUS,
+  },
+  globalInjection: true,
+})
+
+/**
+ * 注册i18n插件
+ * @param app Vue实例
+ */
+export function setupI18n(app: App) {
+  app.use(i18n)
+}
+```
+
+##### 封装切换语言组件
+
+::: code-group
+
+```vue [src/components/LangSelect/index.vue]
+<script lang="ts" setup>
+import { LanguageEnum } from '@/enums/LanguageEnum'
+import { useAppStore } from '@/stores'
+import { useI18n } from 'vue-i18n'
+
+const props = withDefaults(
+  defineProps<{
+    iconSize?: number | string
+  }>(),
+  { iconSize: 20 },
+)
+
+const langOptions = [
+  { label: '中文', value: LanguageEnum.ZH_CN },
+  { label: 'English', value: LanguageEnum.EN_US },
+]
+const { locale, t } = useI18n()
+const appStore = useAppStore()
+
+function changeLanguage(lang: string) {
+  locale.value = lang
+  appStore.changeLanguage(lang)
+  ElMessage.success(t('lang.switch.success'))
+}
+</script>
+
+<template>
+  <el-dropdown trigger="click" @command="changeLanguage">
+    <el-icon :size="props.iconSize">
+      <i-icon-park-outline-translate />
+    </el-icon>
+    <template #dropdown>
+      <el-dropdown-menu>
+        <el-dropdown-item
+          v-for="item in langOptions"
+          :key="item.value"
+          :command="item.value"
+          :disabled="item.value === locale"
+        >
+          {{ item.label }}
+        </el-dropdown-item>
+      </el-dropdown-menu>
+    </template>
+  </el-dropdown>
+</template>
+```
+
+:::
+
+##### 效果预览
+
+![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411022150342.gif)
