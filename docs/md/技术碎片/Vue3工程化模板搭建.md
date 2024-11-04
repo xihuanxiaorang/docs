@@ -638,7 +638,7 @@ export default defineConfig({
         Components({
             resolvers: [
                 // 自动导入 Element Plus 组件
-                ElementPlusResolver(),
+               ElementPlusResolver(),
             ],
             // 组件名称包含目录，防止同名组件冲突
             directoryAsNamespace: true,
@@ -726,8 +726,8 @@ export default defineConfig({
                 ElementPlusResolver(),
                 // 自动注册图标组件
                 IconsResolver({
-                    // 只启用 icon-park 图标集，其他图标库 https://icon-sets.iconify.design/
-                  	enabledCollections: ['icon-park-outline'],
+                    // 只启用 element-plus 图标集，其他图标库 https://icon-sets.iconify.design/
+                  	enabledCollections: ['ep'],
                 }),
             ],
             // 组件名称包含目录，防止同名组件冲突
@@ -762,9 +762,9 @@ export default defineConfig({
 ```vue
 <template>
     <div>
-        <i-icon-park-outline-user />
+        <i-iep-user />
         <el-icon :size="50" color="#1976D2">
-          <i-icon-park-outline-edit-two />
+          <i-iep-edit />
         </el-icon>
     </div>
 </template>
@@ -999,7 +999,7 @@ ElementPlus 图标库有时满足不了实际开发需要，因此需要通过�
        const props = withDefaults(
            defineProps<{
                prefix?: string
-               iconClass: string
+               name: string
                color?: string
            }>(),
            {
@@ -1007,7 +1007,7 @@ ElementPlus 图标库有时满足不了实际开发需要，因此需要通过�
            },
        )
    
-       const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`)
+       const symbolId = computed(() => `#${props.prefix}-${props.name}`)
    </script>
    
    <template>
@@ -1017,15 +1017,15 @@ ElementPlus 图标库有时满足不了实际开发需要，因此需要通过�
    </template>
    
    <style lang="scss" scoped>
-       .svg-icon {
-           display: inline-block;
-           width: 1em;
-           height: 1em;
-           overflow: hidden;
-           vertical-align: -0.15em; /* 因icon大小被设置为和字体大小一致，而span等标签的下边缘会和字体的基线对齐，故需设置一个往下的偏移比例，来纠正视觉上的未对齐效果 */
-           outline: none;
-           fill: currentcolor; /* 定义元素的颜色，currentColor是一个变量，这个变量的值就表示当前元素的color值，如果当前元素未设置color值，则从父元素继承 */
-       }
+   .svg-icon {
+     display: inline-block;
+     width: 1em;
+     height: 1em;
+     overflow: hidden;
+     vertical-align: -0.15em; /* 因icon大小被设置为和字体大小一致，而span等标签的下边缘会和字体的基线对齐，故需设置一个往下的偏移比例，来纠正视觉上的未对齐效果 */
+     outline: none;
+     fill: currentcolor; /* 定义元素的颜色，currentColor是一个变量，这个变量的值就表示当前元素的color值，如果当前元素未设置color值，则从父元素继承 */
+   }
    </style>
    ```
 
@@ -1044,7 +1044,7 @@ ElementPlus 图标库有时满足不了实际开发需要，因此需要通过�
 	<div class="w-full h-full p-[10px]">
         // ...
         <div class="mt-[10px] text-6xl">
-            <svg-icon v-for="icon in iconNames" :key="icon" :icon-class="icon" />
+            <svg-icon v-for="icon in iconNames" :key="icon" :name="icon" />
         </div>
     </div>
 </template>
@@ -1765,7 +1765,7 @@ function changeLanguage(lang: string) {
 <template>
   <el-dropdown trigger="click" @command="changeLanguage">
     <el-icon :size="props.iconSize">
-      <i-icon-park-outline-translate />
+      <svg-icon icon-class="language" />
     </el-icon>
     <template #dropdown>
       <el-dropdown-menu>
@@ -1788,3 +1788,371 @@ function changeLanguage(lang: string) {
 ##### 效果预览
 
 ![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411022150342.gif)
+
+### 暗黑模式
+
+Element Plus 自 2.2.0 版本开始支持暗黑模式，此处根据 [暗黑模式 | Element Plus](https://element-plus.org/zh-CN/guide/dark-mode.html) 官方文档讲述本项目是如何使用 [useDark | VueUse](https://vueuse.org/core/useDark/) 方法实现暗黑模式的动态切换。
+
+#### 基本原理
+
+实现暗黑模式的基本原理是在 `html` 上添加一个名为 `dark` 的类，如下所示：
+
+```html
+<html class="dark">
+  <head></head>
+  <body></body>
+</html>
+```
+
+如果想要实现动态切换暗黑模式的效果，建议使用 [useDark | VueUse](https://vueuse.org/core/useDark/) 方法。
+
+#### 如何启用？
+
+在 `src/styles/index.scss` 文件中导入 ElementPlus 暗黑主题。
+
+```scss
+@use 'tailwind';
+@use 'element-plus/theme-chalk/dark/css-vars.css'; // [!code ++]
+```
+
+#### 封装组件实现暗黑模式动态切换
+
+::: code-group
+
+```vue [src/components/DarkModeSelect/index.vue]
+<script lang="ts" setup>
+const props = withDefaults(
+  defineProps<{
+    iconSize?: number | string
+  }>(),
+  { iconSize: 20 },
+)
+
+const isDark = useDark()
+
+function toggleDark() {
+  isDark.value = !isDark.value
+}
+</script>
+
+<template>
+  <el-icon :size="props.iconSize" class="cursor-pointer" @click="toggleDark">
+    <template v-if="isDark">
+      <i-ep-moon />
+    </template>
+    <template v-else>
+      <i-ep-sunny />
+    </template>
+  </el-icon>
+</template>
+```
+
+```vue [src/layout/components/NavBar/index.vue]
+<script lang="ts" setup></script>
+
+<template>
+  <div class="flex justify-between items-center px-3 nav-bar">
+    <div />
+    <div class="flex items-center justify-center gap-3">
+      <DarkModeSelect />
+      <LangSelect />
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.nav-bar {
+  background-color: var(--el-bg-color);
+}
+</style>
+```
+
+:::
+
+效果如下所示：<br />![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411032337831.gif)
+
+#### 添加暗黑模式切换动画
+
+> - 逻辑：[antfu.me/src/logics/index.ts at main · antfu/antfu.me](https://github.com/antfu/antfu.me/blob/main/src/logics/index.ts#L10)
+> - 样式：[antfu.me/src/styles/main.css at main · antfu/antfu.me](https://github.com/antfu/antfu.me/blob/main/src/styles/main.css#L175)
+
+::: code-group
+
+```vue [src/components/DarkModeSelect/index.vue] {11-41}
+<script lang="ts" setup>
+const props = withDefaults(
+  defineProps<{
+    iconSize?: number | string
+  }>(),
+  { iconSize: 20 },
+)
+
+const isDark = useDark()
+
+function toggleDark(event: MouseEvent) {
+  const x = event.clientX
+  const y = event.clientY
+  const endRadius = Math.hypot(
+    Math.max(x, innerWidth - x),
+    Math.max(y, innerHeight - y),
+  )
+  // @ts-expect-error: Transition API
+  const transition = document.startViewTransition(async () => {
+    isDark.value = !isDark.value
+    await nextTick()
+  })
+  transition.ready.then(() => {
+    const clipPath = [
+      `circle(0px at ${x}px ${y}px)`,
+      `circle(${endRadius}px at ${x}px ${y}px)`,
+    ]
+    document.documentElement.animate(
+      {
+        clipPath: isDark.value ? [...clipPath].reverse() : clipPath,
+      },
+      {
+        duration: 400,
+        easing: 'ease-out',
+        pseudoElement: isDark.value
+          ? '::view-transition-old(root)'
+          : '::view-transition-new(root)',
+      },
+    )
+  })
+}
+</script>
+
+<template>
+  <el-icon :size="props.iconSize" class="cursor-pointer" @click="toggleDark">
+    <template v-if="isDark">
+      <i-ep-moon />
+    </template>
+    <template v-else>
+      <i-ep-sunny />
+    </template>
+  </el-icon>
+</template>
+```
+
+```scss [src/styles/index.scss] {4-24}
+@use 'tailwind';
+@use 'element-plus/theme-chalk/dark/css-vars.css';
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-old(root) {
+  z-index: 9999;
+}
+
+.dark::view-transition-new(root) {
+  z-index: 1;
+}
+```
+
+:::
+
+效果如下所示：<br />![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411032348612.gif)
+
+#### ElementPlus 主题色定制
+
+参考 [主题 | Element Plus](https://element-plus.org/zh-CN/guide/theming.html) & [暗黑模式 | Element Plus](https://element-plus.org/zh-CN/guide/dark-mode.html)，可以通过 scss/css 变量替换的方案来定制 ElementPlus 主题色。
+
+##### SCSS 变量
+
+1. 准备定制样式文件，例如：`src/styles/element-plus.scss`：
+
+   ```scss
+   @forward "element-plus/theme-chalk/src/common/var.scss" with (
+     $colors: (
+       "primary": (
+         "base": #4080ff,
+       ),
+       "success": (
+         "base": #23c343,
+       ),
+       "warning": (
+         "base": #ff9a2e,
+       ),
+       "danger": (
+         "base": #f76560,
+       ),
+       "info": (
+         "base": #a9aeb8,
+       ),
+     ),
+   
+     $bg-color: (
+       "page": #f5f8fd,
+     )
+   );
+   ```
+
+2. 配置 ElementPlus 采用 sass 配色系统
+
+   ```ts {8,14}
+   // vite.config.ts
+   export default defineConfig({
+     plugins: [
+   		// ...
+       AutoImport({
+         resolvers: [
+           // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+           ElementPlusResolver({ importStyle: 'sass' }),
+         ],
+       }),
+       Components({
+         resolvers: [
+           // 自动导入 Element Plus 组件
+           ElementPlusResolver({ importStyle: 'sass' }),
+         ],
+       }),
+   })
+   ```
+
+3. 自动导入定制化样式文件进行样式覆盖，使用 `scss.additionalData` 来编译所有应用 scss 变量的组件。
+
+   ```ts
+   // vite.config.ts
+   export default defineConfig({
+     // ...
+     css: {
+       preprocessorOptions: {
+         scss: {
+           api: 'modern-compiler',
+           additionalData: `@use "@/styles/element-plus.scss" as *;`, // [!code ++]
+         },
+       },
+     },
+   })
+
+##### CSS 变量
+
+直接在定制样式文件中添加自定义 css 变量，然后在 ElementPlus 样式之后导入它。
+
+::: code-group
+
+```scss [src/styles/element-plus.scss]
+:root {
+  --el-color-primary: #4080ff;
+  --el-color-success: #23c343;
+  --el-color-warning: #ff9a2e;
+  --el-color-danger: #f76560;
+  --el-color-info: #a9aeb8;
+  --el-bg-color: #f5f8fd;
+}
+
+html.dark {
+  --el-bg-color-page: #000000;
+}
+```
+
+```scss [src/styles/index.scss]
+@use 'tailwind';
+@use 'element-plus/theme-chalk/dark/css-vars.css';
+@use "element-plus"; // [!code ++]
+```
+
+:::
+
+#### 自定义组件样式实现暗黑模式
+
+除了 ElementPlus 组件样式之外，应用中还有很多自定义的组件和样式，如下所示，样式都是写死的：<br />![image-20241104191317866](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411041913078.png)
+
+想要让自定义组件中的样式实现暗黑模式，就需要使用 css/scss 变量替换原有的样式。步骤如下：
+
+1. 新建 `src/styles/variables.scss` 样式文件，内容如下所示：
+
+   ```scss
+   :root {
+     --sidebar-background: #304156;
+     --sidebar-text: #bfcbd9;
+   }
+   
+   html.dark {
+     --sidebar-background: var(--el-bg-color-overlay);
+     --sidebar-text: #fff;
+   }
+   
+   $sidebar-background: var(--sidebar-background);
+   $sidebar-text: var(--sidebar-text);
+   ```
+
+2. 使用 `scss.additionalData` 来编译所有应用 scss 变量的组件。
+
+   ```ts
+   // vite.config.ts
+   export default defineConfig({
+     // ...
+     css: {
+       preprocessorOptions: {
+         scss: {
+           api: 'modern-compiler',
+           additionalData: `@use "@/styles/variables.scss" as *;`, // [!code ++]
+         },
+       },
+     },
+   })
+   ```
+
+3. 使用 scss 变量进行替换。
+
+   ```vue
+   <script lang="ts" setup></script>
+   
+   <template>
+     <div class="row-start-1 row-span-2 sidebar">
+       Left
+     </div>
+   </template>
+   
+   <style lang="scss" scoped>
+   .sidebar {
+     background-color: $sidebar-background;
+     color: $sidebar-text;
+   }
+   </style>
+   ```
+
+效果如下所示：<br />![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411041921379.gif)
+
+#### TailwindCSS 暗黑模式
+
+1. 编辑 `tailwind.config.js` 文件，添加对暗黑模式的支持：
+
+   ```js
+   /** @type {import('tailwindcss').Config} */
+   export default {
+     darkMode: 'selector', // [!code ++]
+     content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
+     theme: {
+       extend: {},
+     },
+     plugins: [],
+   }
+   ```
+
+2. 给需要暗黑模式支持的 TailwindCSS 类名前添加 `dark:`，如下所示：
+
+   ```vue {3}
+   <template>
+     <div class="w-full h-full p-[10px]">
+       <h1 class="text-5xl font-bold text-orange-600 mt-[10px] dark:text-blue-300">
+         Home
+       </h1>
+     </div>
+   </template>
+   ```
+
+效果如下所示：<br />![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411042231714.gif)
