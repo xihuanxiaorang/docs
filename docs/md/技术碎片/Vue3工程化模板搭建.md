@@ -671,24 +671,24 @@ export default defineConfig({
 
 以下步骤参考自：[Icon 图标 | Element Plus (element-plus.org)](https://element-plus.org/zh-CN/component/icon.html#自动导入)
 
-使用 [unplugin-icons](https://github.com/antfu/unplugin-icons) 和 [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 从 iconify 中自动导入任何图标集。您可以参考[此模板](https://github.com/sxzz/element-plus-best-practices/blob/db2dfc983ccda5570033a0ac608a1bd9d9a7f658/vite.config.ts#L21-L58)。
+使用 [unplugin-icons](https://github.com/antfu/unplugin-icons) 和 [unplugin-auto-import](https://github.com/antfu/unplugin-auto-import) 可以从 iconify 中自动导入任何图标集。您可以参考[此模板](https://github.com/sxzz/element-plus-best-practices/blob/db2dfc983ccda5570033a0ac608a1bd9d9a7f658/vite.config.ts#L21-L58)。
 
 #### 安装
 
-使用 `pnpm i -D unplugin-icons @iconify/json` 命令安装 `unplugin-icons` 和 `iconify`。
+使用 `pnpm i -D unplugin-icons` 命令安装 `unplugin-icons`。
 
 #### 自动导入
 
 修改 `vite.config.ts` 配置文件：
 
-```typescript {7-8,26-27,43-47,56-59}
+```typescript {7-8,41-45,54-59}
 import { resolve } from 'node:path'
 import { fileURLToPath, URL } from 'node:url'
 
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import AutoImport from 'unplugin-auto-import/vite'
-import IconsResolver from 'unplugin-icons/resolver'
+import  from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Components from 'unplugin-vue-components/vite'
@@ -707,8 +707,6 @@ export default defineConfig({
             resolvers: [
                 // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
                 ElementPlusResolver(),
-                // 自动导入图标组件
-                IconsResolver(),
             ],
             // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
             // 自动导入 VueRouter 相关函数，如：useRouter 等
@@ -740,6 +738,8 @@ export default defineConfig({
         Icons({
             // 自动安装图标库
             autoInstall: true,
+           	// 编译方式
+            compiler: 'vue3',
         }),
     ],
     resolve: {
@@ -762,9 +762,9 @@ export default defineConfig({
 ```vue
 <template>
     <div>
-        <i-iep-user />
+        <i-ep-user />
         <el-icon :size="50" color="#1976D2">
-          <i-iep-edit />
+          <IEpEdit />
         </el-icon>
     </div>
 </template>
@@ -789,8 +789,6 @@ export default defineConfig({
         resolvers: [
           // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
           ElementPlusResolver(),
-          // 自动导入图标组件
-          IconsResolver()
         ],
         // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
         // 自动导入 VueRouter 相关函数，如：useRouter 等
@@ -916,44 +914,39 @@ export const useCounterStore = defineStore('counter', () => {
 </script>
 
 <template>
-<div class="w-full h-full p-[10px]">
-    <h1 class="text-5xl font-bold text-orange-600 mt-[10px]">
-        Home
-    </h1>
-    <div class="mt-[10px]">
-        <el-button>
-            Default
-    </el-button>
-        <el-button type="primary">
-            Primary
-    </el-button>
-        <el-button type="success" @click="handleClick">
-            Success
-    </el-button>
-        <el-button type="info">
-            Info
-    </el-button>
-        <el-button type="warning">
-            Warning
-    </el-button>
-        <el-button type="danger">
-            Danger
-    </el-button>
-    </div>
-    <el-date-picker
-                    v-model="date"
-                    class="mt-[10px]"
-                    type="date"
-                    placeholder="选择日期"
-                    />
-    <div class="mt-[10px]">
-        <i-ep-user />
-        <el-icon :size="50" color="#1976D2">
-            <i-ep-edit />
-    </el-icon>
-    </div>
-    <el-input-number v-model="count" class="mt-[10px]" :min="1" :max="10" @change="handleChange" />
-    </div>
+  <div class="w-full h-full p-[10px]">
+      <h1 class="text-5xl font-bold text-orange-600 mt-[10px]">
+          Home
+      </h1>
+      <div class="mt-[10px]">
+          <el-button>
+              Default
+      </el-button>
+          <el-button type="primary">
+              Primary
+      </el-button>
+          <el-button type="success" @click="handleClick">
+              Success
+      </el-button>
+          <el-button type="info">
+              Info
+      </el-button>
+          <el-button type="warning">
+              Warning
+      </el-button>
+          <el-button type="danger">
+              Danger
+      </el-button>
+      </div>
+      <el-date-picker v-model="date" class="mt-[10px]" type="date" placeholder="选择日期" />
+      <div class="mt-[10px]">
+          <i-ep-user />
+          <el-icon :size="50" color="#1976D2">
+              <IEpEdit />
+          </el-icon>
+      </div>
+      <el-input-number v-model="count" class="mt-[10px]" :min="1" :max="10" @change="handleChange" />
+  </div>
 </template>
 ```
 
@@ -996,24 +989,24 @@ ElementPlus 图标库有时满足不了实际开发需要，因此需要通过�
 
    ```vue [src/components/SvgIcon/index.vue]
    <script lang="ts" setup>
-       const props = withDefaults(
-           defineProps<{
-               prefix?: string
-               name: string
-               color?: string
-           }>(),
-           {
-               prefix: 'icon',
-           },
-       )
+   const props = withDefaults(
+     defineProps<{
+       prefix?: string
+       iconClass: string
+       color?: string
+     }>(),
+     {
+       prefix: 'icon',
+     },
+   )
    
-       const symbolId = computed(() => `#${props.prefix}-${props.name}`)
+   const symbolId = computed(() => `#${props.prefix}-${props.iconClass}`)
    </script>
    
    <template>
-   <svg aria-hidden="true" class="svg-icon">
+     <svg aria-hidden="true" class="svg-icon">
        <use :fill="color" :xlink:href="symbolId" />
-       </svg>
+     </svg>
    </template>
    
    <style lang="scss" scoped>
@@ -1568,7 +1561,6 @@ body {
 ```ts [src/stores/modules/app.ts]
 import { LanguageEnum } from '@/enums/LanguageEnum'
 import defaultSettings from '@/settings'
-import { store } from '@/stores'
 import enUS from 'element-plus/es/locale/lang/en'
 import zhCN from 'element-plus/es/locale/lang/zh-cn'
 
@@ -1596,15 +1588,6 @@ export const useAppStore = defineStore('app', () => {
 
   return { language, locale, changeLanguage }
 })
-
-/**
- * 用于在组件外使用 store
- * 官方文档解释了如何在组件外部使用 Pinia Store：
- * https://pinia.vuejs.org/core-concepts/outside-component-usage.html#using-a-store-outside-of-a-component
- */
-export function useAppStoreHook() {
-  return useAppStore(store)
-}
 ```
 
 ```vue [src/App.vue]
@@ -1672,23 +1655,23 @@ export enum LanguageEnum {
 
 ::: code-group
 
-```json [zh-cn.json]
-{
-  "langSelect": {
-    "message": {
-      "success": "切换语言成功！"
-    }
-  }
+```ts [zh-cn.ts]
+export default {
+  langSelect: {
+    message: {
+      success: '切换语言成功！',
+    },
+  },
 }
 ```
 
-```json [en-us.json]
-{
-  "langSelect": {
-    "message": {
-      "success": "Switch Language Successful!"
-    }
-  }
+```ts [en-us.ts]
+export default {
+  langSelect: {
+    message: {
+      success: 'Switch Language Successful!',
+    },
+  },
 }
 ```
 
@@ -1699,21 +1682,22 @@ export enum LanguageEnum {
 ```ts
 import type { App } from 'vue'
 import { LanguageEnum } from '@/enums/LanguageEnum'
-import { useAppStoreHook } from '@/stores'
+import defaultSettings from '@/settings'
 import { createI18n } from 'vue-i18n'
 // 本地语言包
-import enUS from './package/en-us.json'
-import zhCN from './package/zh-cn.json'
+import enUS from './package/en-us'
+import zhCN from './package/zh-cn'
 
 export type MessageSchema = typeof zhCN
-const appStore = useAppStoreHook()
+
+const locale = useStorage('language', defaultSettings.language).value
 
 const i18n = createI18n<
   [MessageSchema],
   LanguageEnum.ZH_CN | LanguageEnum.EN_US
 >({
   legacy: false,
-  locale: appStore.language,
+  locale,
   fallbackLocale: LanguageEnum.ZH_CN,
   messages: {
     [LanguageEnum.ZH_CN]: zhCN,
@@ -1758,7 +1742,7 @@ const appStore = useAppStore()
 function changeLanguage(lang: string) {
   locale.value = lang
   appStore.changeLanguage(lang)
-  ElMessage.success(t('lang.switch.success'))
+  ElMessage.success(t('langSelect.message.success'))
 }
 </script>
 
@@ -1851,10 +1835,10 @@ function toggleDark() {
 <script lang="ts" setup></script>
 
 <template>
-  <div class="flex justify-between items-center px-3 nav-bar">
+  <div class="flex justify-between items-center px-4 nav-bar">
     <div />
     <div class="flex items-center justify-center gap-3">
-      <DarkModeSelect />
+      <DarkModeSelect /> // [!code ++]
       <LangSelect />
     </div>
   </div>
@@ -2156,3 +2140,97 @@ html.dark {
    ```
 
 效果如下所示：<br />![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411042231714.gif)
+
+### 全屏 & 退出全屏
+
+通过 [useFullscreen | VueUse](https://vueuse.org/core/useFullscreen/) 方法可以轻松实现全屏与退出全屏的功能。封装一个 `FullScreen` 的公共组件，如下所示：
+
+::: code-group
+
+```vue [src/components/FullScreen/index.vue]
+<script lang="ts" setup>
+const props = withDefaults(
+  defineProps<{
+    iconSize?: number | string
+  }>(),
+  { iconSize: 20 },
+)
+
+const { isFullscreen, toggle } = useFullscreen()
+</script>
+
+<template>
+  <el-icon :size="props.iconSize" class="cursor-pointer" @click="toggle">
+    <svg-icon :icon-class="isFullscreen ? 'fullscreen-exit' : 'fullscreen'" />
+  </el-icon>
+</template>
+```
+
+```vue [src/layout/components/NavBar/index.vue]
+<script lang="ts" setup></script>
+
+<template>
+  <div class="flex justify-between items-center px-4 nav-bar">
+    <div />
+    <div class="flex items-center justify-center gap-3">
+      <FullScreen /> // [!code ++]
+      <DarkModeSelect />
+      <LangSelect />
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.nav-bar {
+  background-color: var(--el-bg-color);
+}
+</style>
+```
+
+:::
+
+效果如下所示：<br />![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411042349364.gif)
+
+### [Animate.css](https://animate.style/) 动画库集成
+
+#### 介绍
+
+Animate.css 是一个广泛使用的 CSS 动画库，它提供了一系列预定义的动画效果，可以轻松地应用于网页元素。通过简单的类名添加，你可以让页面上的元素动起来，从而提升用户体验和视觉效果。
+
+1. **预定义动画**：提供了大量的预定义动画效果，如淡入淡出、滑动、弹跳等。
+2. **无限重复**：某些动画可以设置为无限重复，适合制作持续的动画效果。
+3. **延迟和持续时间**：可以自定义动画的延迟时间和持续时间。
+4. **响应式**：动画效果在不同设备上都能很好地工作。
+5. **易于使用**：只需添加相应的类名即可应用动画效果。
+
+#### 安装
+
+使用 `pnpm add animate.css` 命令安装 Animate.css，然后在 `src/styles/index.scss` 文件中引入：
+
+```scss
+@use "animate.css"; // [!code++]
+```
+
+#### 使用
+
+将 `animate__animated` 类添加到元素中，同时添加任何[动画名称](https://animate.style/#attention_seekers)(不要忘记 `animate__` 前缀！)
+
+```vue
+<script lang="ts" setup>
+const visiable = ref(true)
+</script>
+
+<template>
+	<div class="mt-5 rounded-md p-5 w-1/2 bg-[var(--el-bg-color)]">
+    <transition enter-active-class="animate__animated animate__bounceInLeft" leave-active-class="animate__animated animate__bounceOutLeft">
+      <h1 v-show="visiable" class="text-5xl font-bold text-orange-600 dark:text-blue-300">An animated element</h1>
+  	</transition>
+    <el-button class="mt-2" type="primary" @click="visiable = !visiable">显示/隐藏</el-button>
+  </div>
+</template>
+```
+
+效果如下所示：<br />![recording](https://cdn.jsdelivr.net/gh/xihuanxiaorang/img2/202411072243705.gif)
+
+
+
